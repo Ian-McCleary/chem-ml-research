@@ -820,6 +820,6 @@ if __name__ == "__main__":
             generator = dc.utils.ConformerGenerator(max_conformers=5)
             conformer_mol = generator.generate_conformers(mol)
             print("Number of available conformers for this molecule: ", len(conformer_mol.GetConformers()))
-            coulomb_mat = dc.feat.CoulombMatrix(max_atoms=50)
+            coulomb_mat = dc.feat.CoulombMatrix(max_atoms=60)
             features = coulomb_mat(conformer_mol)
             print(features)
