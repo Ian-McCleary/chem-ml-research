@@ -29,6 +29,7 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem, rdmolops
 import sys
+import deepchem as dc
 
 global __ATOM_LIST__
 __ATOM_LIST__ = \
@@ -815,3 +816,10 @@ if __name__ == "__main__":
             m = Chem.MolFromSmiles(smiles)
             smiles = Chem.MolToSmiles(m, isomericSmiles=isomeric_smiles)
             print(smiles)
+            #Create Coulomb Matrix from Generated Conformers
+            generator = dc.utils.ConformerGenerator(max_conformers=5)
+            conformer_mol = generator.generate_conformers(mol)
+            print("Number of available conformers for this molecule: ", len(conformer_mol.GetConformers()))
+            coulomb_mat = dc.feat.CoulombMatrix(max_atoms=20)
+            features = coulomb_mat(conformer_mol)
+            print(features)
