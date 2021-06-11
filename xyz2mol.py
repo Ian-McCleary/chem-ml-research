@@ -24,7 +24,7 @@ except ImportError:
 from collections import defaultdict
 
 import numpy as np
-import networkx as nx
+#import networkx as nx
 
 from rdkit import Chem
 from rdkit.Chem import AllChem, rdmolops
