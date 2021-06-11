@@ -822,8 +822,8 @@ if __name__ == "__main__":
             print("Number of available conformers for this molecule: ", len(conformer_mol.GetConformers()))
             coulomb_mat = dc.feat.CoulombMatrix(max_atoms=50)
             features = coulomb_mat(conformer_mol)
-            print(features + "\n")
-
+            print(features)
+            print("\n")
             print("testing for coulomb matrix from smile string \n")
             smile_mol = generator.generate_conformers(Chem.MolFromSmiles(smiles))
             print("Number of available conformers for this molecule: ", len(conformer_mol.GetConformers()))
