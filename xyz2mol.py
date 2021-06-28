@@ -830,3 +830,4 @@ if __name__ == "__main__":
             coulomb_mat_smiles = dc.feat.CoulombMatrix(max_atoms=50)
             features_smiles = coulomb_mat_smiles(smile_mol)
             print(features_smiles)
+
