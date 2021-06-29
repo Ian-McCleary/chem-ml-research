@@ -48,6 +48,8 @@ print("TESTING COULOMB DATASET INPUT \n")
 for x in range(len(input_X)):
     print(input_X[x])
     print("\n")
+    print(output_y[x])
+    print("\n")
 
 #Test set from Deepchem
 tasks, datasets, transformers = dc.molnet.load_delaney(featurizer='GraphConv')
