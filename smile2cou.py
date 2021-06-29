@@ -34,6 +34,7 @@ y_1004663 = [-1554.285506+1554.414150]
 output_y = np.array([y_51677,y_168242,y_857149,y_945444,y_963853,y_971449,y_980818,y_983269,y_998710,y_1004663])
 
 input_X = np.zeros([10,1,45,45])
+id_arr = np.array([51677,168242,857149,945444,963853,971449,980818,983269,998710,1004663])
 
 #Generate Coulomb matrix with 2 conforms. Should be a 2d vector
 for i in range(len(smile_arr)):
@@ -41,27 +42,20 @@ for i in range(len(smile_arr)):
     azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
     coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45, remove_hydrogens=True)
     features = coulomb_mat(azo_mol)
-    #print(str(i) + " done")
     input_X[i] = features
 
-print("TESTING COULOMB DATASET INPUT \n")
-for x in range(len(input_X)):
-    print(input_X[x])
-    print("\n")
-    print(output_y[x])
-    print("\n")
+#print("TESTING COULOMB DATASET INPUT \n")
+#for x in range(len(input_X)):
+#    print(input_X[x])
+#    print("\n")
+#    print(output_y[x])
+#    print("\n")
 
-#Test set from Deepchem
-tasks, datasets, transformers = dc.molnet.load_delaney(featurizer='GraphConv')
-train_dataset, valid_dataset, test_dataset = datasets
+dataset = NumpyDataset(X=input_X,y=output_y,ids=id_arr, n_tasks=1)
 
-print(test_dataset)
-print("\n")
-print(test_dataset.y)
-print("\n")
-print(test_dataset.X)
-
-
+print(dataset.X)
+print(dataset.y)
+print(dataset.ids)
 
 
 #Generate Coulomb matrix
