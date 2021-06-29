@@ -1,0 +1,122 @@
+|===============================================================================
+|
+|  DFTB+ development version (commit: 6753566)
+|
+|  Copyright (C) 2018  DFTB+ developers group
+|
+|===============================================================================
+|
+|  When publishing results obtained with DFTB+, please cite the following
+|  reference:
+|
+|  * B. Aradi, B. Hourahine and T. Frauenheim,
+|    DFTB+, a Sparse Matrix-Based Implementation of the DFTB Method,
+|    J. Phys. Chem. A, 111 5678 (2007).  [doi: 10.1021/jp070186p]
+|
+|  You should also cite additional publications crediting the parametrization
+|  data you use. Please consult the documentation of the SK-files for the
+|  references.
+|
+|===============================================================================
+
+
+***  Parsing and initializing
+
+Parser version: 6
+
+Interpreting input file 'dftb_in.hsd'
+--------------------------------------------------------------------------------
+Reading SK-files:
+  ../dftb_bin/3ob-3-1/C-C.skf
+  ../dftb_bin/3ob-3-1/C-O.skf
+  ../dftb_bin/3ob-3-1/C-F.skf
+  ../dftb_bin/3ob-3-1/C-N.skf
+  ../dftb_bin/3ob-3-1/C-H.skf
+  ../dftb_bin/3ob-3-1/O-O.skf
+  ../dftb_bin/3ob-3-1/O-F.skf
+  ../dftb_bin/3ob-3-1/O-N.skf
+  ../dftb_bin/3ob-3-1/O-H.skf
+  ../dftb_bin/3ob-3-1/F-F.skf
+  ../dftb_bin/3ob-3-1/F-N.skf
+  ../dftb_bin/3ob-3-1/F-H.skf
+  ../dftb_bin/3ob-3-1/N-N.skf
+  ../dftb_bin/3ob-3-1/N-H.skf
+  ../dftb_bin/3ob-3-1/H-H.skf
+Done.
+
+
+Processed input in HSD format written to 'dftb_pin.hsd'
+
+Starting initialization...
+--------------------------------------------------------------------------------
+OpenMP threads:              4
+Chosen random seed:               625044051
+Mode:                        Conjugate gradient relaxation
+Self consistent charges:     Yes
+SCC-tolerance:                 0.100000E-04
+Max. scc iterations:                    100
+Shell resolved Hubbard:      No
+Spin polarisation:           Yes
+Nr. of up electrons:            63.000000
+Nr. of down electrons:          63.000000
+Periodic boundaries:         No
+Diagonalizer:                Relatively robust
+Mixer:                       Broyden mixer
+Mixing parameter:                  0.200000
+Maximal SCC-cycles:                     100
+Nr. of chrg. vec. in memory:              0
+Nr. of moved atoms:                      35
+Max. nr. of geometry steps:           20000
+Force tolerance:               0.100000E-03
+Force evaluation method:     Traditional
+Electronic temperature:        0.100000E-07
+Initial charges:             Set automatically (system chrg:   0.000E+00)
+Included shells:             C:  s, p
+                             O:  s, p
+                             F:  s, p
+                             N:  s, p
+                             H:  s
+Spin coupling constants:     C   1(s)-1(s):  -0.230000E-01
+                             C   1(s)-2(p):  -0.230000E-01
+                             C   2(p)-1(s):  -0.230000E-01
+                             C   2(p)-2(p):  -0.230000E-01
+                             O   1(s)-1(s):  -0.280000E-01
+                             O   1(s)-2(p):  -0.280000E-01
+                             O   2(p)-1(s):  -0.280000E-01
+                             O   2(p)-2(p):  -0.280000E-01
+                             F   1(s)-1(s):  -0.280000E-01
+                             F   1(s)-2(p):  -0.280000E-01
+                             F   2(p)-1(s):  -0.280000E-01
+                             F   2(p)-2(p):  -0.280000E-01
+                             N   1(s)-1(s):  -0.260000E-01
+                             N   1(s)-2(p):  -0.260000E-01
+                             N   2(p)-1(s):  -0.260000E-01
+                             N   2(p)-2(p):  -0.260000E-01
+                             H   1(s)-1(s):  -0.720000E-01
+Full 3rd order correction    Yes
+Damped SCC                   Yes
+Damped species(s):           H                                                 
+Extra options:
+                             Mulliken analysis
+Force type                   original
+
+Geometry converged
+
+--------------------------------------------------------------------------------
+DFTB+ running times                          cpu [s]             wall clock [s]
+--------------------------------------------------------------------------------
+Pre-SCC initialisation                 +    17.35  (  3.4%)      2.43  (  3.3%)
+      Sparse H0 and S build                  9.97  (  2.0%)      1.43  (  2.0%)
+SCC                                    +   403.29  ( 79.0%)     57.77  ( 79.1%)
+  Diagonalisation                          228.67  ( 44.8%)     32.64  ( 44.7%)
+      Sparse to dense                       23.10  (  4.5%)      3.26  (  4.5%)
+      Dense to sparse                       12.47  (  2.4%)      1.77  (  2.4%)
+  Density matrix creation                    1.15  (  0.2%)      0.16  (  0.2%)
+Post-SCC processing                    +    89.90  ( 17.6%)     12.86  ( 17.6%)
+  Eigenvector writing                        0.02  (  0.0%)      0.00  (  0.0%)
+  Energy-density matrix creation             8.30  (  1.6%)      1.23  (  1.7%)
+  Force calculation                         79.32  ( 15.5%)     11.34  ( 15.5%)
+--------------------------------------------------------------------------------
+Missing                                +     0.07  (  0.0%)      0.01  (  0.0%)
+Total                                  =   510.61  (100.0%)     73.07  (100.0%)
+--------------------------------------------------------------------------------

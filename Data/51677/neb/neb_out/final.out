@@ -1,0 +1,135 @@
+|===============================================================================
+|
+|  DFTB+ development version (commit: 6753566)
+|
+|  Copyright (C) 2018  DFTB+ developers group
+|
+|===============================================================================
+|
+|  When publishing results obtained with DFTB+, please cite the following
+|  reference:
+|
+|  * B. Aradi, B. Hourahine and T. Frauenheim,
+|    DFTB+, a Sparse Matrix-Based Implementation of the DFTB Method,
+|    J. Phys. Chem. A, 111 5678 (2007).  [doi: 10.1021/jp070186p]
+|
+|  You should also cite additional publications crediting the parametrization
+|  data you use. Please consult the documentation of the SK-files for the
+|  references.
+|
+|===============================================================================
+
+
+***  Parsing and initializing
+
+Parser version: 6
+
+Interpreting input file 'dftb_in.hsd'
+--------------------------------------------------------------------------------
+Reading SK-files:
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/C-C.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/C-O.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/C-N.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/C-H.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/O-O.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/O-N.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/O-H.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/N-N.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/N-H.skf
+  /var/lib/condor/execute/dir_16489/neb_bin/3ob-3-1/H-H.skf
+Done.
+WARNING!
+-> The following 7 node(s) have been ignored by the parser:
+(1)
+Path: dftb_in/Hamiltonian/DFTB/HubbardDerivs/F
+Line: 23-23 (File: dftb_in.hsd)
+(2)
+Path: dftb_in/Hamiltonian/DFTB/HubbardDerivs/S
+Line: 27-27 (File: dftb_in.hsd)
+(3)
+Path: dftb_in/Hamiltonian/DFTB/MaxAngularMomentum/F
+Line: 31-31 (File: dftb_in.hsd)
+(4)
+Path: dftb_in/Hamiltonian/DFTB/MaxAngularMomentum/S
+Line: 35-35 (File: dftb_in.hsd)
+(5)
+Path: dftb_in/Hamiltonian/DFTB/SpinConstants/F
+Line: 45-45 (File: dftb_in.hsd)
+(6)
+Path: dftb_in/Hamiltonian/DFTB/SpinConstants/S
+Line: 49-49 (File: dftb_in.hsd)
+(7)
+Path: dftb_in/Analysis
+Line: 62-64 (File: dftb_in.hsd)
+
+
+
+Processed input in HSD format written to 'dftb_pin.hsd'
+
+Starting initialization...
+--------------------------------------------------------------------------------
+OpenMP threads:              4
+Chosen random seed:               274635751
+Mode:                        Conjugate gradient relaxation
+Self consistent charges:     Yes
+SCC-tolerance:                 0.100000E-04
+Max. scc iterations:                    100
+Shell resolved Hubbard:      No
+Spin polarisation:           Yes
+Nr. of up electrons:            60.000000
+Nr. of down electrons:          60.000000
+Periodic boundaries:         No
+Diagonalizer:                Relatively robust
+Mixer:                       Broyden mixer
+Mixing parameter:                  0.200000
+Maximal SCC-cycles:                     100
+Nr. of chrg. vec. in memory:              0
+Nr. of moved atoms:                      35
+Max. nr. of geometry steps:           20000
+Force tolerance:               0.100000E-03
+Force evaluation method:     Traditional
+Electronic temperature:        0.950000E-03
+Initial charges:             Set automatically (system chrg:   0.000E+00)
+Included shells:             C:  s, p
+                             O:  s, p
+                             N:  s, p
+                             H:  s
+Spin coupling constants:     C   1(s)-1(s):  -0.230000E-01
+                             C   1(s)-2(p):  -0.230000E-01
+                             C   2(p)-1(s):  -0.230000E-01
+                             C   2(p)-2(p):  -0.230000E-01
+                             O   1(s)-1(s):  -0.280000E-01
+                             O   1(s)-2(p):  -0.280000E-01
+                             O   2(p)-1(s):  -0.280000E-01
+                             O   2(p)-2(p):  -0.280000E-01
+                             N   1(s)-1(s):  -0.260000E-01
+                             N   1(s)-2(p):  -0.260000E-01
+                             N   2(p)-1(s):  -0.260000E-01
+                             N   2(p)-2(p):  -0.260000E-01
+                             H   1(s)-1(s):  -0.720000E-01
+Full 3rd order correction    Yes
+Damped SCC                   Yes
+Damped species(s):           H                                                 
+Extra options:
+                             Mulliken analysis
+Force type                   original
+
+Geometry converged
+
+--------------------------------------------------------------------------------
+DFTB+ running times                          cpu [s]             wall clock [s]
+--------------------------------------------------------------------------------
+Pre-SCC initialisation                 +     0.24  (  3.8%)      0.04  (  4.2%)
+      Sparse H0 and S build                  0.14  (  2.2%)      0.02  (  2.3%)
+SCC                                    +     4.72  ( 75.6%)      0.67  ( 75.3%)
+  Diagonalisation                            2.68  ( 42.9%)      0.39  ( 43.2%)
+      Sparse to dense                        0.27  (  4.4%)      0.04  (  4.2%)
+      Dense to sparse                        0.17  (  2.7%)      0.02  (  2.2%)
+  Density matrix creation                    0.02  (  0.3%)      0.00  (  0.1%)
+Post-SCC processing                    +     1.28  ( 20.5%)      0.18  ( 20.2%)
+  Energy-density matrix creation             0.09  (  1.5%)      0.01  (  0.9%)
+  Force calculation                          1.10  ( 17.6%)      0.16  ( 17.5%)
+--------------------------------------------------------------------------------
+Missing                                +     0.00  (  0.1%)      0.00  (  0.2%)
+Total                                  =     6.24  (100.0%)      0.90  (100.0%)
+--------------------------------------------------------------------------------

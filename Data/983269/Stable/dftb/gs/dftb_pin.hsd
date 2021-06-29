@@ -1,0 +1,144 @@
+Geometry = GenFormat {
+31 C
+C O F N H
+1   1  -4.4592644637E+00  -2.0635106963E-01   9.7536337003E-01
+2   2  -3.2434871532E+00  -1.6769398921E-01   2.4165174551E-01
+3   1  -3.0244896821E+00   9.0560692181E-01  -5.8343100508E-01
+4   1  -3.9387174144E+00   1.9277876320E+00  -8.6241100797E-01
+5   3  -5.1537767378E+00   1.9576600878E+00  -2.9585178806E-01
+6   1  -3.6268617933E+00   2.9577033086E+00  -1.7496962513E+00
+7   1  -2.3935734206E+00   2.9746305686E+00  -2.3908108935E+00
+8   1  -1.4698570042E+00   1.9650322850E+00  -2.1265038581E+00
+9   1  -1.7569658370E+00   9.4603435851E-01  -1.2018615734E+00
+10   4  -7.8935534037E-01  -6.3028098322E-02  -9.7997377150E-01
+11   4   0.0000000000E+00   0.0000000000E+00   0.0000000000E+00
+12   1   9.6367025328E-01  -1.0093953982E+00   2.1697952525E-01
+13   1   5.7850485300E-01  -2.2013937002E+00   8.5064823625E-01
+14   3  -6.9105160405E-01  -2.3684609331E+00   1.2508846072E+00
+15   1   1.4761461567E+00  -3.2422353578E+00   1.0763829468E+00
+16   1   2.7906791734E+00  -3.1199831909E+00   6.4476720452E-01
+17   1   3.1888327044E+00  -1.9638252533E+00  -2.7318879159E-02
+18   1   2.2810012978E+00  -9.1116280312E-01  -2.6327892894E-01
+19   1   2.8077773181E+00   2.5726648793E-01  -1.0252025216E+00
+20   2   4.0023527108E+00   3.9555654741E-01  -1.2414391740E+00
+21   2   1.9012669668E+00   1.1440956059E+00  -1.4806776274E+00
+22   5  -4.4309832827E+00  -1.0915704118E+00   1.6182269819E+00
+23   5  -5.3190315844E+00  -3.1266163619E-01   3.0647151251E-01
+24   5  -4.5587681358E+00   6.6893137273E-01   1.6254444902E+00
+25   5  -4.3614884210E+00   3.7337565821E+00  -1.9452576941E+00
+26   5  -2.1524182033E+00   3.7639841736E+00  -3.0990348801E+00
+27   5  -5.1489202598E-01   1.9700335731E+00  -2.6491788487E+00
+28   5   1.1372143976E+00  -4.1419412271E+00   1.5816586333E+00
+29   5   3.5018761240E+00  -3.9254680657E+00   8.1437033751E-01
+30   5   4.2176955926E+00  -1.8880558239E+00  -3.8097813942E-01
+31   5   9.7352556114E-01   9.8354465335E-01  -1.2048056375E+00
+}
+Driver = ConjugateGradient {
+  MaxSteps = 20000
+  AppendGeometries = Yes
+  OutputPrefix = 'opt'
+  LatticeOpt = No
+  MovedAtoms = "1:-1"
+  MaxAtomStep = 0.20000000000000001
+  MaxForceComponent = 1.0000000000000000E-004
+  ConvergentForcesOnly = Yes
+  Constraints = {}
+}
+Hamiltonian = DFTB {
+  Charge = 0
+  SCC = Yes
+  SpinPolarisation = Colinear {
+    UnpairedElectrons = 0
+    RelaxTotalSpin = No
+    InitialSpins = {}
+  }
+  SpinConstants = {
+    H = -0.072
+    C = -0.023
+    N = -0.026
+    O = -0.028
+    F = -0.028
+    ShellResolvedSpin = No
+  }
+  ThirdOrderFull = Yes
+  HCorrection = Damping {
+    Exponent = 4.05
+  }
+  HubbardDerivs = {
+    H = -0.1857
+    C = -0.1492
+    N = -0.1535
+    O = -0.1575
+    F = -0.1623
+  }
+  MaxAngularMomentum = {
+    H = "s"
+    C = "p"
+    N = "p"
+    O = "p"
+    F = "p"
+  }
+  SlaterKosterFiles = Type2FileNames {
+    Prefix = "../dftb_bin/3ob-3-1/"
+    Separator = '-'
+    Suffix = '.skf'
+    LowerCaseTypeName = No
+  }
+  NonAufbau = No
+  SpinPurify = Yes
+  MOM = No
+  GroundGuess = No
+  PolynomialRepulsive = {}
+  OrbitalResolvedSCC = No
+  ReadInitialCharges = No
+  InitialCharges = {}
+  SCCTolerance = 1.0000000000000001E-005
+  Mixer = Broyden {
+    MixingParameter = 0.20000000000000001
+    InverseJacobiWeight = 1.0000000000000000E-002
+    MinimalWeight = 1.0000000000000000
+    MaximalWeight = 100000.00000000000
+    WeightFactor = 1.0000000000000000E-002
+  }
+  ElectricField = {}
+  Filling = Fermi {
+    Temperature = 0.0000000000000000
+  }
+  Eigensolver = RelativelyRobust {}
+  MaxSCCIterations = 100
+  Dispersion = {}
+  ThirdOrder = No
+  Differentiation = FiniteDiff {
+    Delta = 1.2207031250000000E-004
+  }
+  ForceEvaluation = "Traditional"
+}
+ParserOptions = {
+  ParserVersion = 6
+  WriteHSDInput = Yes
+  WriteXMLInput = No
+  StopAfterParsing = No
+  IgnoreUnprocessedNodes = No
+}
+Analysis = {
+  ProjectStates = {}
+  MullikenAnalysis = Yes
+  AtomResolvedEnergies = No
+  WriteEigenvectors = No
+  WriteBandOut = Yes
+  CalculateForces = No
+}
+ExcitedState = {}
+Options = {
+  WriteDetailedOut = Yes
+  WriteAutotestTag = No
+  WriteDetailedXML = No
+  WriteResultsTag = No
+  RandomSeed = 0
+  WriteHS = No
+  WriteRealHS = No
+  MinimiseMemoryUsage = No
+  ShowFoldedCoords = No
+  TimingVerbosity = -1
+  WriteChargesAsText = No
+}
