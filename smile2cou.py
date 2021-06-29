@@ -23,7 +23,7 @@ input_X = np.zeros([10,0,45,45])
 
 #Generate Coulomb matrix with 2 conforms. Should be a 2d vector
 for i in range(len(smile_arr)):
-    generator = dc.utils.ConformerGenerator(max_conformers=1)
+    generator = dc.utils.ConformerGenerator(max_conformers=0)
     azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
     coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45)
     features = coulomb_mat(azo_mol)
