@@ -78,6 +78,6 @@ print(valid_score)
 print("Test Scores: ")
 print(test_score)
 
-#generated_batch = dc.default_generator(data, epochs=2, mode='fit', deterministic=False, pad_batches=True)
-#print(generated_batch)
+generated_batch = dc.models.DTNNModel.default_generator(data, epochs=2, mode='fit', deterministic=False, pad_batches=True)
+print(generated_batch)
 
