@@ -2,11 +2,11 @@ from rdkit import Chem
 import deepchem as dc
 import numpy as np
 
-#TODO
-#Robust dataset generation from the file structure in cluster.
-#Dataset generation should only be done once.
+# TODO
+# Robust dataset generation from the file structure in cluster.
+# Dataset generation should only be done once.
 
-#Meta smiles strings randomly sampled from Batch 4 and 8
+# Meta smiles strings randomly sampled from Batch 4 and 8
 m_51677 = 'COc1cc(C#N)c(\\N=N/c2ccccc2C(=O)O)c(C(=O)O)c1'
 m_168242 = 'Cc1ccc(-c2ccccc2)c(-c2ccccc2)c1\\N=N/c1ccccc1F'
 m_857149 = 'COc1c(C(=O)O)ccc(F)c1\\N=N/c1cc(C#N)cc(C(=O)O)c1'
@@ -19,7 +19,7 @@ m_998710 = 'Cc1cc(C(=O)O)cc(\\N=N/c2cc(F)cc(C(=O)O)c2)c1C'
 m_1004663 = 'N#Cc1ccc(C(=O)O)c(C#N)c1\\N=N/c1cc(C(=O)O)ccc1F'
 smile_arr = [m_51677,m_168242,m_857149,m_945444,m_963853,m_971449,m_980818,m_983269,m_998710,m_1004663]
 
-#Energy difference calculated from NEB.out. Is this ground state difference?
+# Energy difference calculated from NEB.out. Is this ground state difference?
 # -metastable - (-stable)
 y_51677 = [-1501.474570+1501.463127]
 y_168242 = [-1604.911934+1604.999148]
@@ -33,10 +33,10 @@ y_998710 = [-1486.485683+1486.563960]
 y_1004663 = [-1554.285506+1554.414150]
 output_y = np.array([y_51677,y_168242,y_857149,y_945444,y_963853,y_971449,y_980818,y_983269,y_998710,y_1004663])
 
-input_X = np.zeros([10,1,45,45])
+input_X = np.zeros([10,45,45])
 id_arr = np.array([51677,168242,857149,945444,963853,971449,980818,983269,998710,1004663])
 
-#Generate Coulomb matrix with 2 conforms. Should be a 2d vector
+# Generate Coulomb matrix with 2 conforms. Should be a 2d vector
 for i in range(len(smile_arr)):
     generator = dc.utils.ConformerGenerator(max_conformers=1)
     azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
@@ -44,18 +44,24 @@ for i in range(len(smile_arr)):
     features = coulomb_mat(azo_mol)
     input_X[i] = features
 
-#print("TESTING COULOMB DATASET INPUT \n")
-#for x in range(len(input_X)):
+# print("TESTING COULOMB DATASET INPUT \n")
+# for x in range(len(input_X)):
 #    print(input_X[x])
 #    print("\n")
 #    print(output_y[x])
 #    print("\n")
 
-dataset = dc.data.NumpyDataset(X=input_X,y=output_y,ids=id_arr, n_tasks=1)
+data = dc.data.NumpyDataset(X=input_X,y=output_y,ids=id_arr, n_tasks=1)
+# Splits dataset into train/validation/test
+dataset = dc.split(data)
+print(dataset.train)
 
-print(dataset.X)
-print(dataset.y)
-print(dataset.ids)
+model = dc.models.DTNNModel(
+    n_tasks=1,
+    n_embedding=45,
+    mode="regression",
+    dropout=0.5
+)
 
 
 #Generate Coulomb matrix
