@@ -79,5 +79,6 @@ print("Test Scores: ")
 print(test_score)
 
 generated_batch = dc.models.DTNNModel.default_generator(self=model, dataset=data, epochs=2, mode='fit', deterministic=False, pad_batches=True)
-print(generated_batch([2]))
+compute_features = dc.modls.DTNNModel.compute_features_on_batch(data.X)
+print(compute_features)
 
