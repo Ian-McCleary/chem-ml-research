@@ -56,6 +56,7 @@ data = dc.data.NumpyDataset(X=input_X, y=output_y, ids=id_arr, n_tasks=1)
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
 print(len(train_dataset))
+print(output_y)
 
 metric = [
     dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
