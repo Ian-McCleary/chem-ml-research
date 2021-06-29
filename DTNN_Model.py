@@ -61,7 +61,8 @@ model = dc.models.DTNNModel(
     n_embedding=10,
     # n_hidden=45,
     mode="regression",
-    dropout=0.1
+    dropout=0.1,
+    learning_rate=0.001
 )
 model.fit(train_dataset)
 # How well the model fit's the training subset of our data
@@ -77,6 +78,6 @@ print(valid_score)
 print("Test Scores: ")
 print(test_score)
 
-generated_batch = dc.default_generator(data, epochs=2, mode='fit', deterministic=False, pad_batches=True)
-print(generated_batch)
+#generated_batch = dc.default_generator(data, epochs=2, mode='fit', deterministic=False, pad_batches=True)
+#print(generated_batch)
 
