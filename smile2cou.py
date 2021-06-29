@@ -12,8 +12,10 @@ tasks, datasets, transformers = dc.molnet.load_delaney(featurizer='GraphConv')
 train_dataset, valid_dataset, test_dataset = datasets
 
 print(test_dataset)
-
-
+print("\n")
+print(test_dataset.y)
+print("\n")
+print(test_dataset.x)
 
 #Generate Coulomb matrix
 #generator = dc.utils.ConformerGenerator(max_conformers=5)
