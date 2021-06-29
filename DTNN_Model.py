@@ -44,13 +44,6 @@ for i in range(len(smile_arr)):
     features = coulomb_mat(azo_mol)
     input_X[i] = features
 
-# print("TESTING COULOMB DATASET INPUT \n")
-# for x in range(len(input_X)):
-#    print(input_X[x])
-#    print("\n")
-#    print(output_y[x])
-#    print("\n")
-
 data = dc.data.NumpyDataset(X=input_X, y=output_y, ids=id_arr, n_tasks=1)
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
@@ -59,8 +52,8 @@ print(len(train_dataset))
 print(output_y)
 
 metric = [
-    dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
-    # dc.metrics.Metric(dc.metrics.pearson_r2_score, mode="regression")
+    dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression"),
+    dc.metrics.Metric(dc.metrics.mean_squared_error, mode="regression")
 ]
 
 model = dc.models.DTNNModel(
