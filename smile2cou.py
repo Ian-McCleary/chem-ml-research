@@ -19,11 +19,11 @@ m_998710 = 'Cc1cc(C(=O)O)cc(\\N=N/c2cc(F)cc(C(=O)O)c2)c1C'
 m_1004663 = 'N#Cc1ccc(C(=O)O)c(C#N)c1\\N=N/c1cc(C(=O)O)ccc1F'
 smile_arr = [m_51677,m_168242,m_857149,m_945444,m_963853,m_971449,m_980818,m_983269,m_998710,m_1004663]
 
-input_X = np.zeros([10,2,45,45])
+input_X = np.zeros([10,1,45,45])
 
 #Generate Coulomb matrix with 2 conforms. Should be a 2d vector
 for i in range(len(smile_arr)):
-    generator = dc.utils.ConformerGenerator(max_conformers=2)
+    generator = dc.utils.ConformerGenerator(max_conformers=1)
     azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
     coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45, remove_hydrogens=True)
     features = coulomb_mat(azo_mol)
