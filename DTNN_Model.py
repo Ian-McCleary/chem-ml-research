@@ -67,7 +67,7 @@ model = dc.models.DTNNModel(
     n_tasks=1,
     n_embedding=45,
     mode="regression",
-    dropout=0.1
+    dropout=0.01
 )
 model.fit(train_dataset)
 
