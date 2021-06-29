@@ -63,21 +63,15 @@ model = dc.models.DTNNModel(
     dropout=0.1
 )
 model.fit(train_dataset)
-
+# How well the model fit's the training subset of our data
 train_scores = model.evaluate(train_dataset, metric)
+# Validation of the model over several training iterations.
 valid_score = model.evaluate(valid_dataset, metric)
+# How well the model generalizes the rest of the data
 test_score = model.evaluate(test_dataset, metric)
+print("Training Scores: ")
 print(train_scores)
+print("Validity Scores: ")
 print(valid_score)
+print("Test Scores: ")
 print(test_score)
-
-
-
-#Generate Coulomb matrix
-#generator = dc.utils.ConformerGenerator(max_conformers=5)
-#azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile1))
-#print("Number of available conformers for propane: ", len(azo_mol.GetConformers()))
-#coulomb_mat = dc.feat.CoulombMatrix(max_atoms=50)
-#features = coulomb_mat(azo_mol)
-#print(features)
-
