@@ -57,7 +57,10 @@ splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
 print(len(train_dataset))
 
-metric = dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
+metric = [
+    dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression"),
+    dc.metrics.Metric(dc.metrics.pearson_r2_score, mode="regression")
+]
 
 model = dc.models.DTNNModel(
     n_tasks=1,
