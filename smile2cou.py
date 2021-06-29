@@ -51,7 +51,7 @@ for i in range(len(smile_arr)):
 #    print(output_y[x])
 #    print("\n")
 
-dataset = NumpyDataset(X=input_X,y=output_y,ids=id_arr, n_tasks=1)
+dataset = dc.data.NumpyDataset(X=input_X,y=output_y,ids=id_arr, n_tasks=1)
 
 print(dataset.X)
 print(dataset.y)
