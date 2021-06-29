@@ -70,7 +70,9 @@ model.fit(train_dataset)
 train_scores = model.evaluate(train_dataset, metric)
 valid_score = model.evaluate(valid_dataset, metric)
 test_score = model.evaluate(test_dataset, metric)
-print(train_scores + ", " + valid_score + ", " + test_score)
+print(train_scores)
+print(valid_score)
+print(test_score)
 
 
 
