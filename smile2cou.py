@@ -25,9 +25,9 @@ input_X = np.zeros([10,2,45,45])
 for i in range(len(smile_arr)):
     generator = dc.utils.ConformerGenerator(max_conformers=2)
     azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
-    coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45)
+    coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45, remove_hydrogens=True)
     features = coulomb_mat(azo_mol)
-    print(str(i) + "done")
+    print(str(i) + " done")
     input_X[i] = features
 
 print("TESTING COULOMB DATASET INPUT \n")
