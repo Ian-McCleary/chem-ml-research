@@ -15,7 +15,7 @@ print(test_dataset)
 print("\n")
 print(test_dataset.y)
 print("\n")
-print(test_dataset.x)
+print(test_dataset.X)
 
 #Generate Coulomb matrix
 #generator = dc.utils.ConformerGenerator(max_conformers=5)
