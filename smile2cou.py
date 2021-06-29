@@ -53,7 +53,7 @@ for i in range(len(smile_arr)):
 
 data = dc.data.NumpyDataset(X=input_X,y=output_y,ids=id_arr, n_tasks=1)
 # Splits dataset into train/validation/test
-dataset = dc.splits.RandomSplitter(data)
+dataset = dc.splits(data)
 print(dataset.train)
 
 model = dc.models.DTNNModel(
