@@ -58,8 +58,8 @@ metric = [
 
 model = dc.models.DTNNModel(
     n_tasks=1,
-    n_embedding=30,
-    n_hidden=15,
+    n_embedding=10,
+    #n_hidden=15,
     mode="regression",
     dropout=0.1,
     learning_rate=0.001
