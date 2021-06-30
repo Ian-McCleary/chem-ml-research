@@ -4,7 +4,9 @@ import os
 start_dir = "./Data/"
 
 directory_list = os.listdir(start_dir)
-print(directory_list)
+for folder in directory_list:
+    mol_list = os.listdir(folder)
+    print(mol_list)
 
 
             #rel_path1 = os.path.relpath(os.path.join(root, subdirectory))
