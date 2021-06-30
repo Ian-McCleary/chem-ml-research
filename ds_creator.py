@@ -13,7 +13,7 @@ for batch in directory_list:
             #Create the path for smile string. Must use os.path.join() and cannot use string + operator
             sstr1 = "Meta"
             s_append1 = os.path.join(mol_path, sstr1)
-            s_filename = mol + "_meta.smiles"
+            s_filename = mol + "_Meta.smiles"
             #smile_append_path = os.path.normpath(smile_append_str)
             smile_rel_path = os.path.join(s_append1, s_filename)
             smile_absolute = os.path.realpath(smile_rel_path)
