@@ -10,6 +10,7 @@ for batch in directory_list:
     for mol in mol_list:
         mol_path = os.path.join(batch_path, mol)
         if os.path.isdir(mol_path):
+            print(mol_path)
             smile_append = "/Meta/" + mol + "_Meta.smiles"
             smile_rel_path = os.path.join(mol_path, smile_append)
             smile_absolute = os.path.realpath(smile_rel_path)
