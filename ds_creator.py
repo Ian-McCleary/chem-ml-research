@@ -12,12 +12,15 @@ for batch in directory_list:
         if os.path.isdir(mol_path):
             smile_append = "/Meta/" + mol + "_Meta.smiles"
             smile_rel_path = os.path.join(mol_path, smile_append)
-            if os.path.isfile(smile_rel_path):
+            smile_absolute = os.path.realpath(smile_rel_path)
+            if os.path.isfile(smile_absolute):
                 print("found!")
                 f = open(os.path.realpath(smile_rel_path), "r")
                 print(f.readline())
-
-
+            else:
+                print("not a smile path")
+        else:
+            print("not a mol_path")
 
 
             #rel_path1 = os.path.relpath(os.path.join(root, subdirectory))
