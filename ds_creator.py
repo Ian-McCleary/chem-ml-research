@@ -4,10 +4,12 @@ import os
 start_dir = "./Data/"
 
 directory_list = os.listdir(start_dir)
-for folder in directory_list:
-    mol_path = os.path.join(start_dir, folder)
-    mol_list = os.listdir(mol_path)
-    print(mol_list)
+for batch in directory_list:
+    batch_path = os.path.join(start_dir, batch)
+    mol_list = os.listdir(batch_path)
+    for mol in mol_list:
+        mol_path = os.path.join(batch_path, mol)
+        print(mol)
 
 
             #rel_path1 = os.path.relpath(os.path.join(root, subdirectory))
