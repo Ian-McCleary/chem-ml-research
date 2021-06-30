@@ -4,8 +4,6 @@ import os
 #currently named Azo_Data_1 on cluster
 start_dir = "./Data/"
 
-start_ds_creation()
-
 # TODO Add parameters which allow specific data collection fields and create customizable featurizer function
 def start_ds_creation():
     directory_list = os.listdir(start_dir)
