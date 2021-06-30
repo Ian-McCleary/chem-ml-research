@@ -5,7 +5,8 @@ start_dir = "./Data/"
 
 directory_list = os.listdir(start_dir)
 for folder in directory_list:
-    mol_list = os.listdir(folder)
+    mol_path = os.path.join(start_dir, folder)
+    mol_list = os.listdir(mol_path)
     print(mol_list)
 
 
