@@ -9,7 +9,15 @@ for batch in directory_list:
     mol_list = os.listdir(batch_path)
     for mol in mol_list:
         mol_path = os.path.join(batch_path, mol)
-        print(mol)
+        if os.path.isdir(mol_path):
+            smile_append = "/Meta/" + mol + "_Meta.smiles"
+            smile_rel_path = os.path.join(mol_path, smile_append)
+            if os.path.isfile(smile_rel_path):
+                print("found!")
+                f = open(os.path.realpath(smile_rel_path), "r")
+                print(f.readline())
+
+
 
 
             #rel_path1 = os.path.relpath(os.path.join(root, subdirectory))
