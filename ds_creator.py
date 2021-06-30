@@ -13,6 +13,7 @@ for batch in directory_list:
             smile_append = "/Meta/" + mol + "_Meta.smiles"
             smile_rel_path = os.path.join(mol_path, smile_append)
             smile_absolute = os.path.realpath(smile_rel_path)
+            print(smile_absolute)
             if os.path.isfile(smile_absolute):
                 print("found!")
                 f = open(os.path.realpath(smile_rel_path), "r")
