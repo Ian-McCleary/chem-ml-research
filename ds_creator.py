@@ -12,5 +12,5 @@ for root, subdirectories, files in os.walk(start_dir):
             name, extension = os.path.splitext(rel_path2)
             if "smiles" in extension:
                 print("found!")
-                f = open(rel_path2, "r")
+                f = open(os.path.realpath(file), "r")
                 print(f.readline())
