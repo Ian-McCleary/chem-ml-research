@@ -18,7 +18,7 @@ for batch in directory_list:
             smile_rel_path = os.path.join(s_append1, s_filename)
             smile_absolute = os.path.realpath(smile_rel_path)
             print(smile_rel_path)
-            if os.path.isfile(smile_absolute):
+            if os.path.isfile(smile_rel_path):
                 print("found!")
                 f = open(os.path.realpath(smile_rel_path), "r")
                 print(f.readline())
