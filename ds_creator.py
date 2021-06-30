@@ -6,6 +6,7 @@ start_dir = "./Data/"
 for root, subdirectories, files in os.walk(start_dir):
     for subdirectory in subdirectories:
         for file in files:
-            name, extension = os.path.splitext(os.path.relpath())
+            rel_path = os.path.relpath(root, subdirectories, files)
+            name, extension = os.path.splitext(rel_path)
             if "smiles" in extension:
                 print("found!")
