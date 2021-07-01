@@ -9,23 +9,43 @@ start_dir = "./Data/"
 # TODO Add parameters which allow specific data collection fields. Remove print statements. Add variables to dataset object type & write to file
 # Driver method for dataset creation.
 def start_ds_creation(args):
-    create_ds_obj(args)
+    #create initial np arrays
+    id_arr = np.zeros([args.count])
+
+    # For coulomb matrix, input_arr must be [args.count, max_atoms, max_atoms]
+    input_arr = np.zeros([args.count])
+
+    if args.eisomerization:
+        eiso_arr = np.zeros([args.count])
+    if args.reverse_isomerization:
+        riso_arr = np.zeros([args.count])
+    if args.vertical_excitation:
+        vexci_arr = np.zeros([args.count])
+    if args.internal_conversion:
+        inc_arr = np.zeros([args.count])
+
     mol_count = 0
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
         batch_path = os.path.join(start_dir, batch)
         mol_list = os.listdir(batch_path)
+
         for molecule in mol_list:
             mol_path = os.path.join(batch_path, molecule)
             if os.path.isdir(mol_path):
-                get_smiles(mol_path, molecule)
+                #Pass smile string to featurizer, then add to input
+                input_arr[mol_count] = get_smiles(mol_path, molecule)
+                id_arr[mol_count] = molecule
 
                 neb_path = get_neb_path(mol_path)
-                get_barrier_height(neb_path)
-                get_meta_energy_dif(neb_path)
+                if args.reverse_isomerization:
+                    riso_arr[mol_count] = get_barrier_height(neb_path)
+                if args.eisomerization:
+                    eiso_arr[mol_count] = get_meta_energy_dif(neb_path)
+                if args.vertical_excitation:
+                    rel_gs_folder = get_gs_ex_path(mol_path, "gs")
+                    get_electronic_dif(rel_gs_folder)
 
-                rel_gs_folder = get_gs_ex_path(mol_path, "gs")
-                get_electronic_dif(rel_gs_folder)
                 mol_count += 1
                 print("\n")
             else:
@@ -35,25 +55,9 @@ def start_ds_creation(args):
         if mol_count >= args.count:
             break
 
-
-# Creates the multidimensional object used to store specified input and tasks.
-# Sub-arrays are numpy arrays of size args.count
-def create_ds_obj(args):
-    num_lists = 1
-    if args.eisomerization:
-        num_lists  += 1
-    if args.reverse_isomerization:
-        num_lists += 1
-    if args.vertical_excitation:
-        num_lists += 1
-    if args.internal_conversion:
-        num_lists += 1
-    print(num_lists)
-    i = 0
-    while i < num_lists:
-        do = "d"
-
-
+    print(id_arr)
+    print(eiso_arr)
+    print(riso_arr)
 
 
 # Get the path to the excited and ground state dftb folders.
@@ -125,8 +129,10 @@ def get_smiles(rel_molecule_path, molecule_name):
     if os.path.isfile(smile_rel_path):
         f = open(os.path.realpath(smile_rel_path), "r")
         print(f.readline())
+        smile = f.readline()
     else:
         print("Invalid smiles filepath")
+    return smile
 
 # Allows for custom featurizer code for specific models
 def featurize_smiles(smile_string):
