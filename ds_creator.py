@@ -36,12 +36,13 @@ def start_ds_creation(args):
             if os.path.isdir(mol_path):
                 # Pass smile string to featurizer, then add to input
                 input_arr[mol_count] = get_smiles(mol_path, molecule)
+                print(input_arr[mol_count])
                 id_arr[mol_count] = molecule
 
                 output_count = 0
                 neb_path = get_neb_path(mol_path)
                 if args.reverse_isomerization:
-                    output_arr[mol_count,output_count] = au_to_ev(get_barrier_height(neb_path))
+                    output_arr[mol_count, output_count] = au_to_ev(get_barrier_height(neb_path))
                     output_count += 1
                 if args.eisomerization:
                     output_arr[mol_count, output_count] = au_to_ev(get_meta_energy_dif(neb_path))
