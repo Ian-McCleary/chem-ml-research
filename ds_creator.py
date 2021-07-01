@@ -13,7 +13,8 @@ def start_ds_creation(args):
     id_arr = np.zeros([args.count])
 
     # For coulomb matrix, input_arr must be [args.count, max_atoms, max_atoms]
-    input_arr = np.zeros([args.count])
+    #input_arr = np.zeros([args.count])
+    input_arr = [args.count]
 
     if args.eisomerization:
         eiso_arr = np.zeros([args.count])
