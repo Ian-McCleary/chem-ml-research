@@ -118,7 +118,7 @@ def get_barrier_height(neb_path):
         print(f.readline())
         #str_lines = f.readline()
         one_line = f.readline()
-        str_num = one_line[:-1]
+        str_num = one_line[:-5]
         float_num = float(str_num)
         print(float_num)
         return float_num
