@@ -14,17 +14,17 @@ def start_ds_creation(args):
     # create initial np arrays
     id_arr = np.zeros(args.count, dtype=int)
 
-    # For coulomb matrix, input_arr must be [args.count, max_atoms, max_atoms]
+    # For coulomb matrix, input_arr must be np.zeros([args.count, max_atoms, max_atoms])
     # input_arr = np.zeros([args.count, 45, 45])
     input_arr = np.zeros(args.count, dtype=str)
-
+    output_count = 0
     if args.eisomerization:
-        eiso_arr = np.zeros(args.count)
+        output_count += 1
     if args.reverse_isomerization:
-        riso_arr = np.zeros(args.count)
+        output_count += 1
     if args.vertical_excitation:
-        vexci_arr = np.zeros(args.count)
-
+        output_count += 1
+    output_arr = np.zeros([args.count, output_count], dtype=float)
     mol_count = 0
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
@@ -38,18 +38,22 @@ def start_ds_creation(args):
                 input_arr[mol_count] = get_smiles(mol_path, molecule)
                 id_arr[mol_count] = molecule
 
+                output_count = 0
                 neb_path = get_neb_path(mol_path)
                 if args.reverse_isomerization:
-                    riso_arr[mol_count] = au_to_ev(get_barrier_height(neb_path))
+                    output_arr[mol_count,output_count] = au_to_ev(get_barrier_height(neb_path))
+                    output_count += 1
                 if args.eisomerization:
-                    eiso_arr[mol_count] = au_to_ev(get_meta_energy_dif(neb_path))
+                    output_arr[mol_count, output_count] = au_to_ev(get_meta_energy_dif(neb_path))
+                    output_count += 1
                 if args.vertical_excitation:
                     rel_gs_folder = get_gs_ex_path(mol_path, "gs")
                     rel_ex_folder = get_gs_ex_path(mol_path, "ex")
                     gs = get_total_electronic(rel_gs_folder)
                     ex = get_total_electronic(rel_ex_folder)
                     total_electronic_difference = ex-gs
-                    vexci_arr[mol_count] = au_to_ev(total_electronic_difference)
+                    output_arr[mol_count, output_count] = au_to_ev(total_electronic_difference)
+                    output_count += 1
                 mol_count += 1
                 print("\n")
             else:
@@ -60,9 +64,7 @@ def start_ds_creation(args):
             break
 
     print(id_arr)
-    print(eiso_arr)
-    print(riso_arr)
-    print(vexci_arr)
+    print(output_arr)
 
 
 # Allows for custom featurizer code for specific models
