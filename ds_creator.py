@@ -9,14 +9,14 @@ import numpy as np
 start_dir = "./Data/"
 
 
-# Driver method for regression dataset creation.
+# Driver method for multioutput regression dataset creation.
 def start_ds_creation(args):
     # create initial np arrays
     id_arr = np.zeros(args.count, dtype=int)
 
     # For coulomb matrix, input_arr must be np.zeros([args.count, max_atoms, max_atoms])
     # input_arr = np.zeros([args.count, 45, 45])
-    input_arr = np.zeros(args.count, dtype=str)
+    input_arr = np.empty(args.count, dtype=str)
     output_count = 0
     if args.eisomerization:
         output_count += 1
