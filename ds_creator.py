@@ -52,13 +52,13 @@ def start_ds_creation(args):
                     rel_ex_folder = get_gs_ex_path(mol_path, "ex")
                     gs = get_total_electronic(rel_gs_folder)
                     ex = get_total_electronic(rel_ex_folder)
-                    total_electronic_difference = ex-gs
+                    total_electronic_difference = ex - gs
                     output_arr[mol_count, output_count] = au_to_ev(total_electronic_difference)
                     output_count += 1
                 mol_count += 1
                 print("\n")
             else:
-                print("Invalid molecule filepath " + mol_path + " (This may not be a folder)")
+                print("Invalid molecule filepath " + mol_path + " (This may not be a folder)\n")
             if mol_count >= args.count:
                 break
         if mol_count >= args.count:
@@ -76,9 +76,11 @@ def featurize_smiles(smile_string):
     feature = smile_string
     return feature
 
+
 # Convert atomic units to electron volt
 def au_to_ev(au):
-    return 27.211324570273*au
+    return 27.211324570273 * au
+
 
 # Get the path to the stable excited and ground state dftb folders.
 # gs_or_ex parameter is a string "gs" or "ex"
@@ -154,7 +156,9 @@ def get_smiles(rel_molecule_path, molecule_name):
     smile_absolute = os.path.realpath(smile_rel_path)
     if os.path.isfile(smile_rel_path):
         f = open(os.path.realpath(smile_rel_path), "r")
-        smile = f.readline()
+        all_lines = f.readlines()
+        first_line = all_lines[0]
+        smile = first_line
         print(smile)
     return smile
 
