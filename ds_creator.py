@@ -157,10 +157,9 @@ def get_smiles(rel_molecule_path, molecule_name):
     if os.path.isfile(smile_rel_path):
         f = open(os.path.realpath(smile_rel_path), "r")
         all_lines = f.readlines()
-        first_line = all_lines[0]
-        smile = first_line
+        smile = all_lines[0]
         print(smile)
-    return smile
+        return smile
 
 
 def parse_args():
