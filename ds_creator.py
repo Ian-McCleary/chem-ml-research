@@ -5,7 +5,7 @@ import os
 start_dir = "./Data/"
 
 
-# TODO Add parameters which allow specific data collection fields. Remove print statements.
+# TODO Add parameters which allow specific data collection fields. Remove print statements. Add variables to dataset object type
 def start_ds_creation():
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
@@ -17,10 +17,25 @@ def start_ds_creation():
                 get_smiles(mol_path, molecule)
                 neb_path = get_neb_path(mol_path)
                 get_barrier_height(neb_path)
+                get_meta_energy_dif(neb_path)
                 print("\n")
             else:
-                print("Invalid molecule filepath" + mol_path)
+                print("Invalid molecule filepath" + mol_path + " This may not be a folder.")
 
+
+def get_meta_energy_dif(neb_path):
+    out = "neb.out"
+    rel_neb_out = os.path.join(neb_path, out)
+    if os.path.isfile(rel_neb_out):
+        f = open(os.path.realpath(rel_neb_out), "r")
+        all_lines = f.readlines()
+        stable_line = all_lines[2]
+        meta_line = all_lines[4]
+        stable_int = int(stable_line[23:-7])
+        meta_int = int(meta_line[23:-7])
+        energy = meta_int - stable_int
+        print(energy)
+        return energy
 
 # Create the path for neb_out string. Must use os.path.join() and cannot use string + operator
 def get_neb_path(rel_molecule_path):
@@ -48,7 +63,6 @@ def get_smiles(rel_molecule_path, molecule_name):
     s_filename = molecule_name + "_Meta.smiles"
     smile_rel_path = os.path.join(s_append1, s_filename)
     smile_absolute = os.path.realpath(smile_rel_path)
-    print(smile_rel_path)
     if os.path.isfile(smile_rel_path):
         f = open(os.path.realpath(smile_rel_path), "r")
         print(f.readline())
