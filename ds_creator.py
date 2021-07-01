@@ -9,8 +9,6 @@ start_dir = "./Data/"
 # TODO Add parameters which allow specific data collection fields. Remove print statements. Add variables to dataset object type & write to file
 # Driver method for dataset creation.
 def start_ds_creation(args):
-    test = "0.47215574947310124"
-    print(float(test))
     #create initial np arrays
     id_arr = np.zeros([args.count])
 
@@ -118,8 +116,11 @@ def get_barrier_height(neb_path):
     if os.path.isfile(barrier_path):
         f = open(os.path.realpath(barrier_path), "r")
         print(f.readline())
-        str_num = f.readline()
+        str_lines = f.readlines()
+        one_line = str_lines[0]
+        str_num = one_line[:-1]
         float_num = float(str_num)
+        print(float_num)
         return float_num
 
 
