@@ -64,6 +64,7 @@ def start_ds_creation(args):
             break
 
     print(id_arr)
+    print(input_arr)
     print(output_arr)
 
 
