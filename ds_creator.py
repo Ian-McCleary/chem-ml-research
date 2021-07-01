@@ -29,12 +29,12 @@ def get_meta_energy_dif(neb_path):
     if os.path.isfile(rel_neb_out):
         f = open(os.path.realpath(rel_neb_out), "r")
         all_lines = f.readlines()
-        stable_line = all_lines[2]
-        meta_line = all_lines[4]
-        #stable_float = float(stable_line[23:-7])
-        #meta_float = float(meta_line[23:-7])
-        #energy = meta_float - stable_float
-        print(stable_line[23:-7])
+        stable_line = all_lines[3]
+        meta_line = all_lines[5]
+        stable_float = float(stable_line[23:-7])
+        meta_float = float(meta_line[23:-7])
+        energy = meta_float - stable_float
+        print(energy)
         #return energy
 
 # Create the path for neb_out string. Must use os.path.join() and cannot use string + operator
