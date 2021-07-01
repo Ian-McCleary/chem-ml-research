@@ -72,7 +72,7 @@ def featurize_smiles(smile_string):
 
 # Convert atomic units to electron volt
 def au_to_ev(au):
-    return 0.036749405469679*au
+    return 27.211324570273*au
 
 # Get the path to the stable excited and ground state dftb folders.
 # gs_or_ex parameter is a string "gs" or "ex"
