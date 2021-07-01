@@ -31,10 +31,10 @@ def get_meta_energy_dif(neb_path):
         all_lines = f.readlines()
         stable_line = all_lines[2]
         meta_line = all_lines[4]
-        stable_float = float(stable_line[23:-7])
-        meta_float = float(meta_line[23:-7])
-        energy = meta_float - stable_float
-        print(energy)
+        #stable_float = float(stable_line[23:-7])
+        #meta_float = float(meta_line[23:-7])
+        #energy = meta_float - stable_float
+        print(stable_line[23:-7])
         return energy
 
 # Create the path for neb_out string. Must use os.path.join() and cannot use string + operator
