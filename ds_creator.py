@@ -118,7 +118,7 @@ def get_barrier_height(neb_path):
         #print(f.readline())
         str_lines = f.readlines()
         one_line = str_lines[0]
-        str_num = float(one_line[:-1])
+        str_num = float(one_line)
         if one_line.isnumeric():
             print("true")
         else:
