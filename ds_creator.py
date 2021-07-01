@@ -2,18 +2,20 @@ import argparse
 import os
 import numpy as np
 
+# Example input: python ds_creator.py 100 -eiso -riso
+# Parameters after molecule count specify which labels to use. Assumes 1 task regression model.
+
 # currently named Azo_Data_1 on cluster
 start_dir = "./Data/"
 
 
-# TODO Add parameters which allow specific data collection fields. Remove print statements. Add variables to dataset object type & write to file
-# Driver method for dataset creation.
+# Driver method for regression dataset creation.
 def start_ds_creation(args):
-    #create initial np arrays
+    # create initial np arrays
     id_arr = np.zeros(args.count)
 
     # For coulomb matrix, input_arr must be [args.count, max_atoms, max_atoms]
-    #input_arr = np.zeros([args.count])
+    # input_arr = np.zeros([args.count, 45, 45])
     input_arr = np.zeros(args.count, dtype=str)
 
     if args.eisomerization:
@@ -34,7 +36,7 @@ def start_ds_creation(args):
         for molecule in mol_list:
             mol_path = os.path.join(batch_path, molecule)
             if os.path.isdir(mol_path):
-                #Pass smile string to featurizer, then add to input
+                # Pass smile string to featurizer, then add to input
                 input_arr[mol_count] = get_smiles(mol_path, molecule)
                 id_arr[mol_count] = molecule
 
@@ -76,7 +78,7 @@ def get_gs_ex_path(molecule_path, gs_or_ex):
 # This is found in detailed.out (may need to come from neb folder instead)
 def get_electronic_dif(folder_path):
     filename = "detailed.out"
-    rel_path = os.path.join(folder_path,filename)
+    rel_path = os.path.join(folder_path, filename)
     if os.path.isfile(rel_path):
         f = open(os.path.realpath(rel_path), "r")
         all_lines = f.readlines()
@@ -84,6 +86,7 @@ def get_electronic_dif(folder_path):
         diff_electronic = float(line[25:-17])
         print(diff_electronic)
         return diff_electronic
+
 
 # Energy difference between stable and metastable found in neb.out
 def get_meta_energy_dif(neb_path):
@@ -101,6 +104,7 @@ def get_meta_energy_dif(neb_path):
         print(stable_float)
         return energy
 
+
 # Create the path for neb_out string. Must use os.path.join() and cannot use string + operator
 def get_neb_path(rel_molecule_path):
     neb1 = "neb"
@@ -109,13 +113,14 @@ def get_neb_path(rel_molecule_path):
     rel_neb_out = os.path.join(rel_neb, neb2)
     return rel_neb_out
 
+
 # Get barrier height found in neb folder
 def get_barrier_height(neb_path):
     b_file = "barrier.height"
     barrier_path = os.path.join(neb_path, b_file)
     if os.path.isfile(barrier_path):
         f = open(os.path.realpath(barrier_path), "r")
-        #print(f.readline())
+        # print(f.readline())
         str_lines = f.readlines()
         one_line = str_lines[0]
         float_num = float(one_line)
@@ -139,11 +144,13 @@ def get_smiles(rel_molecule_path, molecule_name):
         print("Invalid smiles filepath")
     return smile
 
+
 # Allows for custom featurizer code for specific models
 def featurize_smiles(smile_string):
     # add deepchem featurizer code here such as Coulombmatrix ect..
     feature = smile_string
     return feature
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
