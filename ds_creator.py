@@ -94,7 +94,7 @@ def get_total_electronic(folder_path):
         f = open(os.path.realpath(rel_path), "r")
         all_lines = f.readlines()
         line = all_lines[7]
-        total_electronic = float(line[25:-17])
+        total_electronic = float(line[7:-34])
         print(total_electronic)
         return total_electronic
 
@@ -112,7 +112,6 @@ def get_meta_energy_dif(neb_path):
         meta_float = float(meta_line[23:-7])
         energy = meta_float - stable_float
         print(energy)
-        print(stable_float)
         return energy
 
 
