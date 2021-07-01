@@ -153,8 +153,8 @@ def get_smiles(rel_molecule_path, molecule_name):
     smile_absolute = os.path.realpath(smile_rel_path)
     if os.path.isfile(smile_rel_path):
         f = open(os.path.realpath(smile_rel_path), "r")
-        print(f.readline())
         smile = f.readline()
+        print(smile)
     return smile
 
 
