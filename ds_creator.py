@@ -62,6 +62,7 @@ def start_ds_creation(args):
     print(id_arr)
     print(eiso_arr)
     print(riso_arr)
+    print(vexci_arr)
 
 
 # Allows for custom featurizer code for specific models
