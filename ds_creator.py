@@ -39,7 +39,21 @@ def start_ds_creation(args):
 # Creates the multidimensional object used to store specified input and tasks.
 # Sub-arrays are numpy arrays of size args.count
 def create_ds_obj(args):
-    print(len(args))
+    num_lists = 1
+    if args.eisomerization:
+        num_lists  += 1
+    if args.reverse_isomerization:
+        num_lists += 1
+    if args.vertical_excitation:
+        num_lists += 1
+    if args.internal_conversion:
+        num_lists += 1
+    print(num_lists)
+    i = 0
+    while i < num_lists:
+        do = "d"
+
+
 
 
 # Get the path to the excited and ground state dftb folders.
