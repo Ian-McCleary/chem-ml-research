@@ -116,7 +116,8 @@ def get_barrier_height(neb_path):
     if os.path.isfile(barrier_path):
         f = open(os.path.realpath(barrier_path), "r")
         print(f.readline())
-        return f.readline()
+        float_num = float(f.readline())
+        return float_num
 
 
 def get_smiles(rel_molecule_path, molecule_name):
