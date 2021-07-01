@@ -35,7 +35,7 @@ def get_meta_energy_dif(neb_path):
         meta_float = float(meta_line[23:-7])
         energy = meta_float - stable_float
         print(energy)
-        #return energy
+        return energy
 
 # Create the path for neb_out string. Must use os.path.join() and cannot use string + operator
 def get_neb_path(rel_molecule_path):
