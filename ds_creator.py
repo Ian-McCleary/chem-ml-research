@@ -35,6 +35,7 @@ def start_ds_creation(args):
             mol_path = os.path.join(batch_path, molecule)
             if os.path.isdir(mol_path):
                 print(args.count)
+                print(len(input_arr))
                 print(mol_count)
                 #Pass smile string to featurizer, then add to input
                 input_arr[mol_count] = get_smiles(mol_path, molecule)
