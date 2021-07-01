@@ -116,7 +116,8 @@ def get_barrier_height(neb_path):
     if os.path.isfile(barrier_path):
         f = open(os.path.realpath(barrier_path), "r")
         print(f.readline())
-        float_num = float(f.readline())
+        str_num = f.readline()
+        float_num = float(str_num)
         return float_num
 
 
