@@ -5,7 +5,7 @@ import os
 start_dir = "./Data/"
 
 
-# TODO Add parameters which allow specific data collection fields. Remove print statements. Add variables to dataset object type
+# TODO Add parameters which allow specific data collection fields. Remove print statements. Add variables to dataset object type & write to file
 def start_ds_creation():
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
@@ -15,14 +15,42 @@ def start_ds_creation():
             mol_path = os.path.join(batch_path, molecule)
             if os.path.isdir(mol_path):
                 get_smiles(mol_path, molecule)
+
                 neb_path = get_neb_path(mol_path)
                 get_barrier_height(neb_path)
                 get_meta_energy_dif(neb_path)
+
+                rel_gs_folder = get_gs_ex_path(mol_path, "gs")
+                get_electronic_dif(rel_gs_folder)
                 print("\n")
             else:
-                print("Invalid molecule filepath" + mol_path + " This may not be a folder.")
+                print("Invalid molecule filepath" + mol_path + " (This may not be a folder)")
+
+# Get the path to the excited and ground state dftb folders.
+# gs_or_ex parameter is a string "gs" or "ex"
+def get_gs_ex_path(molecule_path, gs_or_ex):
+    meta = "Meta"
+    dftb = "dftb"
+    rel_meta = os.path.join(molecule_path, meta)
+    rel_dftb = os.path.join(rel_meta, dftb)
+    rel_folder = os.path.join(rel_dftb, gs_or_ex)
+    return rel_folder
 
 
+# Get electronic energy difference from detailed.out in gs or ex folder
+# This is found in detailed.out (may need to come from neb folder instead)
+def get_electronic_dif(folder_path):
+    filename = "detailed.out"
+    rel_path = os.path.join(folder_path,filename)
+    if os.path.isfile(rel_path):
+        f = open(os.path.realpath(rel_path), "r")
+        all_lines = f.readlines()
+        line = all_lines[7]
+        diff_electronic = float(line[25:-17])
+        print(diff_electronic)
+        return diff_electronic
+
+# Energy difference between stable and metastable found in neb.out
 def get_meta_energy_dif(neb_path):
     out = "neb.out"
     rel_neb_out = os.path.join(neb_path, out)
@@ -46,7 +74,7 @@ def get_neb_path(rel_molecule_path):
     rel_neb_out = os.path.join(rel_neb, neb2)
     return rel_neb_out
 
-
+# Get barrier height found in neb folder
 def get_barrier_height(neb_path):
     b_file = "barrier.height"
     barrier_path = os.path.join(neb_path, b_file)
