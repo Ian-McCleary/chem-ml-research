@@ -9,6 +9,8 @@ start_dir = "./Data/"
 # TODO Add parameters which allow specific data collection fields. Remove print statements. Add variables to dataset object type & write to file
 # Driver method for dataset creation.
 def start_ds_creation(args):
+    test = "0.47215574947310124"
+    print(float(test))
     #create initial np arrays
     id_arr = np.zeros([args.count])
 
