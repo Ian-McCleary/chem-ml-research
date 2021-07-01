@@ -65,6 +65,7 @@ def start_ds_creation(args):
 
     print(id_arr)
     print(input_arr)
+    print(input_arr[2])
     print(output_arr)
 
 
@@ -154,7 +155,7 @@ def get_smiles(rel_molecule_path, molecule_name):
         f = open(os.path.realpath(smile_rel_path), "r")
         print(f.readline())
         smile = f.readline()
-        return smile
+    return smile
 
 
 def parse_args():
