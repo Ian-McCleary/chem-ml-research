@@ -154,9 +154,7 @@ def get_smiles(rel_molecule_path, molecule_name):
         f = open(os.path.realpath(smile_rel_path), "r")
         print(f.readline())
         smile = f.readline()
-    else:
-        print("Invalid smiles filepath")
-    return smile
+        return smile
 
 
 def parse_args():
