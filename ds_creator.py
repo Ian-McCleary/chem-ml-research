@@ -10,20 +10,20 @@ start_dir = "./Data/"
 # Driver method for dataset creation.
 def start_ds_creation(args):
     #create initial np arrays
-    id_arr = np.zeros([args.count])
+    id_arr = np.zeros(args.count)
 
     # For coulomb matrix, input_arr must be [args.count, max_atoms, max_atoms]
     #input_arr = np.zeros([args.count])
-    input_arr = np.zeros([args.count])
+    input_arr = np.zeros(args.count, dtype=str)
 
     if args.eisomerization:
-        eiso_arr = np.zeros([args.count])
+        eiso_arr = np.zeros(args.count)
     if args.reverse_isomerization:
-        riso_arr = np.zeros([args.count])
+        riso_arr = np.zeros(args.count)
     if args.vertical_excitation:
-        vexci_arr = np.zeros([args.count])
+        vexci_arr = np.zeros(args.count)
     if args.internal_conversion:
-        inc_arr = np.zeros([args.count])
+        inc_arr = np.zeros(args.count)
 
     mol_count = 0
     directory_list = os.listdir(start_dir)
@@ -34,9 +34,6 @@ def start_ds_creation(args):
         for molecule in mol_list:
             mol_path = os.path.join(batch_path, molecule)
             if os.path.isdir(mol_path):
-                print(args.count)
-                print(len(input_arr))
-                print(mol_count)
                 #Pass smile string to featurizer, then add to input
                 input_arr[mol_count] = get_smiles(mol_path, molecule)
                 id_arr[mol_count] = molecule
