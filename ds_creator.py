@@ -1,12 +1,16 @@
 import argparse
 import os
+import numpy as np
 
 # currently named Azo_Data_1 on cluster
 start_dir = "./Data/"
 
 
 # TODO Add parameters which allow specific data collection fields. Remove print statements. Add variables to dataset object type & write to file
-def start_ds_creation():
+# Driver method for dataset creation.
+def start_ds_creation(args):
+    create_ds_obj(args)
+    mol_count = 0
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
         batch_path = os.path.join(start_dir, batch)
@@ -22,9 +26,21 @@ def start_ds_creation():
 
                 rel_gs_folder = get_gs_ex_path(mol_path, "gs")
                 get_electronic_dif(rel_gs_folder)
+                mol_count += 1
                 print("\n")
             else:
-                print("Invalid molecule filepath" + mol_path + " (This may not be a folder)")
+                print("Invalid molecule filepath " + mol_path + " (This may not be a folder)")
+            if mol_count >= args.count:
+                break
+        if mol_count >= args.count:
+            break
+
+
+# Creates the multidimensional object used to store specified input and tasks.
+# Sub-arrays are numpy arrays of size args.count
+def create_ds_obj(args):
+    print(len(args))
+
 
 # Get the path to the excited and ground state dftb folders.
 # gs_or_ex parameter is a string "gs" or "ex"
@@ -104,9 +120,38 @@ def featurize_smiles(smile_string):
     feature = smile_string
     return feature
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("count",
+                        help="Specify how many molecules to use in dataset.",
+                        type=int,
+                        default=5)
+    parser.add_argument("-eiso",
+                        "--eisomerization",
+                        help="Add delta E_iso as output task",
+                        action="store_true"
+                        )
+    parser.add_argument("-riso",
+                        "--reverse_isomerization",
+                        help="Add reverse isomerization as output task",
+                        action="store_true"
+                        )
+    parser.add_argument("-vexci",
+                        "--vertical_excitation",
+                        help="Add vertical excitation as output task",
+                        action="store_true"
+                        )
+    parser.add_argument("-iconv",
+                        "--internal_conversion",
+                        help="Add internal conversion as output task",
+                        action="store_true"
+                        )
+    return parser.parse_args()
+
 
 def main():
-    start_ds_creation()
+    args = parse_args()
+    start_ds_creation(args)
 
 
 if __name__ == "__main__":
