@@ -12,7 +12,7 @@ start_dir = "./Data/"
 # Driver method for regression dataset creation.
 def start_ds_creation(args):
     # create initial np arrays
-    id_arr = np.zeros(args.count)
+    id_arr = np.zeros(args.count, dtype=int)
 
     # For coulomb matrix, input_arr must be [args.count, max_atoms, max_atoms]
     # input_arr = np.zeros([args.count, 45, 45])
@@ -24,8 +24,6 @@ def start_ds_creation(args):
         riso_arr = np.zeros(args.count)
     if args.vertical_excitation:
         vexci_arr = np.zeros(args.count)
-    if args.internal_conversion:
-        inc_arr = np.zeros(args.count)
 
     mol_count = 0
     directory_list = os.listdir(start_dir)
@@ -42,13 +40,16 @@ def start_ds_creation(args):
 
                 neb_path = get_neb_path(mol_path)
                 if args.reverse_isomerization:
-                    riso_arr[mol_count] = get_barrier_height(neb_path)
+                    riso_arr[mol_count] = au_to_ev(get_barrier_height(neb_path))
                 if args.eisomerization:
-                    eiso_arr[mol_count] = get_meta_energy_dif(neb_path)
+                    eiso_arr[mol_count] = au_to_ev(get_meta_energy_dif(neb_path))
                 if args.vertical_excitation:
                     rel_gs_folder = get_gs_ex_path(mol_path, "gs")
-                    get_electronic_dif(rel_gs_folder)
-
+                    rel_ex_folder = get_gs_ex_path(mol_path, "ex")
+                    gs = get_total_electronic(rel_gs_folder)
+                    ex = get_total_electronic(rel_ex_folder)
+                    total_electronic_difference = ex-gs
+                    vexci_arr[mol_count] = au_to_ev(total_electronic_difference)
                 mol_count += 1
                 print("\n")
             else:
@@ -63,10 +64,20 @@ def start_ds_creation(args):
     print(riso_arr)
 
 
-# Get the path to the excited and ground state dftb folders.
+# Allows for custom featurizer code for specific models
+def featurize_smiles(smile_string):
+    # add deepchem featurizer code here such as Coulombmatrix ect..
+    feature = smile_string
+    return feature
+
+# Convert atomic units to electron volt
+def au_to_ev(au):
+    return 0.036749405469679*au
+
+# Get the path to the stable excited and ground state dftb folders.
 # gs_or_ex parameter is a string "gs" or "ex"
 def get_gs_ex_path(molecule_path, gs_or_ex):
-    meta = "Meta"
+    meta = "Stable"
     dftb = "dftb"
     rel_meta = os.path.join(molecule_path, meta)
     rel_dftb = os.path.join(rel_meta, dftb)
@@ -76,16 +87,16 @@ def get_gs_ex_path(molecule_path, gs_or_ex):
 
 # Get electronic energy difference from detailed.out in gs or ex folder
 # This is found in detailed.out (may need to come from neb folder instead)
-def get_electronic_dif(folder_path):
+def get_total_electronic(folder_path):
     filename = "detailed.out"
     rel_path = os.path.join(folder_path, filename)
     if os.path.isfile(rel_path):
         f = open(os.path.realpath(rel_path), "r")
         all_lines = f.readlines()
         line = all_lines[7]
-        diff_electronic = float(line[25:-17])
-        print(diff_electronic)
-        return diff_electronic
+        total_electronic = float(line[25:-17])
+        print(total_electronic)
+        return total_electronic
 
 
 # Energy difference between stable and metastable found in neb.out
@@ -145,13 +156,6 @@ def get_smiles(rel_molecule_path, molecule_name):
     return smile
 
 
-# Allows for custom featurizer code for specific models
-def featurize_smiles(smile_string):
-    # add deepchem featurizer code here such as Coulombmatrix ect..
-    feature = smile_string
-    return feature
-
-
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("count",
@@ -171,11 +175,6 @@ def parse_args():
     parser.add_argument("-vexci",
                         "--vertical_excitation",
                         help="Add vertical excitation as output task",
-                        action="store_true"
-                        )
-    parser.add_argument("-iconv",
-                        "--internal_conversion",
-                        help="Add internal conversion as output task",
                         action="store_true"
                         )
     return parser.parse_args()
