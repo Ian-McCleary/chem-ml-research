@@ -84,7 +84,7 @@ print(test_score)
 #compute_features = dc.models.DTNNModel.compute_features_on_batch(self=model, X_b=data.X)
 #print(generated_batch)
 model.default_generator(dataset=data, epochs=3, mode='fit', deterministic=False, pad_batches=True)
-model.fit(train_dataset)
+#model.fit(train_dataset)
 # How well the model fit's the training subset of our data
 train_scores = model.evaluate(train_dataset, metric)
 # Validation of the model over several training iterations.
