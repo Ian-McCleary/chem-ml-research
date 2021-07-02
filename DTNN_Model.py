@@ -51,8 +51,8 @@ print(data.y)
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
-print(len(train_dataset))
-print(output_y)
+task_count = len(data.y)
+print(task_count)
 
 metric = [
     dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression"),
@@ -60,7 +60,7 @@ metric = [
 ]
 
 model = dc.models.DTNNModel(
-    n_tasks=1,
+    n_tasks=task_count,
     n_embedding=10,
     #n_hidden=15,
     mode="regression",
