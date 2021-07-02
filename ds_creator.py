@@ -88,7 +88,7 @@ def featurize_smiles(smile_arr):
 
 # Create and save the dataset with featurized input. Weight vector to be added here
 def create_save_dataset(id, input, output):
-    dataset = dc.data.NumpyDataset(X=input, y=output, ids=id)
+    dataset = dc.data.NumpyDataset(X=input, y=output, ids=id, n_tasks=1)
     file_name = "dataset_out"
     dataset.to_json(dataset, file_name)
     print("DONE!")
