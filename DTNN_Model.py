@@ -45,7 +45,7 @@ for i in range(len(smile_arr)):
     input_X[i] = features
 
 #data = dc.data.NumpyDataset(X=input_X, y=output_y, ids=id_arr, n_tasks=1)
-data = dc.data.NumpyDataset(X=np.rand(10,1))
+data = dc.data.NumpyDataset(X=np.random.rand(10,1))
 data.from_json("dataset_out")
 print(data.y)
 # Splits dataset into train/validation/test
