@@ -1,6 +1,8 @@
 import argparse
 import os
 import numpy as np
+import deepchem as dc  # Comment out if not using featurizers
+from rdkit import Chem
 
 # Example input: python ds_creator.py 100 -eiso -riso
 # Parameters after molecule count specify which labels to use. Assumes 1 task regression model.
@@ -16,8 +18,8 @@ def start_ds_creation(args):
 
     # For coulomb matrix, input_arr must be np.zeros([args.count, max_atoms, max_atoms])
     # input_arr = np.zeros([args.count, 45, 45])
-    input_arr = []
-    input_arr = ["hi" for i in range(args.count)]
+    smiles_arr = []
+    smiles_arr = ["hi" for i in range(args.count)]
     output_count = 0
     if args.eisomerization:
         output_count += 1
@@ -36,8 +38,7 @@ def start_ds_creation(args):
             mol_path = os.path.join(batch_path, molecule)
             if os.path.isdir(mol_path):
                 # Pass smile string to featurizer, then add to input
-                input_arr[mol_count] = get_smiles(mol_path, molecule)
-                print(input_arr[mol_count])
+                smiles_arr[mol_count] = get_smiles(mol_path, molecule)
                 id_arr[mol_count] = molecule
 
                 output_count = 0
@@ -66,16 +67,31 @@ def start_ds_creation(args):
             break
 
     print(id_arr)
-    print(input_arr)
-    print(input_arr[2])
+    print(smiles_arr)
     print(output_arr)
+    input_arr = featurize_smiles(smiles_arr)
+    create_save_dataset(id_arr, input_arr, output_arr)
 
 
 # Allows for custom featurizer code for specific models
-def featurize_smiles(smile_string):
+def featurize_smiles(smile_arr):
     # add deepchem featurizer code here such as Coulombmatrix ect..
-    feature = smile_string
-    return feature
+    input_X = np.zeros([len(smile_arr), 45, 45])
+    for i in range(len(smile_arr)):
+        generator = dc.utils.ConformerGenerator(max_conformers=1)
+        azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
+        coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45, remove_hydrogens=True)
+        features = coulomb_mat(azo_mol)
+        input_X[i] = features
+    return input_X
+
+
+# Create and save the dataset with featurized input. Weight vector to be added here
+def create_save_dataset(id, input, output):
+    dataset = dc.data.NumpyDataset(X=input, y=output, ids=id)
+    file_name = "dataset_out"
+    dataset.to_json(file_name)
+    print("DONE!")
 
 
 # Convert atomic units to electron volt
