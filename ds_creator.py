@@ -1,17 +1,17 @@
 import argparse
 import os
 import numpy as np
-import deepchem as dc  # Comment out if not using featurizers
+import deepchem as dc
 from rdkit import Chem
 
-# Example input: python ds_creator.py 100 -eiso -riso
-# Parameters after molecule count specify which labels to use. Assumes 1 task regression model.
+# Example input: python ds_creator.py 100 -eiso -riso -verte
+# Parameters after molecule count specify which labels/outputs to use. Assumes 1 task regression model.
 
 # currently named Azo_Data_1 on cluster
 start_dir = "./Data/"
 
 
-# Driver method for multioutput regression dataset creation.
+# Driver method for multi-output regression dataset creation.
 def start_ds_creation(args):
     # create initial np arrays
     id_arr = np.zeros(args.count, dtype=int)
@@ -195,7 +195,7 @@ def parse_args():
                         help="Add reverse isomerization as output task",
                         action="store_true"
                         )
-    parser.add_argument("-vexci",
+    parser.add_argument("-verte",
                         "--vertical_excitation",
                         help="Add vertical excitation as output task",
                         action="store_true"
