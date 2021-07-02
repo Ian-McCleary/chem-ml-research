@@ -65,10 +65,6 @@ def start_ds_creation(args):
                 break
         if mol_count >= args.count:
             break
-
-    print(id_arr)
-    print(smiles_arr)
-    print(output_arr)
     input_arr = featurize_smiles(smiles_arr)
     create_save_dataset(id_arr, input_arr, output_arr, output_count)
 

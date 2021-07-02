@@ -47,12 +47,10 @@ for i in range(len(smile_arr)):
 #data = dc.data.NumpyDataset(X=input_X, y=output_y, ids=id_arr, n_tasks=1)
 data = dc.data.datasets.NumpyDataset.from_json("dataset_out")
 #data.from_json("dataset_out")
-print(data.y)
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
 task_count = len(data.y[0])
-print(task_count)
 
 metric = [
     dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression"),
@@ -82,6 +80,6 @@ print("Test Scores: ")
 print(test_score)
 
 #generated_batch = dc.models.DTNNModel.default_generator(self=model, dataset=data, epochs=2, mode='fit', deterministic=True, pad_batches=True)
-#compute_features = dc.models.DTNNModel.compute_features_on_batch(self=model, X_b=data.X)
-#print(compute_features)
+compute_features = dc.models.DTNNModel.compute_features_on_batch(self=model, X_b=data.X)
+print(compute_features)
 
