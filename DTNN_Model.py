@@ -51,7 +51,7 @@ print(data.y)
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
-task_count = len(data.y)
+task_count = len(data.y[0])
 print(task_count)
 
 metric = [
