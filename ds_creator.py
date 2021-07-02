@@ -90,7 +90,7 @@ def featurize_smiles(smile_arr):
 def create_save_dataset(id, input, output):
     dataset = dc.data.NumpyDataset(X=input, y=output, ids=id)
     file_name = "dataset_out"
-    dc.data.to_json(dataset, file_name)
+    dataset.to_json(dataset, file_name)
     print("DONE!")
 
 
