@@ -84,4 +84,5 @@ while i < 3:
     generated_batch = dc.models.DTNNModel.default_generator(self=model, dataset=data, epochs=2, mode='fit', deterministic=False, pad_batches=True)
     compute_features = dc.models.DTNNModel.compute_features_on_batch(self=model, X_b=data.X)
     print(compute_features)
+    i+=1
 
