@@ -70,7 +70,7 @@ def start_ds_creation(args):
     print(smiles_arr)
     print(output_arr)
     input_arr = featurize_smiles(smiles_arr)
-    create_save_dataset(id_arr, input_arr, output_arr)
+    create_save_dataset(id_arr, input_arr, output_arr, output_count)
 
 
 # Allows for custom featurizer code for specific models
@@ -87,8 +87,8 @@ def featurize_smiles(smile_arr):
 
 
 # Create and save the dataset with featurized input. Weight vector to be added here
-def create_save_dataset(id, input, output):
-    dataset = dc.data.NumpyDataset(X=input, y=output, ids=id, n_tasks=3)
+def create_save_dataset(id, input, output, output_count):
+    dataset = dc.data.NumpyDataset(X=input, y=output, ids=id, n_tasks=output_count)
     file_name = "dataset_out"
     dataset.to_json(dataset, file_name)
     print("DONE!")
