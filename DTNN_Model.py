@@ -64,8 +64,8 @@ model = dc.models.DTNNModel(
     n_embedding=10,
     #n_hidden=15,
     mode="regression",
-    dropout=0.1,
-    learning_rate=0.01
+    dropout=0.2,
+    learning_rate=0.1
 )
 model.fit(train_dataset)
 # How well the model fit's the training subset of our data
