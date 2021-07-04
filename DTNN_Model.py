@@ -80,22 +80,7 @@ print("Test Scores: ")
 print(test_score)
 
 
-#generated_batch = dc.models.DTNNModel.default_generator(self=model, dataset=data, epochs=2, mode='fit', deterministic=False, pad_batches=True)
-#compute_features = dc.models.DTNNModel.compute_features_on_batch(self=model, X_b=data.X)
-#print(generated_batch)
-model.default_generator(dataset=data, epochs=3, mode='fit', deterministic=False, pad_batches=True)
-#model.fit(train_dataset)
-# How well the model fit's the training subset of our data
-train_scores = model.evaluate(train_dataset, metric)
-# Validation of the model over several training iterations.
-valid_score = model.evaluate(valid_dataset, metric)
-# How well the model generalizes the rest of the data
-test_score = model.evaluate(test_dataset, metric)
-print("Training Scores: ")
-print(train_scores)
-print("Validity Scores: ")
-print(valid_score)
-print("Test Scores: ")
-print(test_score)
-#print(model.compute_features_on_batch(X_b=data.X))
+
+#model.default_generator(dataset=data, epochs=3, mode='fit', deterministic=False, pad_batches=True)
+
 
