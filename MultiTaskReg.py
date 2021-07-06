@@ -22,8 +22,9 @@ params_dict = {
     'learning_rate': [0.001, 0.0001]
 }
 print(data.y)
-optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskClassifier)
-metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
-        params_dict, train_dataset, valid_dataset, metric, transformer)
-print(all_results)
+
+#optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskClassifier)
+#metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
+#best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
+#        params_dict, train_dataset, valid_dataset, metric, transformer)
+#print(all_results)
