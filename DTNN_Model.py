@@ -22,10 +22,10 @@ params_dict = {
     'learning_rate': [0.001, 0.0001]
 }
 
-optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
-fit_transformers = [dc.trans.CoulombFitTransformer(data)]
-best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-                                                                         metric, fit_transformers)
+#optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
+#fit_transformers = [dc.trans.CoulombFitTransformer(data)]
+#best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
+#                                                                         metric, fit_transformers)
 
 model = dc.models.DTNNModel(
     n_tasks=task_count,
@@ -35,7 +35,7 @@ model = dc.models.DTNNModel(
     learning_rate=0.1
 )
 
-print(all_results)
+#print(all_results)
 
 model.fit(train_dataset)
 # How well the model fit's the training subset of our data
