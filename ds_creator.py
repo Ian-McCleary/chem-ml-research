@@ -218,7 +218,8 @@ def parse_args():
                         action="store_true")
     parser.add_argument("-ecfp",
                         "--extended_connectivity_fingerprint",
-                        help="Extended Connectivity Fingerpring featurization to input")
+                        help="Extended Connectivity Fingerpring featurization to input",
+                        action="store_true")
     return parser.parse_args()
 
 
