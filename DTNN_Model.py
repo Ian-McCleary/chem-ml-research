@@ -29,10 +29,10 @@ params_dict = {
 
 model = dc.models.DTNNModel(
     n_tasks=task_count,
-    n_embedding=10,
+    n_embedding=30,
     mode="regression",
     dropout=0.1,
-    learning_rate=0.1
+    learning_rate=0.001
 )
 
 #print(all_results)
