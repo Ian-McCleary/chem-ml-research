@@ -9,7 +9,7 @@ data = dc.data.datasets.NumpyDataset.from_json("dataset_out")
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
 task_count = len(data.y[0])
-#fit_transformers = [dc.trans.CoulombFitTransformer(data)]
+
 
 metric = [
     dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
@@ -23,6 +23,9 @@ params_dict = {
 }
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
+fit_transformers = [dc.trans.CoulombFitTransformer(data)]
+best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
+                                                                         metric, fit_transformers)
 
 model = dc.models.DTNNModel(
     n_tasks=task_count,
@@ -31,8 +34,7 @@ model = dc.models.DTNNModel(
     dropout=0.1,
     learning_rate=0.1
 )
-best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-                                                                         metric)
+
 print(all_results)
 
 model.fit(train_dataset)
