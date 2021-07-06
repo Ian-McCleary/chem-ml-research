@@ -3,7 +3,7 @@ import deepchem as dc
 import numpy as np
 
 data = dc.data.datasets.NumpyDataset.from_json("dataset_out")
-transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
+transformer = dc.trans.BalancingTransformer(transform_y=True, dataset=data)
 dataset = transformer.transform(data)
 
 # Splits dataset into train/validation/test
