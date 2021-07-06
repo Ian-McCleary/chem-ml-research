@@ -17,7 +17,7 @@ metric = [
 
 params_dict = {
     'n_tasks': [task_count],
-    'n_embedding': [[10], [100], [1000]],
+    'n_embedding': [[40], [100], [1000]],
     'dropouts': [0.1, 0.2, 0.5],
     'learning_rate': [0.001, 0.0001]
 }
