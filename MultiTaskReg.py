@@ -26,7 +26,7 @@ print(data.y[0][0])
 print(data.y[0][1])
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskClassifier)
-metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
+metric = dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
 best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
         params_dict, train_dataset, valid_dataset, metric, transformer)
 print(all_results)
