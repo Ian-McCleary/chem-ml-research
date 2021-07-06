@@ -9,20 +9,32 @@ data = dc.data.datasets.NumpyDataset.from_json("dataset_out")
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
 task_count = len(data.y[0])
+fit_transformers = [dc.trans.CoulombFitTransformer(data)]
 
 metric = [
-    dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression"),
-    dc.metrics.Metric(dc.metrics.mean_squared_error, mode="regression")
+    dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
 ]
+
+params_dict = {
+    'n_tasks': [task_count],
+    'n_embedding': [[10], [100], [1000]],
+    'dropouts': [0.1, 0.2, 0.5],
+    'learning_rate': [0.001, 0.0001]
+}
+
+optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
 
 model = dc.models.DTNNModel(
     n_tasks=task_count,
     n_embedding=10,
-    #n_hidden=15,
     mode="regression",
     dropout=0.1,
     learning_rate=0.1
 )
+best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
+                                                                         metric, fit_transformers)
+print(all_results)
+
 model.fit(train_dataset)
 # How well the model fit's the training subset of our data
 train_scores = model.evaluate(train_dataset, metric)
@@ -36,9 +48,5 @@ print("Validity Scores: ")
 print(valid_score)
 print("Test Scores: ")
 print(test_score)
-
-
-
-#model.default_generator(dataset=data, epochs=3, mode='fit', deterministic=False, pad_batches=True)
 
 
