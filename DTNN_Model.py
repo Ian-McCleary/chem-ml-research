@@ -32,7 +32,7 @@ model = dc.models.DTNNModel(
     learning_rate=0.1
 )
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-                                                                         metric, fit_transformers)
+                                                                         metric, test_dataset)
 print(all_results)
 
 model.fit(train_dataset)
