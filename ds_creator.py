@@ -70,15 +70,30 @@ def start_ds_creation(args):
 
 
 # Allows for custom featurizer code for specific models
-def featurize_smiles(smile_arr):
+def featurize_smiles(smile_arr, args):
     # add deepchem featurizer code here such as Coulombmatrix ect..
-    input_X = np.zeros([len(smile_arr), 45, 45])
-    for i in range(len(smile_arr)):
-        generator = dc.utils.ConformerGenerator(max_conformers=1)
-        azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
-        coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45, remove_hydrogens=True)
-        features = coulomb_mat(azo_mol)
-        input_X[i] = features
+
+    # Coulomb Matrix Featurizer
+    input_X = np.zeros([len(smile_arr)])
+    if args.coulomb_matrix:
+        input_X = np.zeros([len(smile_arr), 45, 45])
+        for i in range(len(smile_arr)):
+            generator = dc.utils.ConformerGenerator(max_conformers=1)
+            azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
+            coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45, remove_hydrogens=True)
+            features = coulomb_mat(azo_mol)
+            input_X[i] = features
+
+    # Circular Fingerprint Featurizer
+    if args.extended_connectivity_fingerprint:
+        size = 1024
+        radius = 2
+        input_X = np.zeros([len(smile_arr), size])
+        for i in range(len(smile_arr)):
+            featurizer = dc.feat.CircularFingerprint(size=size, radius=radius)
+            features = featurizer.featurize(smile_arr[i])
+            input_X[i] = features
+
     return input_X
 
 
@@ -196,6 +211,14 @@ def parse_args():
                         help="Add vertical excitation as output task",
                         action="store_true"
                         )
+    # Chose 1 featurizer to avoid conflict.
+    parser.add_argument("-cm",
+                        "--coulomb_matrix",
+                        help="Coulomb Matrix featurization to input",
+                        action="store_true")
+    parser.add_argument("-ecfp",
+                        "--extended_connectivity_fingerprint",
+                        help="Extended Connectivity Fingerpring featurization to input")
     return parser.parse_args()
 
 
