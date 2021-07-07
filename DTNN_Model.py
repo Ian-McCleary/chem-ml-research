@@ -12,9 +12,10 @@ task_count = len(data.y[0])
 
 
 metrics = [
-    dc.metrics.Metric(dc.metrics.mean_squared_error),
-    dc.metrics.Metric(dc.metrics.r2_score)
+    dc.metrics.Metric(dc.metrics.mean_squared_error, mode="regression"),
+    dc.metrics.Metric(dc.metrics.r2_score, mode="regression")
     ]
+metric = dc.metrics.Metric(dc.metrics.mean_squared_error, mode="regression")
 
 # parameter optimization
 params_dict = {
