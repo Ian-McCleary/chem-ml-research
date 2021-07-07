@@ -11,9 +11,7 @@ train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dat
 task_count = len(data.y[0])
 
 
-metric = [
-    dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
-]
+metric = dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
 
 params_dict = {
     'n_tasks': [task_count],
@@ -29,6 +27,7 @@ best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_
 
                                                                     
 print(all_results)
+
 ''' model = dc.models.DTNNModel(
     n_tasks=task_count,
     n_embedding=30,
