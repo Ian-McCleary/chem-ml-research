@@ -86,7 +86,7 @@ def featurize_smiles(smile_arr, args):
 
     # Circular Fingerprint Featurizer
     if args.extended_connectivity_fingerprint:
-        size = 2048
+        size = 1024
         radius = 2
         input_X = np.zeros([len(smile_arr), size])
         for i in range(len(smile_arr)):
