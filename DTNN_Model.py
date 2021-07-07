@@ -15,7 +15,7 @@ metrics = [
     dc.metrics.Metric(dc.metrics.mean_squared_error),
     dc.metrics.Metric(dc.metrics.pearson_r2_score)
     ]
-metric = dc.metrics.Metric(dc.metrics.mean_squared_error, mode="regression")
+metric = dc.metrics.Metric(dc.metrics.pearson_r2_score)
 
 # parameter optimization
 params_dict = {
@@ -28,7 +28,7 @@ params_dict = {
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
 transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-                                                                         metrics, transformers)                                                                  
+                                                                         metric, transformers)                                                                  
 print(all_results) 
 
 # Single evaluation model
