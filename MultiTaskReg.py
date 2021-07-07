@@ -22,8 +22,7 @@ params_dict = {
     'learning_rate': [0.001, 0.0001]
 }
 print(data.y)
-print(data.y[0][0])
-print(data.y[0][1])
+
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskClassifier)
 metric = dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
