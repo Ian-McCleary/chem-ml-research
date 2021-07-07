@@ -12,6 +12,7 @@ train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dat
 task_count = len(dataset.y[0])
 n_features = len(dataset.X[0])
 
+print(len(task_count))
 #tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
 #train_dataset, valid_dataset, test_dataset = datasets
 
@@ -22,7 +23,8 @@ params_dict = {
     'n_features': [n_features],
     'layer_sizes': [[500], [1000], [1000, 1000]],
     'dropouts': [0.2, 0.5],
-    'learning_rate': [0.001, 0.0001]
+    'learning_rate': [0.001, 0.0001],
+    'n_classes': [len(data.y)]
 }
 #print(data.y)
 
