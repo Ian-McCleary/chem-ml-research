@@ -15,7 +15,7 @@ metrics = [
     dc.metrics.Metric(dc.metrics.mean_squared_error),
     dc.metrics.Metric(dc.metrics.r2_score)
     ]
-metric = dc.metrics.Metric(dc.metrics.r2_score)
+metric = dc.metrics.Metric(dc.mean_squared_error)
 
 # parameter optimization
 params_dict = {
