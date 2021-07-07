@@ -25,7 +25,7 @@ def start_ds_creation(args):
     if args.vertical_excitation:
         output_count += 1
 
-    weight_arr = np.ones([args.count, output_count], dtype=float)
+    # weight_arr = np.ones([args.count, output_count], dtype=float)
     output_arr = np.zeros([args.count, output_count], dtype=float)
     mol_count = 0
     directory_list = os.listdir(start_dir)
@@ -66,7 +66,7 @@ def start_ds_creation(args):
             break
 
     input_arr = featurize_smiles(smiles_arr, args)
-    create_save_dataset(id_arr, input_arr, output_arr, weight_arr, output_count)
+    create_save_dataset(id_arr, input_arr, output_arr, output_count)
 
 
 # Allows for custom featurizer code for specific models
@@ -98,8 +98,8 @@ def featurize_smiles(smile_arr, args):
 
 
 # Create and save the dataset with featurized input. Weight vector to be added here
-def create_save_dataset(id, input, output, weight_arr, output_count):
-    dataset = dc.data.NumpyDataset(X=input, y=output, w=weight_arr, ids=id, n_tasks=output_count)
+def create_save_dataset(id, input, output, output_count):
+    dataset = dc.data.NumpyDataset(X=input, y=output, ids=id, n_tasks=output_count)
     file_name = "dataset_out"
     dataset.to_json(dataset, file_name)
     print("DONE!")

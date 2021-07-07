@@ -4,7 +4,7 @@ import numpy as np
 
 
 data = dc.data.datasets.NumpyDataset.from_json("dataset_out")
-#data.from_json("dataset_out")
+
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
