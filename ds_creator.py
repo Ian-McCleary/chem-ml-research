@@ -15,9 +15,6 @@ start_dir = "./Data/"
 def start_ds_creation(args):
     # create initial np arrays
     id_arr = np.zeros(args.count, dtype=int)
-
-    # For coulomb matrix, input_arr must be np.zeros([args.count, max_atoms, max_atoms])
-    # input_arr = np.zeros([args.count, 45, 45])
     smiles_arr = []
     smiles_arr = ["hi" for i in range(args.count)]
     output_count = 0
@@ -27,6 +24,7 @@ def start_ds_creation(args):
         output_count += 1
     if args.vertical_excitation:
         output_count += 1
+
     output_arr = np.zeros([args.count, output_count], dtype=float)
     mol_count = 0
     directory_list = os.listdir(start_dir)
@@ -40,7 +38,6 @@ def start_ds_creation(args):
                 # Pass smile string to featurizer, then add to input
                 smiles_arr[mol_count] = get_smiles(mol_path, molecule)
                 id_arr[mol_count] = molecule
-
                 output_count = 0
                 neb_path = get_neb_path(mol_path)
                 if args.reverse_isomerization:
@@ -57,6 +54,7 @@ def start_ds_creation(args):
                     total_electronic_difference = ex - gs
                     output_arr[mol_count, output_count] = au_to_ev(total_electronic_difference)
                     output_count += 1
+
                 mol_count += 1
                 print("\n")
             else:
@@ -65,6 +63,7 @@ def start_ds_creation(args):
                 break
         if mol_count >= args.count:
             break
+
     input_arr = featurize_smiles(smiles_arr, args)
     create_save_dataset(id_arr, input_arr, output_arr, output_count)
 
@@ -76,11 +75,11 @@ def featurize_smiles(smile_arr, args):
     # Coulomb Matrix Featurizer
     input_X = np.zeros([len(smile_arr)])
     if args.coulomb_matrix:
-        input_X = np.zeros([len(smile_arr), 45, 45])
+        input_X = np.zeros([len(smile_arr), 35, 35])
         for i in range(len(smile_arr)):
             generator = dc.utils.ConformerGenerator(max_conformers=1)
             azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
-            coulomb_mat = dc.feat.CoulombMatrix(max_atoms=45, remove_hydrogens=True)
+            coulomb_mat = dc.feat.CoulombMatrix(max_atoms=35, remove_hydrogens=True)
             features = coulomb_mat(azo_mol)
             input_X[i] = features
 
