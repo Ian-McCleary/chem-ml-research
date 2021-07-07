@@ -36,6 +36,7 @@ print("\n")
 print(best_hyperparams)
 
 # Single evaluation model
+# Single task: params (1, 50, 0.2, 1e-06)
 '''
 model = dc.models.DTNNModel(
     n_tasks=task_count,
