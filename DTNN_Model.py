@@ -11,11 +11,10 @@ train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dat
 task_count = len(data.y[0])
 
 
-tim = [
-    dc.metrics.Metric(dc.metrics.mean_squared_error, mode="regression"),
-    dc.metrics.Metric(dc.metrics.r2_score, mode="regression")
+metrics = [
+    dc.metrics.Metric(dc.metrics.mean_squared_error),
+    dc.metrics.Metric(dc.metrics.pearson_r2_score)
     ]
-metrics = [dc.metrics.mean_squared_error, dc.metrics.r2_score]
 metric = dc.metrics.Metric(dc.metrics.mean_squared_error, mode="regression")
 
 # parameter optimization
