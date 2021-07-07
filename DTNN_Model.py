@@ -31,7 +31,9 @@ best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_
                                                                          metric, transformers)                                                                  
 print(all_results)
 print("\n")
-print(best_model + "   " + best_hyperparams)
+print(best_model)
+print("\n")
+print(best_hyperparams)
 
 # Single evaluation model
 '''
