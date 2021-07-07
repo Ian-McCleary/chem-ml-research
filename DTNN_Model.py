@@ -13,7 +13,7 @@ task_count = len(data.y[0])
 
 metric = dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
 # parameter optimization
-
+'''
 params_dict = {
     'n_tasks': [task_count],
     'n_embedding': [10, 40, 100, 1000],
@@ -51,5 +51,4 @@ print("Validity Scores: ")
 print(valid_score)
 print("Test Scores: ")
 print(test_score)
-'''
 
