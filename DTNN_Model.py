@@ -15,13 +15,13 @@ metrics = [
     dc.metrics.Metric(dc.metrics.mean_squared_error),
     dc.metrics.Metric(dc.metrics.r2_score)
     ]
-    
+
 # parameter optimization
 params_dict = {
     'n_tasks': [task_count],
-    'n_embedding': [10, 40, 100, 1000],
+    'n_embedding': [5, 10, 50, 100],
     'dropouts': [0.1, 0.2, 0.5, 0.9],
-    'learning_rate': [0.001, 0.0001, 0.00001]
+    'learning_rate': [0.001, 0.0001, 0.00001, 0.000001]
 }
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
