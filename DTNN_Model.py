@@ -22,12 +22,14 @@ params_dict = {
     'learning_rate': [0.001, 0.0001]
 }
 
-#optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
-#fit_transformers = [dc.trans.CoulombFitTransformer(data)]
-#best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-#                                                                         metric, fit_transformers)
+optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
+transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
+best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
+                                                                         metric, transformers)
 
-model = dc.models.DTNNModel(
+                                                                    
+print(all_results)
+''' model = dc.models.DTNNModel(
     n_tasks=task_count,
     n_embedding=30,
     mode="regression",
@@ -49,6 +51,6 @@ print(train_scores)
 print("Validity Scores: ")
 print(valid_score)
 print("Test Scores: ")
-print(test_score)
+print(test_score) '''
 
 
