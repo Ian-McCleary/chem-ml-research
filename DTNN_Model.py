@@ -15,8 +15,8 @@ metric = dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
 
 params_dict = {
     'n_tasks': [task_count],
-    'n_embedding': [40],
-    'dropouts': [0.1, 0.2, 0.5],
+    'n_embedding': [10, 40, 100, 1000],
+    'dropouts': [0.1, 0.2, 0.5, 0.9],
     'learning_rate': [0.001, 0.0001]
 }
 
