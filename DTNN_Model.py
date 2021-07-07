@@ -25,14 +25,14 @@ params_dict = {
     'learning_rate': [0.001, 0.0001, 0.00001, 0.000001]
 }
 
-#optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
-#transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
-#best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-#                                                                         metrics, transformers)                                                                  
-#print(all_results) 
+optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
+transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
+best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
+                                                                         metrics, transformers)                                                                  
+print(all_results) 
 
 # Single evaluation model
-
+'''
 model = dc.models.DTNNModel(
     n_tasks=task_count,
     n_embedding=1000,
@@ -55,3 +55,4 @@ print("Validity Scores: ")
 print(valid_score)
 print("Test Scores: ")
 print(test_score)
+'''
