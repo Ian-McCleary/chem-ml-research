@@ -11,9 +11,12 @@ train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dat
 task_count = len(data.y[0])
 
 
-metric = dc.metrics.Metric(dc.metrics.mean_absolute_error, mode="regression")
+metrics = [
+    dc.metrics.Metric(dc.metrics.mean_squared_error),
+    dc.metrics.Metric(dc.metrics.r2_score)
+    ]
+    
 # parameter optimization
-'''
 params_dict = {
     'n_tasks': [task_count],
     'n_embedding': [10, 40, 100, 1000],
@@ -24,7 +27,7 @@ params_dict = {
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
 transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-                                                                         metric, transformers)                                                                  
+                                                                         metrics, transformers)                                                                  
 print(all_results) 
 
 # Single evaluation model
@@ -40,11 +43,11 @@ model = dc.models.DTNNModel(
 
 model.fit(train_dataset)
 # How well the model fit's the training subset of our data
-train_scores = model.evaluate(train_dataset, metric)
+train_scores = model.evaluate(train_dataset, metrics)
 # Validation of the model over several training iterations.
-valid_score = model.evaluate(valid_dataset, metric)
+valid_score = model.evaluate(valid_dataset, metrics)
 # How well the model generalizes the rest of the data
-test_score = model.evaluate(test_dataset, metric)
+test_score = model.evaluate(test_dataset, metrics)
 print("Training Scores: ")
 print(train_scores)
 print("Validity Scores: ")
@@ -52,3 +55,4 @@ print(valid_score)
 print("Test Scores: ")
 print(test_score)
 
+'''
