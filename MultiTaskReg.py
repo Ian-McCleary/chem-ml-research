@@ -12,7 +12,7 @@ train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dat
 task_count = len(dataset.y[0])
 n_features = len(dataset.X[0])
 
-print(len(task_count))
+print(task_count)
 #tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
 #train_dataset, valid_dataset, test_dataset = datasets
 
