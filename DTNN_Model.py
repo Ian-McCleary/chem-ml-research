@@ -38,6 +38,7 @@ model = dc.models.DTNNModel(
 )
 callback = dc.models.ValidationCallback(valid_dataset, 1000, metric)
 model.fit(train_dataset, nb_epoch=50, callbacks=callback)
+print(callback)
 '''
 model.fit(train_dataset)
 # How well the model fit's the training subset of our data
