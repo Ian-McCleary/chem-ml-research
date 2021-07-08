@@ -7,7 +7,7 @@ import pandas as pd
 # update task count as list ["task1", "task2"..]
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
 data = loader.create_dataset("dataset_out.csv")
-transformer = dc.trans.NormalizationTranformer(transform_y=True, dataset=data)
+transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
 dataset = transformer.transform(data)
 
 # Splits dataset into train/validation/test
