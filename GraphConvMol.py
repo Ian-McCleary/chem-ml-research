@@ -36,8 +36,8 @@ print("losses")
 print(losses)
 
 print("Evaluating model")
-train_scores = model.evaluate(train_dataset, [metric], transformer)
-valid_scores = model.evaluate(valid_dataset, [metric], transformer)
+train_scores = model.evaluate(train_dataset, [metric], [transformer])
+valid_scores = model.evaluate(valid_dataset, [metric], [transformer])
 
 print("Train scores")
 print(train_scores)
