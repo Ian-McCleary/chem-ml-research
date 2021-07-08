@@ -17,7 +17,7 @@ task_count = len(train_dataset.y[0])
 metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
 
 # supports width of channels from convolutional layers and dropout for each layer.
-model = dc.model.GraphConvModel(
+model = dc.models.GraphConvModel(
   n_tasks=task_count,
   number_atom_features=75,
   mode="regression"
