@@ -38,7 +38,7 @@ metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
 n_feat = 75
 # Batch size of models
 batch_size = 128
-model = dc.model.GraphConvModel(
+model = dc.models.GraphConvModel(
     len(delaney_tasks), batch_size=batch_size, mode='regression')
 
 # Fit trained model
