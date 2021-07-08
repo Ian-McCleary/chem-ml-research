@@ -19,6 +19,7 @@ metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
 model = dc.models.GraphConvModel(
   n_tasks=task_count,
   number_atom_features=75,
+  batch_size=128,
   mode="regression"
 )
 
