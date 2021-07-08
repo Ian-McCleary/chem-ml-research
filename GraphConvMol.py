@@ -2,8 +2,10 @@ from rdkit import Chem
 import deepchem as dc
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 
-
+tf.random.set_seed(123)
+np.random.seed(123)
 # update task count as list ["task1", "task2"..]
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
 data = loader.create_dataset("dataset_out.csv")
