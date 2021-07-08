@@ -35,6 +35,7 @@ def start_ds_creation(args):
 
         for molecule in mol_list:
             mol_path = os.path.join(batch_path, molecule)
+            print(mol_path)
             if os.path.isdir(mol_path):
                 # Pass smile string to featurizer, then add to input
                 smiles_arr[mol_count] = get_smiles(mol_path, molecule)
@@ -108,7 +109,7 @@ def get_total_electronic(folder_path):
         all_lines = f.readlines()
         line = all_lines[7]
         total_electronic = float(line[7:-34])
-        print(total_electronic)
+        #print(total_electronic)
         return total_electronic
 
 
@@ -124,7 +125,7 @@ def get_meta_energy_dif(neb_path):
         stable_float = float(stable_line[23:-7])
         meta_float = float(meta_line[23:-7])
         energy = meta_float - stable_float
-        print(energy)
+        #print(energy)
         return energy
 
 
