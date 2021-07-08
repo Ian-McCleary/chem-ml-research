@@ -5,8 +5,8 @@ import pandas as pd
 
 # update task count as list ["task1", "task2"..]
 
-loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=35))
-data = loader.create_dataset("dataset_10.csv")
+loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=40))
+data = loader.create_dataset("dataset_100.csv")
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
