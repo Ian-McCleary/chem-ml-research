@@ -49,10 +49,17 @@ model = dc.models.DTNNModel(
     dropout=0.2,
     learning_rate=0.000001
 )
-callback = dc.models.ValidationCallback(valid_dataset, 1000, metric, save_dir="callback")
-model.fit(train_dataset, nb_epoch=10, callbacks=callback)
+# Fit trained model
+# test
+losses = []
+for i in range(20):
+  loss = model.fit(train_dataset, nb_epoch=1)
+  print("loss: %s" % str(loss))
+  losses.append(loss)
+print("losses")
+print(losses)
 
-model.fit(train_dataset)
+# model.fit(train_dataset)
 # How well the model fit's the training subset of our data
 train_scores = model.evaluate(train_dataset, metrics)
 # Validation of the model over several training iterations.

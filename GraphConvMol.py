@@ -9,7 +9,7 @@ np.random.seed(123)
 # update task count as list ["task1", "task2"..]
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
 data = loader.create_dataset("dataset_out.csv")
-transformer = dc.trans.NormalizationTransformer(dataset=data)
+transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
 dataset = transformer.transform(data)
 
 # Splits dataset into train/validation/test
@@ -36,6 +36,10 @@ for i in range(20):
   losses.append(loss)
 print("losses")
 print(losses)
+
+print("Panda coeff")
+df = pd.DataFrame(data=[train_dataset.X,train_dataset.y])
+print(df.corr())
 
 print("Evaluating model")
 train_scores = model.evaluate(train_dataset, [metric], [transformer])
