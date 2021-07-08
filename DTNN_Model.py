@@ -24,7 +24,7 @@ params_dict = {
     'dropouts': [0.1, 0.2, 0.5, 0.9],
     'learning_rate': [0.001, 0.0001, 0.00001, 0.000001]
 }
-
+'''
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
 transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
@@ -46,7 +46,8 @@ model = dc.models.DTNNModel(
     dropout=0.2,
     learning_rate=0.000001
 )
-
+callback = dc.models.ValidationCallback(valid_dataset, 1000, metric, save_dir="callback")
+model.fit(train_dataset, nb_epoch=50, callbacks=callback)
 
 model.fit(train_dataset)
 # How well the model fit's the training subset of our data
@@ -61,4 +62,3 @@ print("Validity Scores: ")
 print(valid_score)
 print("Test Scores: ")
 print(test_score)
-'''
