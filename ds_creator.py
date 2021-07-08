@@ -5,7 +5,7 @@ import deepchem as dc
 from rdkit import Chem
 import pandas as pd
 
-# Example input: python ds_creator.py 100 -eiso -riso -verte
+# Example input: python ds_creator.py 100 -eiso -riso -vert
 # Parameters after molecule count specify which labels/outputs to use. Assumes 1 task regression model.
 
 # currently named Azo_Data_1 on cluster
@@ -186,25 +186,9 @@ def parse_args():
                         help="Add reverse isomerization as output task",
                         action="store_true"
                         )
-    parser.add_argument("-verte",
+    parser.add_argument("-vert",
                         "--vertical_excitation",
                         help="Add vertical excitation as output task",
-                        action="store_true"
-                        )
-    # Chose 1 featurizer to avoid conflict.
-    parser.add_argument("-cm",
-                        "--coulomb_matrix",
-                        help="Coulomb Matrix Featurizer",
-                        action="store_true"
-                        )
-    parser.add_argument("-ecfp",
-                        "--extended_connectivity_fingerprint",
-                        help="Extended Connectivity Fingerpring Featurizer",
-                        action="store_true"
-                        )
-    parser.add_argument("-cmf",
-                        "--convolutional_molecule",
-                        help="Convolutional Molecule Featurizer aka ConvMol",
                         action="store_true"
                         )
     return parser.parse_args()
