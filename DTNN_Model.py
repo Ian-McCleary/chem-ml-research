@@ -27,7 +27,7 @@ params_dict = {
     'dropouts': [0.1, 0.2, 0.5, 0.9],
     'learning_rate': [0.001, 0.0001, 0.00001, 0.000001]
 }
-'''
+
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
 transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
@@ -40,7 +40,7 @@ print(best_hyperparams)
 
 # Single evaluation model
 # Single task: params (1, 50, 0.2, 1e-06)
-'''
+
 print(data.get_shape())
 model = dc.models.DTNNModel(
     n_tasks=task_count,
@@ -49,6 +49,7 @@ model = dc.models.DTNNModel(
     dropout=0.2,
     learning_rate=0.000001
 )
+
 # Fit trained model
 # test
 losses = []
