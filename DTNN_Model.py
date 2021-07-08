@@ -15,8 +15,8 @@ task_count = len(train_dataset.y[0])
 
 
 metrics = [
-    dc.metrics.Metric(dc.metrics.rms_score),
-    dc.metrics.Metric(dc.metrics.r2_score)
+    dc.metrics.Metric(dc.metrics.rms_score)
+    #dc.metrics.Metric(dc.metrics.r2_score)
     ]
 metric = dc.metrics.Metric(dc.metrics.rms_score)
 

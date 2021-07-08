@@ -17,7 +17,8 @@ splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset)
 task_count = len(train_dataset.y[0])
 
-metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
+# metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
+metric = dc.metrics.Metric(dc.metrics.rms_score)
 
 # supports width of channels from convolutional layers and dropout for each layer.
 model = dc.models.GraphConvModel(
