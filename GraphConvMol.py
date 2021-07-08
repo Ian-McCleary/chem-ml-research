@@ -1,6 +1,8 @@
 from rdkit import Chem
 import deepchem as dc
 import numpy as np
+import pandas as pd
+import tempfile
 
 
 data = dc.data.datasets.NumpyDataset.from_json("dataset_out")

@@ -1,14 +1,18 @@
 from rdkit import Chem
 import deepchem as dc
 import numpy as np
+import pandas as pd
+import tempfile
 
+# update task count as list ["task1", "task2"..]
 
-data = dc.data.datasets.NumpyDataset.from_json("dataset_out")
+loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=35))
+data = loader.create_dataset("dataset_out.csv")
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
-task_count = len(data.y[0])
+task_count = len(train_dataset.y[0])
 
 
 metrics = [
@@ -47,7 +51,7 @@ model = dc.models.DTNNModel(
     learning_rate=0.000001
 )
 callback = dc.models.ValidationCallback(valid_dataset, 1000, metric, save_dir="callback")
-model.fit(train_dataset, nb_epoch=50, callbacks=callback)
+model.fit(train_dataset, nb_epoch=10, callbacks=callback)
 
 model.fit(train_dataset)
 # How well the model fit's the training subset of our data
