@@ -7,10 +7,12 @@ import pandas as pd
 # update task count as list ["task1", "task2"..]
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
 data = loader.create_dataset("dataset_out.csv")
+transformer = dc.trans.NormalizationTranformer(transform_y=True, dataset=data)
+dataset = transformer.transform(data)
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
-train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
+train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset)
 task_count = len(train_dataset.y[0])
 
 metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
@@ -34,8 +36,8 @@ print("losses")
 print(losses)
 
 print("Evaluating model")
-train_scores = model.evaluate(train_dataset, [metric])
-valid_scores = model.evaluate(valid_dataset, [metric])
+train_scores = model.evaluate(train_dataset, [metric], transformer)
+valid_scores = model.evaluate(valid_dataset, [metric], transformer)
 
 print("Train scores")
 print(train_scores)
