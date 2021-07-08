@@ -78,7 +78,7 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count):
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1])), columns=["ids", "smiles", "task1", "task2"])
     elif output_count == 3:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=["ids", "smiles", "task1", "task2", "task3"])
-    df.to_csv('dataset_200.csv')
+    df.to_csv('dataset_500.csv')
     print("DONE!")
 
 
