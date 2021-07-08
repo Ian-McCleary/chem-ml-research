@@ -5,12 +5,14 @@ import pandas as pd
 import tempfile
 
 
-data = dc.data.datasets.NumpyDataset.from_json("dataset_out")
+# update task count as list ["task1", "task2"..]
+loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
+data = loader.create_dataset("dataset_out.csv")
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
 train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
-task_count = len(data.y[0])
+task_count = len(train_dataset.y[0])
 
 metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
 
