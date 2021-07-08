@@ -2,7 +2,6 @@ from rdkit import Chem
 import deepchem as dc
 import numpy as np
 import pandas as pd
-import tempfile
 
 
 # update task count as list ["task1", "task2"..]
@@ -22,6 +21,16 @@ model = dc.models.GraphConvModel(
   number_atom_features=75,
   mode="regression"
 )
+
+# Fit trained model
+# test
+losses = []
+for i in range(20):
+  loss = model.fit(train_dataset, nb_epoch=1)
+  print("loss: %s" % str(loss))
+  losses.append(loss)
+print("losses")
+print(losses)
 
 print("Evaluating model")
 train_scores = model.evaluate(train_dataset, [metric])

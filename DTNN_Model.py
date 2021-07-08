@@ -2,7 +2,6 @@ from rdkit import Chem
 import deepchem as dc
 import numpy as np
 import pandas as pd
-import tempfile
 
 # update task count as list ["task1", "task2"..]
 
