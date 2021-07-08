@@ -7,5 +7,5 @@ Example command line inputs:
 For xyz2mol:
 `python xyz2mol.py molecule.xyz --no-graph`
 
-For dc_creator:
-`python ds_creator.py 10 -eiso -riso -vexci`
+For dc_creator (each parameter is a task):
+`python ds_creator.py 10 -eiso -riso -vert`
