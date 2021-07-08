@@ -3,6 +3,7 @@ import os
 import numpy as np
 import deepchem as dc
 from rdkit import Chem
+import pandas as pd
 
 # Example input: python ds_creator.py 100 -eiso -riso -verte
 # Parameters after molecule count specify which labels/outputs to use. Assumes 1 task regression model.
@@ -24,9 +25,10 @@ def start_ds_creation(args):
         output_count += 1
     if args.vertical_excitation:
         output_count += 1
-
+    if output_count == 0:
+        raise ValueError('You must specify 1 output field. output_count=0')
     # weight_arr = np.ones([args.count, output_count], dtype=float)
-    output_arr = np.zeros([args.count, output_count], dtype=float)
+    output_arr = np.zeros([output_count, args.count], dtype=float)
     mol_count = 0
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
@@ -42,10 +44,10 @@ def start_ds_creation(args):
                 output_count = 0
                 neb_path = get_neb_path(mol_path)
                 if args.reverse_isomerization:
-                    output_arr[mol_count, output_count] = au_to_ev(get_barrier_height(neb_path))
+                    output_arr[output_count, mol_count] = au_to_ev(get_barrier_height(neb_path))
                     output_count += 1
                 if args.eisomerization:
-                    output_arr[mol_count, output_count] = au_to_ev(get_meta_energy_dif(neb_path))
+                    output_arr[output_count, mol_count] = au_to_ev(get_meta_energy_dif(neb_path))
                     output_count += 1
                 if args.vertical_excitation:
                     rel_gs_folder = get_gs_ex_path(mol_path, "gs")
@@ -53,7 +55,7 @@ def start_ds_creation(args):
                     gs = get_total_electronic(rel_gs_folder)
                     ex = get_total_electronic(rel_ex_folder)
                     total_electronic_difference = ex - gs
-                    output_arr[mol_count, output_count] = au_to_ev(total_electronic_difference)
+                    output_arr[output_count, mol_count] = au_to_ev(total_electronic_difference)
                     output_count += 1
 
                 mol_count += 1
@@ -65,51 +67,20 @@ def start_ds_creation(args):
         if mol_count >= args.count:
             break
 
-    input_arr = featurize_smiles(smiles_arr, args)
-    create_save_dataset(id_arr, input_arr, output_arr, output_count)
+    create_save_dataset(id_arr, smiles_arr, output_arr, output_count)
 
 
-# Allows for custom featurizer code for specific models
-def featurize_smiles(smile_arr, args):
-    # add deepchem featurizer code here such as Coulombmatrix ect..
 
-    # Coulomb Matrix Featurizer
-    input_X = np.zeros([len(smile_arr)])
-    if args.coulomb_matrix:
-        input_X = np.zeros([len(smile_arr), 35, 35])
-        for i in range(len(smile_arr)):
-            generator = dc.utils.ConformerGenerator(max_conformers=1)
-            azo_mol = generator.generate_conformers(Chem.MolFromSmiles(smile_arr[i]))
-            coulomb_mat = dc.feat.CoulombMatrix(max_atoms=35, remove_hydrogens=True)
-            features = coulomb_mat(azo_mol)
-            input_X[i] = features
-
-    # Circular Fingerprint Featurizer
-    if args.extended_connectivity_fingerprint:
-        size = 1024
-        radius = 2
-        input_X = np.zeros([len(smile_arr), size])
-        for i in range(len(smile_arr)):
-            featurizer = dc.feat.CircularFingerprint(size=size, radius=radius)
-            features = featurizer.featurize(smile_arr[i])
-            input_X[i] = features
-
-    # Convolutional Molecule Featurizer
-    if args.convolutional_molecule:
-        featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False)
-        input_X = np.dtype(object)
-        for i in range(len(smile_arr)):
-            f = featurizer.featurize(smile_arr[i])
-            input_X[i] = f
-
-    return input_X
-
-
-# Create and save the dataset with featurized input. Weight vector to be added here
-def create_save_dataset(id, input, output, output_count):
-    dataset = dc.data.NumpyDataset(X=input, y=output, ids=id, n_tasks=output_count)
-    file_name = "dataset_out"
-    dataset.to_json(dataset, file_name)
+# Create and save the dataset. Weight vector to be added here
+# Featurizing should be done in ML model, deepchem CSVLoader class
+def create_save_dataset(id, smiles_arr, output_arr, output_count):
+    if output_count == 1:
+        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0])), columns=["ids", "smiles", "task1"])
+    elif output_count == 2:
+        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1])), columns=["ids", "smiles", "task1", "task2"])
+    elif output_count == 3:
+        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=["ids", "smiles", "task1", "task2", "task3"])
+    df.to_csv('dataset_out.csv')
     print("DONE!")
 
 
