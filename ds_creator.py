@@ -94,6 +94,14 @@ def featurize_smiles(smile_arr, args):
             features = featurizer.featurize(smile_arr[i])
             input_X[i] = features
 
+    # Convolutional Molecule Featurizer
+    if args.convolutional_molecule:
+        featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False)
+        input_X = np.dtype(object)
+        for i in range(len(smile_arr)):
+            f = featurizer.featurize(smile_arr[i])
+            input_X[i] = f
+
     return input_X
 
 
@@ -195,7 +203,8 @@ def parse_args():
     parser.add_argument("count",
                         help="Specify how many molecules to use in dataset.",
                         type=int,
-                        default=5)
+                        default=5
+                        )
     parser.add_argument("-eiso",
                         "--eisomerization",
                         help="Add delta E_iso as output task",
@@ -214,12 +223,19 @@ def parse_args():
     # Chose 1 featurizer to avoid conflict.
     parser.add_argument("-cm",
                         "--coulomb_matrix",
-                        help="Coulomb Matrix featurization to input",
-                        action="store_true")
+                        help="Coulomb Matrix Featurizer",
+                        action="store_true"
+                        )
     parser.add_argument("-ecfp",
                         "--extended_connectivity_fingerprint",
-                        help="Extended Connectivity Fingerpring featurization to input",
-                        action="store_true")
+                        help="Extended Connectivity Fingerpring Featurizer",
+                        action="store_true"
+                        )
+    parser.add_argument("-cmf",
+                        "--convolutional_molecule",
+                        help="Convolutional Molecule Featurizer aka ConvMol",
+                        action="store_true"
+                        )
     return parser.parse_args()
 
 
