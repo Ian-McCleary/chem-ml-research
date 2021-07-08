@@ -1,8 +1,6 @@
 import argparse
 import os
 import numpy as np
-import deepchem as dc
-from rdkit import Chem
 import pandas as pd
 
 # Example input: python ds_creator.py 100 -eiso -riso -vert
