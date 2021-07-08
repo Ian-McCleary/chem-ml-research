@@ -9,7 +9,7 @@ import pandas as pd
 # Parameters after molecule count specify which labels/outputs to use. Assumes 1 task regression model.
 
 # currently named Azo_Data_1 on cluster
-start_dir = "./Data/"
+start_dir = "./cluster/research-groups/kowalczyk/stf_screen_cluster/Azo_Data_1"
 
 
 # Driver method for multi-output regression dataset creation.
