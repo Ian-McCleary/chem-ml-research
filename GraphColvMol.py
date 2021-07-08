@@ -42,6 +42,7 @@ model = GraphConvModel(
     len(delaney_tasks), batch_size=batch_size, mode='regression')
 
 # Fit trained model
+# test
 losses = []
 for i in range(20):
   loss = model.fit(train_dataset, nb_epoch=1)
