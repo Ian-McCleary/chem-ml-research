@@ -34,12 +34,12 @@ params_dict = {
 
 params_dict = {
     'n_tasks': [task_count],
-    'mode': ["regression"],
     'number_atom_features': [75, 100, 150],
     'graph_conv_layers': [[32, 32], [64,64]],
     'dense_layer_size': [64, 128],
     'dropouts': [0.2, 0.5],
     'learning_rate': [0.001],
+    'mode': ["regression"],
     'batch_normalize': [True]
 }
 
