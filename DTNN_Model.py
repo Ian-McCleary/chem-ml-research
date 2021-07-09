@@ -6,7 +6,7 @@ import pandas as pd
 # update task count as list ["task1", "task2"..]
 
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=60))
-data = loader.create_dataset("dataset_10.csv")
+data = loader.create_dataset("dataset_1000.csv")
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
@@ -55,7 +55,7 @@ model = dc.models.DTNNModel(
 # Fit trained model
 # test
 losses = []
-for i in range(20):
+for i in range(200):
   loss = model.fit(train_dataset, nb_epoch=1)
   print("loss: %s" % str(loss))
   losses.append(loss)
@@ -65,7 +65,7 @@ print("\n")
 print("Valid_dataset losses:")
 
 loses = []
-for i in range(20):
+for i in range(200):
     loss = model.fit(valid_dataset, nb_epoch=1)
     print("loss: %s" % str(loss))
     losses.append(loss)
