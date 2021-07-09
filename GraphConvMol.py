@@ -39,8 +39,7 @@ params_dict = {
     'dense_layer_size': [64, 128],
     'dropouts': [0.2, 0.5],
     'learning_rate': [0.001],
-    'mode': ["regression"],
-    'batch_normalize': [True]
+    'mode': ["regression"]
 }
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
@@ -67,8 +66,7 @@ model = dc.models.GraphConvModel(
   dense_layer_size=best_hyperparams[3],
   dropouts=best_hyperparams[4],
   learning_rate=best_hyperparams[5],
-  mode="regression",
-  batch_normalize=True
+  mode="regression"
 )
 '''
 model = dc.models.GraphConvModel(
