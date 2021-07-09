@@ -31,9 +31,9 @@ params_dict = {
 }
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
-transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
+#transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-                                                                         metric, transformers)                                                                  
+                                                                         metric, transformer)                                                                  
 print(all_results)
 print("\n")
 print(best_model)
