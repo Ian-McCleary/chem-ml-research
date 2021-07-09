@@ -23,12 +23,12 @@ metric = dc.metrics.Metric(dc.metrics.rms_score)
 # parameter optimization
 params_dict = {
     'n_tasks': [task_count],
-    'mode': ["regression"],
     'number_atom_features': [15, 30, 75, 100, 150],
     'graph_conv_layers': [[32, 32], [64,64], [128,128]],
     'dense_layer_size': [8, 16, 32, 64, 128],
     'dropouts': [0.1, 0.2, 0.5, 0.9],
-    'learning_rate': [0.001, 0.0001, 0.00001, 0.000001, 0.0000001]
+    'learning_rate': [0.001, 0.0001, 0.00001, 0.000001, 0.0000001],
+    'mode': ["regression"],
 }
 '''
 
@@ -80,7 +80,7 @@ model = dc.models.GraphConvModel(
 # Fit trained model
 # test
 losses = []
-for i in range(20):
+for i in range(200):
   loss = model.fit(train_dataset, nb_epoch=1)
   print("loss: %s" % str(loss))
   losses.append(loss)
@@ -88,7 +88,7 @@ print("losses")
 print(losses)
 
 losses = []
-for i in range(20):
+for i in range(200):
   loss = model.fit(valid_dataset, nb_epoch=1)
   print("loss: %s" % str(loss))
   losses.append(loss)
