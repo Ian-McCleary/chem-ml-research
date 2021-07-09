@@ -23,6 +23,7 @@ metric = dc.metrics.Metric(dc.metrics.rms_score)
 # parameter optimization
 params_dict = {
     'n_tasks': [task_count],
+    'mode': ["regression"],
     'number_atom_features': [15, 30, 75, 100, 150],
     'graph_conv_layers': [[32, 32], [64,64], [128,128]],
     'dense_layer_size': [8, 16, 32, 64, 128],
