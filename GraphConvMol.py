@@ -39,7 +39,7 @@ params_dict = {
     'graph_conv_layers': [[32, 32], [64,64]],
     'dense_layer_size': [64, 128],
     'dropouts': [0.2, 0.5],
-    'batch_normalize': False,
+    'batch_normalize': [False],
     'learning_rate': [0.001]
 }
 
