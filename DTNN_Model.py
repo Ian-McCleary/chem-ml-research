@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 # update task count as list ["task1", "task2"..]
-
+# TODO check that transformers are applied
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=65))
 data = loader.create_dataset("dataset_1000.csv")
 
