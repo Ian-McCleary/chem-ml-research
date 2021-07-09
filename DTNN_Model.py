@@ -6,7 +6,7 @@ import pandas as pd
 # update task count as list ["task1", "task2"..]
 
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=60))
-data = loader.create_dataset("dataset_100.csv")
+data = loader.create_dataset("dataset_10.csv")
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
@@ -25,7 +25,7 @@ params_dict = {
     'n_tasks': [task_count],
     'n_embedding': [5, 10, 50, 100],
     'dropouts': [0.1, 0.2, 0.5, 0.9],
-    'learning_rate': [0.001, 0.0001, 0.00001, 0.000001]
+    'learning_rate': [0.001, 0.0001, 0.00001, 0.000001, 0.0000001]
 }
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
@@ -46,10 +46,10 @@ print(best_hyperparams[2])
 
 model = dc.models.DTNNModel(
     n_tasks=task_count,
-    n_embedding=50,
+    n_embedding=best_hyperparams[1],
     mode="regression",
-    dropout=0.2,
-    learning_rate=0.000001
+    dropout=best_hyperparams[2],
+    learning_rate=best_hyperparams[3]
 )
 
 # Fit trained model
@@ -59,6 +59,16 @@ for i in range(20):
   loss = model.fit(train_dataset, nb_epoch=1)
   print("loss: %s" % str(loss))
   losses.append(loss)
+print("losses")
+print(losses)
+print("\n")
+print("Valid_dataset losses:")
+
+loses = []
+for i in range(20):
+    loss = model.fit(valid_dataset, nb_epoch=1)
+    print("loss: %s" % str(loss))
+    losses.append(loss)
 print("losses")
 print(losses)
 
