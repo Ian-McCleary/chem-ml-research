@@ -39,9 +39,10 @@ params_dict = {
     'graph_conv_layers': [[32, 32], [64,64]],
     'dense_layer_size': [64, 128],
     'dropouts': [0.2, 0.5],
+    'batch_normalize': False,
     'learning_rate': [0.001]
 }
-'''
+
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
 #transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
@@ -76,7 +77,7 @@ model = dc.models.GraphConvModel(
   learning_rate=0.001,
   mode="regression"
 )
-
+'''
 # Fit trained model
 # test
 losses = []
