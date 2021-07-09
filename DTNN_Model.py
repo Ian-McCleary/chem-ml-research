@@ -5,7 +5,7 @@ import pandas as pd
 
 # update task count as list ["task1", "task2"..]
 
-loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=60))
+loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=65))
 data = loader.create_dataset("dataset_1000.csv")
 
 # Splits dataset into train/validation/test
@@ -23,7 +23,7 @@ metric = dc.metrics.Metric(dc.metrics.rms_score)
 # parameter optimization
 params_dict = {
     'n_tasks': [task_count],
-    'n_embedding': [5, 10, 50, 100],
+    'n_embedding': [5, 10, 50, 100, 200],
     'dropouts': [0.1, 0.2, 0.5, 0.9],
     'learning_rate': [0.001, 0.0001, 0.00001, 0.000001, 0.0000001]
 }
