@@ -39,7 +39,7 @@ params_dict = {
     'graph_conv_layers': [[32, 32], [64,64]],
     'dense_layer_size': [64, 128],
     'dropouts': [0.2, 0.5],
-    'batch_normalize': [False],
+    'batch_normalize': [True],
     'learning_rate': [0.001]
 }
 
@@ -67,7 +67,7 @@ model = dc.models.GraphConvModel(
   dense_layer_size=best_hyperparams[3],
   dropouts=best_hyperparams[4],
   learning_rate=best_hyperparams[5],
-  batch_normalize=False,
+  batch_normalize=True,
   mode="regression"
 )
 '''
