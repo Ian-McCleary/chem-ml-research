@@ -18,6 +18,7 @@ def start_ds_creation(args):
     smiles_arr = []
     smiles_arr = ["hi" for i in range(args.count)]
     output_count = 0
+    failed_arr = []
     if args.eisomerization:
         output_count += 1
     if args.reverse_isomerization:
@@ -43,6 +44,9 @@ def start_ds_creation(args):
                 id_arr[mol_count] = molecule
                 output_count = 0
                 neb_path = get_neb_path(mol_path)
+                if not os.path.isdir(neb_path):
+                    failed_arr.append(molecule)
+                    break
                 if args.reverse_isomerization:
                     output_arr[output_count, mol_count] = au_to_ev(get_barrier_height(neb_path))
                     output_count += 1
@@ -61,6 +65,7 @@ def start_ds_creation(args):
                 mol_count += 1
                 print("\n")
             else:
+                failed_arr.append(molecule)
                 print("Invalid molecule filepath " + mol_path + " (This may not be a folder)\n")
             if mol_count >= args.count:
                 break
