@@ -30,7 +30,7 @@ params_dict = {
     'learning_rate': [0.001, 0.0001, 0.00001, 0.000001, 0.0000001]
 }
 
-optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
+optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
 #transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
                                                                          metric, [transformer])                                                                  
