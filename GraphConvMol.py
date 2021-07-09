@@ -66,7 +66,6 @@ model = dc.models.GraphConvModel(
   dense_layer_size=best_hyperparams[3],
   dropouts=best_hyperparams[4],
   learning_rate=best_hyperparams[5],
-  batch_normalize=True,
   mode="regression"
 )
 '''
