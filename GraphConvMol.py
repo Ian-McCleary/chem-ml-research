@@ -19,7 +19,7 @@ task_count = len(train_dataset.y[0])
 
 # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
 metric = dc.metrics.Metric(dc.metrics.rms_score)
-
+'''
 # parameter optimization
 params_dict = {
     'n_tasks': [task_count],
@@ -29,6 +29,17 @@ params_dict = {
     'dense_layer_size': [8, 16, 32, 64, 128],
     'dropouts': [0.1, 0.2, 0.5, 0.9],
     'learning_rate': [0.001, 0.0001, 0.00001, 0.000001, 0.0000001]
+}
+'''
+
+params_dict = {
+    'n_tasks': [task_count],
+    'mode': ["regression"],
+    'number_atom_features': [75, 100, 150],
+    'graph_conv_layers': [[32, 32], [64,64]],
+    'dense_layer_size': [64, 128],
+    'dropouts': [0.2, 0.5],
+    'learning_rate': [0.001]
 }
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
@@ -42,7 +53,6 @@ print("\n")
 print(best_hyperparams)
 
 # Single evaluation model
-# Single task: params (1, 50, 0.2, 1e-06)
 print("Hyperparam list")
 print(best_hyperparams[1])
 print(best_hyperparams[2])
