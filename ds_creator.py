@@ -46,7 +46,7 @@ def start_ds_creation(args):
                 neb_path = get_neb_path(mol_path)
                 if not os.path.isdir(neb_path):
                     failed_arr.append(molecule)
-                    break
+                    continue
                 if args.reverse_isomerization:
                     output_arr[output_count, mol_count] = au_to_ev(get_barrier_height(neb_path))
                     output_count += 1
@@ -72,13 +72,13 @@ def start_ds_creation(args):
         if mol_count >= args.count:
             break
 
-    create_save_dataset(id_arr, smiles_arr, output_arr, output_count)
+    create_save_dataset(id_arr, smiles_arr, output_arr, output_count, failed_arr)
 
 
 
 # Create and save the dataset. Weight vector to be added here
 # Featurizing should be done in ML model, deepchem CSVLoader class
-def create_save_dataset(id, smiles_arr, output_arr, output_count):
+def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr):
     if output_count == 1:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0])), columns=["ids", "smiles", "task1"])
     elif output_count == 2:
@@ -86,6 +86,8 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count):
     elif output_count == 3:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=["ids", "smiles", "task1", "task2", "task3"])
     df.to_csv('dataset_10.csv')
+    failed_df = pd.DataFrame(list(zip(failed_arr)), columns=["Failed Molecules"])
+    failed_df.to_csv("failed_molecules")
     print("DONE!")
 
 
