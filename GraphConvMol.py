@@ -9,7 +9,7 @@ tf.random.set_seed(123)
 np.random.seed(123)
 # update task count as list ["task1", "task2"..]
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
-data = loader.create_dataset("dataset_10.csv")
+data = loader.create_dataset("dataset_200.csv")
 transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
 dataset = transformer.transform(data)
 
@@ -97,7 +97,7 @@ print("losses")
 print(valid_losses)
 
 df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-df.to_csv("Conv_loss")
+df.to_csv("Conv_loss_200.csv")
 
 print("Evaluating model")
 train_scores = model.evaluate(train_dataset, [metric], [transformer])
