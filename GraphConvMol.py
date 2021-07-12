@@ -80,25 +80,24 @@ model = dc.models.GraphConvModel(
 '''
 # Fit trained model
 # test
-losses = []
+train_losses = []
 for i in range(200):
   loss = model.fit(train_dataset, nb_epoch=1)
   print("loss: %s" % str(loss))
-  losses.append(loss)
+  train_losses.append(loss)
 print("losses")
-print(losses)
+print(train_losses)
 
-losses = []
+valid_losses = []
 for i in range(200):
   loss = model.fit(valid_dataset, nb_epoch=1)
   print("loss: %s" % str(loss))
-  losses.append(loss)
+  valid_losses.append(loss)
 print("losses")
-print(losses)
+print(valid_losses)
 
-print("Panda coeff")
-df = pd.DataFrame(data=[train_dataset.X,train_dataset.y])
-print(df.corr())
+df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
+df.to_csv("Conv_loss")
 
 print("Evaluating model")
 train_scores = model.evaluate(train_dataset, [metric], [transformer])
