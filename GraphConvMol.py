@@ -9,7 +9,7 @@ tf.random.set_seed(123)
 np.random.seed(123)
 # update task count as list ["task1", "task2"..]
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
-data = loader.create_dataset("chem-ml-research/dataset_10000.csv")
+data = loader.create_dataset("dataset_10000.csv")
 transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
 dataset = transformer.transform(data)
 
