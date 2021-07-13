@@ -114,7 +114,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
 
   # file_name = "loss_" + str(l_rate) + ".csv"
   df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-  df.to_csv("loss_output.csv")
+  df.to_csv("/GraphConv_Out/loss_output.csv")
 
   print("Evaluating model")
   train_scores = model.evaluate(train_dataset, [metric], [transformer])
