@@ -6,6 +6,7 @@ import pandas as pd
 import tensorflow as tf
 import argparse
 
+# Driver method
 def start_training(args):
       
   tf.random.set_seed(123)
@@ -23,8 +24,13 @@ def start_training(args):
 
   # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
   metric = dc.metrics.Metric(dc.metrics.rms_score)
-  '''
+
+  model = param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
+  loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
+
+
   # parameter optimization
+  '''
   params_dict = {
       'n_tasks': [task_count],
       'number_atom_features': [15, 30, 75, 100, 150],
@@ -35,7 +41,7 @@ def start_training(args):
       'mode': ["regression"],
   }
   '''
-  '''
+def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer):
   params_dict = {
       'n_tasks': [task_count],
       'number_atom_features': [75, 100, 150],
@@ -62,17 +68,20 @@ def start_training(args):
   print(best_hyperparams[2])
 
 
-    # supports width of channels from convolutional layers and dropout for each layer.
-    model = dc.models.GraphConvModel(
-      n_tasks=task_count,
-      number_atom_features=best_hyperparams[1],
-      graph_conv_layers=best_hyperparams[2],
-      dense_layer_size=best_hyperparams[3],
-      dropouts=best_hyperparams[4],
-      learning_rate=best_hyperparams[5],
-      mode="regression"
-    )
-    '''
+  # supports width of channels from convolutional layers and dropout for each layer.
+  model = dc.models.GraphConvModel(
+    n_tasks=task_count,
+    number_atom_features=best_hyperparams[1],
+    graph_conv_layers=best_hyperparams[2],
+    dense_layer_size=best_hyperparams[3],
+    dropouts=best_hyperparams[4],
+    learning_rate=best_hyperparams[5],
+    mode="regression"
+  )
+  return model
+
+
+def fixed_param_model(task_count):
   l_rate = 0.1
   while l_rate > 0.00001:
     model = dc.models.GraphConvModel(
@@ -84,44 +93,47 @@ def start_training(args):
       learning_rate=l_rate,
       mode="regression"
     )
-    
-    # Fit trained model
-    train_losses = []
-    for i in range(100):
-      loss = model.fit(train_dataset, nb_epoch=1)
-      print("loss: %s" % str(loss))
-      train_losses.append(loss)
-    print("losses")
-    print(train_losses)
+    return model
 
-    valid_losses = []
-    for i in range(100):
-      loss = model.fit(valid_dataset, nb_epoch=1)
-      print("loss: %s" % str(loss))
-      valid_losses.append(loss)
-    print("losses")
-    print(valid_losses)
+# Calculate loss over multiple training rounds
+def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
+  # Fit trained model
+  train_losses = []
+  for i in range(100):
+    loss = model.fit(train_dataset, nb_epoch=1)
+    print("loss: %s" % str(loss))
+    train_losses.append(loss)
+  print("losses")
+  print(train_losses)
 
-    file_name = "loss_" + str(l_rate) + ".csv"
-    df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-    df.to_csv(file_name)
+  valid_losses = []
+  for i in range(100):
+    loss = model.fit(valid_dataset, nb_epoch=1)
+    print("loss: %s" % str(loss))
+    valid_losses.append(loss)
+  print("losses")
+  print(valid_losses)
 
-    print("Evaluating model")
-    train_scores = model.evaluate(train_dataset, [metric], [transformer])
-    valid_scores = model.evaluate(valid_dataset, [metric], [transformer])
+  # file_name = "loss_" + str(l_rate) + ".csv"
+  df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
+  df.to_csv("loss_output.csv")
 
-    print("Train scores")
-    print(train_scores)
+  print("Evaluating model")
+  train_scores = model.evaluate(train_dataset, [metric], [transformer])
+  valid_scores = model.evaluate(valid_dataset, [metric], [transformer])
 
-    print("Validation scores")
-    print(valid_scores)
-    l_rate = l_rate * 0.1
+  print("Train scores")
+  print(train_scores)
+
+  print("Validation scores")
+  print(valid_scores)
+  # l_rate = l_rate * 0.1
 
 def parse_args():
   parser = argparse.ArgumentParser()
   parser.add_argument("learn_rate",
                       help="Specify the learning rate of the model",
-                      type=int,
+                      type=float,
                       default=0.001
                       )
   return parser.parse_args()
