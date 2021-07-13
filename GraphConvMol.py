@@ -87,7 +87,7 @@ def start_training(args):
     
     # Fit trained model
     train_losses = []
-    for i in range(200):
+    for i in range(100):
       loss = model.fit(train_dataset, nb_epoch=1)
       print("loss: %s" % str(loss))
       train_losses.append(loss)
@@ -95,7 +95,7 @@ def start_training(args):
     print(train_losses)
 
     valid_losses = []
-    for i in range(200):
+    for i in range(100):
       loss = model.fit(valid_dataset, nb_epoch=1)
       print("loss: %s" % str(loss))
       valid_losses.append(loss)
