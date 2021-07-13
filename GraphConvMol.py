@@ -102,7 +102,7 @@ def start_training(args):
     print("losses")
     print(valid_losses)
 
-    file_name = "loss_" + l_rate + ".csv"
+    file_name = "loss_" + str(l_rate) + ".csv"
     df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
     df.to_csv(file_name)
 
