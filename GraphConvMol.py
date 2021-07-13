@@ -58,8 +58,6 @@ def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, m
                                                                           metric, [transformer])                                                                  
   print(all_results)
   print("\n")
-  # print(best_model)
-  print("\n")
   print(best_hyperparams)
 
   # Single evaluation model
