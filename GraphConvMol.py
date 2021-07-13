@@ -20,7 +20,7 @@ task_count = len(train_dataset.y[0])
 
 # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
 metric = dc.metrics.Metric(dc.metrics.rms_score)
-
+'''
 # parameter optimization
 params_dict = {
     'n_tasks': [task_count],
@@ -39,10 +39,10 @@ params_dict = {
     'graph_conv_layers': [[32, 32], [64,64]],
     'dense_layer_size': [64, 128],
     'dropouts': [0.2, 0.5],
-    'learning_rate': [0.001],
+    'learning_rate': [0.001, 0.0001],
     'mode': ["regression"],
 }
-'''
+
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
 #transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
 best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
@@ -79,7 +79,6 @@ model = dc.models.GraphConvModel(
 )
 '''
 # Fit trained model
-# test
 train_losses = []
 for i in range(200):
   loss = model.fit(train_dataset, nb_epoch=1)
