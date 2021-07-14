@@ -107,10 +107,10 @@ def find_learn_rate(task_count, valid_dataset):
       learning_rate=l_rate,
       mode="regression"
     )
-    loss = model.fit(valid_dataset, nb_epoch=1)
+    loss = model.fit(valid_dataset, nb_epoch=5)
     loss_arr.append(loss)
     learn_arr.append(l_rate)
-    l_rate = l_rate * 2
+    l_rate = l_rate * 1.6
 
   df = pd.DataFrame(list(zip(learn_arr, loss_arr)), columns=["learning_rate", "validity_loss"])
   df.to_csv("gcm_learning_curve.csv")
