@@ -23,8 +23,7 @@ params_dict = {
     'n_features': [n_features],
     'layer_sizes': [[500], [1000]],
     'dropouts': [0.2, 0.5],
-    'learning_rate': [0.001, 0.0001],
-    'n_classes': [len(data.y)]
+    'learning_rate': [0.001, 0.0001]
 }
 #print(data.y)
 
@@ -32,7 +31,7 @@ params_dict = {
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
 metric = dc.metrics.Metric(dc.metrics.rms_score)
 best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
-        params_dict, train_dataset, valid_dataset, metric, transformer)
+        params_dict, train_dataset, valid_dataset, metric, [transformer])
 print(all_results)
 
 model = dc.models.MultitaskRegressor(
