@@ -1,4 +1,3 @@
-import rdkit
 from rdkit import Chem
 import deepchem as dc
 import numpy as np
@@ -7,7 +6,7 @@ import tensorflow as tf
 import argparse
 
 # Driver method
-def start_training(args):
+def start_training():
       
   tf.random.set_seed(123)
   np.random.seed(123)
@@ -149,7 +148,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
   print("Validation scores")
   print(valid_scores)
   # l_rate = l_rate * 0.1
-
+'''
 def parse_args():
   parser = argparse.ArgumentParser()
   parser.add_argument("learn_rate",
@@ -158,11 +157,11 @@ def parse_args():
                       default=0.001
                       )
   return parser.parse_args()
-
+'''
 
 def main():
-  args = parse_args()
-  start_training(args)
+  # args = parse_args()
+  start_training()
 
 
 if __name__ == "__main__":
