@@ -19,7 +19,7 @@ metrics = [
     #dc.metrics.Metric(dc.metrics.r2_score)
     ]
 metric = dc.metrics.Metric(dc.metrics.rms_score)
-
+'''
 # parameter optimization
 params_dict = {
     'n_tasks': [task_count],
@@ -49,7 +49,14 @@ model = dc.models.DTNNModel(
     dropout=best_hyperparams[2],
     learning_rate=best_hyperparams[3]
 )
-
+'''
+model = dc.models.DTNNModel(
+    n_tasks = task_count,
+    n_embedding=50,
+    mode="regression",
+    dropout=0.2,
+    learning_rate=0.001
+)
 # Fit trained model
 # test
 train_losses = []
@@ -70,8 +77,8 @@ for i in range(100):
 print("losses")
 print(valid_losses)
 
-df = pd.DataFrame(list(zip(train_losses, valid_losses, best_hyperparams)), columns=["train_losses", "valid_losses", "parameters"])
-df.to_csv("/Losses/DTNN_10k.csv")
+df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
+df.to_csv("/Losses/DTNN_fixed_learn.csv")
 
 # model.fit(train_dataset)
 # How well the model fit's the training subset of our data
