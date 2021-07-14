@@ -6,7 +6,7 @@ import pandas as pd
 # update task count as list ["task1", "task2"..]
 # TODO check that transformers are applied
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=65))
-data = loader.create_dataset("dataset_10000.csv")
+data = loader.create_dataset("Datasets/dataset_10000.csv")
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
@@ -25,7 +25,7 @@ params_dict = {
     'n_tasks': [task_count],
     'n_embedding': [5, 10, 50, 100],
     'dropouts': [0.2, 0.5],
-    'learning_rate': [0.001, 0.0001, 0.00001]
+    'learning_rate': [0.001, 0.0001]
 }
 
 optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
@@ -71,7 +71,7 @@ print("losses")
 print(valid_losses)
 
 df = pd.DataFrame(list(zip(train_losses, valid_losses, best_hyperparams)), columns=["train_losses", "valid_losses", "parameters"])
-df.to_csv("/DTNN_Out/loss_output.csv")
+df.to_csv("/Losses/DTNN_10k.csv")
 
 # model.fit(train_dataset)
 # How well the model fit's the training subset of our data
