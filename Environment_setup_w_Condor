@@ -1,0 +1,6 @@
+1) Install miniconda to home folder: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html
+2) Install rdkit environment through conda: https://www.rdkit.org/docs/Install.html
+3) Activate rdkit environment & pip install deepchem, tensorflow, numpy.
+4) Follow this guide to setup job file and script execution shell: https://datasci.danforthcenter.org/htcondor/#using-conda-environments
+5) Run command "chmod +x file_name" where filename is the name of shell script, as well as on this file in miniconda: ~/miniconda/etc/profile.d/conda.sh
+6) Condor_submit job
