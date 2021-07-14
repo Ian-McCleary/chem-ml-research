@@ -13,7 +13,7 @@ def start_training(args):
   np.random.seed(123)
   # update task count as list ["task1", "task2"..]
   loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
-  data = loader.create_dataset("/Datasets/dataset_10000.csv")
+  data = loader.create_dataset("/Datasets/dataset_100.csv")
   transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
   dataset = transformer.transform(data)
 
@@ -25,8 +25,10 @@ def start_training(args):
   # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
   metric = dc.metrics.Metric(dc.metrics.rms_score)
 
-  model = param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
-  loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
+  # model = param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
+  # model = fixed_param_model(task_count)
+  # loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
+  find_learn_rate(task_count,valid_dataset)
 
 
   # parameter optimization
@@ -81,7 +83,22 @@ def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, m
 
 def fixed_param_model(task_count):
   l_rate = 0.1
-  while l_rate > 0.00001:
+  model = dc.models.GraphConvModel(
+    n_tasks=task_count,
+    number_atom_features=100,
+    dense_layer_size=128,
+    graph_conv_layers=[32, 32],
+    dropouts=0.2,
+    learning_rate=l_rate,
+    mode="regression"
+  )
+  return model
+
+def find_learn_rate(task_count, valid_dataset):
+  l_rate = 0.00001
+  learn_arr = []
+  loss_arr = []
+  while l_rate < 0.1:
     model = dc.models.GraphConvModel(
       n_tasks=task_count,
       number_atom_features=100,
@@ -91,7 +108,13 @@ def fixed_param_model(task_count):
       learning_rate=l_rate,
       mode="regression"
     )
-    return model
+    loss = model.fit(valid_dataset, nb_epoch=1)
+    loss_arr.append(loss)
+    learn_arr.append(l_rate)
+    l_rate = l_rate * 2
+
+  df = pd.DataFrame(list(zip(learn_arr, loss_arr)), columns=["learning_rate", "validity_loss"])
+  df.to_csv("/Losses/learning_curve_gcm.csv")
 
 # Calculate loss over multiple training rounds
 def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
