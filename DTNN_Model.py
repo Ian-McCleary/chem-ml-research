@@ -78,7 +78,7 @@ print("losses")
 print(valid_losses)
 
 df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-df.to_csv("/Losses/DTNN_fixed_learn.csv")
+df.to_csv("DTNN_fixed_learn.csv")
 
 # model.fit(train_dataset)
 # How well the model fit's the training subset of our data

@@ -12,7 +12,7 @@ def start_training():
   np.random.seed(123)
   # update task count as list ["task1", "task2"..]
   loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
-  data = loader.create_dataset("/Datasets/dataset_100.csv")
+  data = loader.create_dataset("Datasets/dataset_100.csv")
   transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
   dataset = transformer.transform(data)
 
@@ -113,7 +113,7 @@ def find_learn_rate(task_count, valid_dataset):
     l_rate = l_rate * 2
 
   df = pd.DataFrame(list(zip(learn_arr, loss_arr)), columns=["learning_rate", "validity_loss"])
-  df.to_csv("/Losses/learning_curve_gcm.csv")
+  df.to_csv("gcm_learning_curve.csv")
 
 # Calculate loss over multiple training rounds
 def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
