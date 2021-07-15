@@ -3,7 +3,7 @@ import deepchem as dc
 import numpy as np
 import pandas as pd
 
-loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+loader = dc.data.CSVLoader(["task1", "task2"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
 data = loader.create_dataset("Datasets/dataset_1000.csv")
 transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
 dataset = transformer.transform(data)
@@ -47,7 +47,7 @@ model = dc.models.MultitaskRegressor(
 # Fit trained model
 # test
 train_losses = []
-for i in range(100):
+for i in range(300):
   loss = model.fit(train_dataset, nb_epoch=1)
   print("loss: %s" % str(loss))
   train_losses.append(loss)
@@ -57,7 +57,7 @@ print("\n")
 print("Valid_dataset losses:")
 
 valid_losses = []
-for i in range(100):
+for i in range(300):
     loss = model.fit(valid_dataset, nb_epoch=1)
     print("loss: %s" % str(loss))
     valid_losses.append(loss)
@@ -65,4 +65,4 @@ print("losses")
 print(valid_losses)
 
 df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-df.to_csv("mtr_losses.csv")
+df.to_csv("mtr_losses_2task.csv")
