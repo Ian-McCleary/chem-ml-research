@@ -60,7 +60,7 @@ model = dc.models.DTNNModel(
 # Fit trained model
 # test
 train_losses = []
-for i in range(100):
+for i in range(1000):
   loss = model.fit(train_dataset, nb_epoch=1)
   print("loss: %s" % str(loss))
   train_losses.append(loss)
@@ -70,7 +70,7 @@ print("\n")
 print("Valid_dataset losses:")
 
 valid_losses = []
-for i in range(100):
+for i in range(1000):
     loss = model.fit(valid_dataset, nb_epoch=1)
     print("loss: %s" % str(loss))
     valid_losses.append(loss)
@@ -78,7 +78,7 @@ print("losses")
 print(valid_losses)
 
 df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-df.to_csv("DTNN_fixed_learn.csv")
+df.to_csv("DTNN_fixed_learn_loss.csv")
 
 # model.fit(train_dataset)
 # How well the model fit's the training subset of our data
