@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 loader = dc.data.CSVLoader(["task1", "task2"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-data = loader.create_dataset("Datasets/dataset_1000.csv")
+data = loader.create_dataset("Datasets/dataset_2task_500.csv")
 transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
 dataset = transformer.transform(data)
 
