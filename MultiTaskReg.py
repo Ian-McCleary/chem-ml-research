@@ -3,7 +3,7 @@ import deepchem as dc
 import numpy as np
 import pandas as pd
 
-for x in range(2):
+for x in range(3):
 
   if x == 0:
     loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
