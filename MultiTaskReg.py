@@ -56,7 +56,8 @@ for i in range(2):
   '''
   model = dc.models.MultitaskRegressor(
     n_tasks=task_count,
-    n_features=n_features
+    n_features=n_features,
+    dropouts=0.2
   )
 
   # Fit trained model
