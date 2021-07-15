@@ -88,6 +88,10 @@ for x in range(3):
   # How well the model generalizes the rest of the data
   test_score = model.evaluate(test_dataset, metric)
 
+
   file_name = "mtr_losses_" + str(x+1)+ "task_default.csv"
-  df = pd.DataFrame(list(zip(train_losses, valid_losses), train_scores, valid_score, test_score), columns=["train_losses", "valid_losses", "train_score", "valid_score", "test_score"])
+  df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
+  df.insert(4,"train_score", train_scores)
+  df.insert(5,"valid_score", valid_score)
+  df.insert(6,"test_score", test_score)
   df.to_csv(file_name)
