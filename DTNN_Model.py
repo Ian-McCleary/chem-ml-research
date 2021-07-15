@@ -81,7 +81,7 @@ df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses"
 df.to_csv("DTNN_fixed_learn_loss.csv")
 
 # model.fit(train_dataset)
-# How well the model fit's the training subset of our data
+# How well the model fits the training subset of our data
 train_scores = model.evaluate(train_dataset, metrics)
 # Validation of the model over several training iterations.
 valid_score = model.evaluate(valid_dataset, metrics)
