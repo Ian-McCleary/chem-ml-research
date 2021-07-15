@@ -57,7 +57,7 @@ for x in range(3):
   model = dc.models.MultitaskRegressor(
     n_tasks=task_count,
     n_features=n_features,
-    # layer_sizes=[1000, 1000, 1000, 100],
+    layer_sizes=[1000, 1000, 1000, 1000],
     dropouts=0.2
     )
 
@@ -98,6 +98,6 @@ for x in range(3):
     valid.append(0)
     test.append(0)
 
-  file_name = "mtr_losses_" + str(x+1)+ "task_default.csv"
+  file_name = "mtr_losses_" + str(x+1)+ "task_4layer.csv"
   df = pd.DataFrame(list(zip(train_losses, valid_losses, train, valid, test)), columns=["train_losses", "valid_losses", "train_score", "valid_score", "test_score"])
   df.to_csv(file_name)
