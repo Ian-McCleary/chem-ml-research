@@ -3,7 +3,7 @@ import deepchem as dc
 import numpy as np
 import pandas as pd
 
-for i in range(2):
+for x in range(2):
 
   if i == 0:
     loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
@@ -88,6 +88,6 @@ for i in range(2):
   test_score = model.evaluate(test_dataset, metric)
   scores = [train_scores, valid_score, test_score]
 
-  file_name = "mtr_losses_" + str(i)+ "task_default.csv"
+  file_name = "mtr_losses_" + str(x)+ "task_default.csv"
   df = pd.DataFrame(list(zip(train_losses, valid_losses, scores)), columns=["train_losses", "valid_losses", "rms_train_valid_test"])
   df.to_csv(file_name)
