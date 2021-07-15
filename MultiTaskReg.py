@@ -5,13 +5,13 @@ import pandas as pd
 
 for x in range(2):
 
-  if i == 0:
+  if x == 0:
     loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
     data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
-  elif i == 1:
+  elif x == 1:
     loader = dc.data.CSVLoader(["task1", "task2"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
     data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
-  elif i == 2:
+  elif x == 2:
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
     data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 
@@ -88,6 +88,6 @@ for x in range(2):
   test_score = model.evaluate(test_dataset, metric)
   scores = [train_scores, valid_score, test_score]
 
-  file_name = "mtr_losses_" + str(x)+ "task_default.csv"
+  file_name = "mtr_losses_" + str(x+1)+ "task_default.csv"
   df = pd.DataFrame(list(zip(train_losses, valid_losses, scores)), columns=["train_losses", "valid_losses", "rms_train_valid_test"])
   df.to_csv(file_name)
