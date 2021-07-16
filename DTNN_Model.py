@@ -5,7 +5,7 @@ import pandas as pd
 from keras import backend as K
 import os
 
-K.set_session(K.tf.compat.v1.Session(config=K.tf.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
+K.set_session(K.tf.compat.v1.Session(config=K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
 
 
 # update task count as list ["task1", "task2"..]
