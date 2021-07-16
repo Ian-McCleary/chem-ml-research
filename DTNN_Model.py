@@ -6,8 +6,7 @@ import tensorflow as tf
 # inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
 
 config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=0, 
-                        inter_op_parallelism_threads=0, 
-                        allow_soft_placement=True,
+                        inter_op_parallelism_threads=0,
                         device_count = {'CPU': int(os.environ['OMP_NUM_THREADS'])})
 
 session = tf.compat.v1.Session(config=config)
