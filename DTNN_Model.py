@@ -2,15 +2,15 @@ from keras import backend as K
 import os
 import tensorflow as tf
 
-# K.set_session(K.tf.compat.v1.Session(config=K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), 
-# inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
+K.set_session(K.tf.compat.v1.Session(config=K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), 
+inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
 
-config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=0, 
-                        inter_op_parallelism_threads=0,
-                        device_count = {'CPU': int(os.environ['OMP_NUM_THREADS'])})
+# config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=0, 
+#                        inter_op_parallelism_threads=0,
+#                        device_count = {'CPU': int(os.environ['OMP_NUM_THREADS'])})
 
-session = tf.compat.v1.Session(config=config)
-tf.compat.v1.keras.backend.set_session(session)
+# session = tf.compat.v1.Session(config=config)
+# tf.compat.v1.keras.backend.set_session(session)
 
 from rdkit import Chem
 import deepchem as dc
