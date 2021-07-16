@@ -2,6 +2,12 @@ from rdkit import Chem
 import deepchem as dc
 import numpy as np
 import pandas as pd
+from keras import backend as K
+import os
+from keras import backend as K
+
+K.set_session(K.tf.Session(config=K.tf.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
+
 
 # update task count as list ["task1", "task2"..]
 # TODO check that transformers are applied
@@ -50,6 +56,7 @@ model = dc.models.DTNNModel(
     learning_rate=best_hyperparams[3]
 )
 '''
+
 model = dc.models.DTNNModel(
     n_tasks = task_count,
     n_embedding=50,
