@@ -46,7 +46,7 @@ for y in range(2):
         dataset = transformer.transform(data)
 
         # Splits dataset into train/validation/test
-        splitter = dc.splits.RandomSplitter(seed=dataseed)
+        splitter = dc.splits.RandomSplitter()
         train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
         task_count = len(dataset.y[0])
         n_features = len(dataset.X[0])
