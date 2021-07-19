@@ -2,6 +2,7 @@ from keras import backend as K
 import os
 import tensorflow as tf
 
+# https://www.tensorflow.org/api_docs/python/tf/config/threading/set_inter_op_parallelism_threads
 K.set_session(K.tf.compat.v1.Session(config=K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), 
 inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
 
