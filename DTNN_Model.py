@@ -21,6 +21,12 @@ from rdkit import Chem
 import deepchem as dc
 import numpy as np
 import pandas as pd
+from random import randrange
+
+# Set the seed
+dataseed = randrange(1000)
+np.random.seed(dataseed)
+tf.random.set_seed(dataseed)
 
 # update task count as list ["task1", "task2"..]
 # TODO check that transformers are applied
@@ -29,7 +35,7 @@ data = loader.create_dataset("Datasets/dataset_1000.csv")
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
-train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data)
+train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data, seed=dataseed)
 task_count = len(train_dataset.y[0])
 
 
