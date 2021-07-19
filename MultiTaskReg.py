@@ -12,9 +12,10 @@ from rdkit import Chem
 import deepchem as dc
 import numpy as np
 import pandas as pd
+from random import randrange
 
 # Set the seed
-dataseed = np.random.rand(1)
+dataseed = randrange(1000)
 np.random.seed(dataseed)
 tf.random.set_seed(dataseed)
 
