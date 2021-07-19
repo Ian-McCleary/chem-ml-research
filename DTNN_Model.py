@@ -6,7 +6,7 @@ import tensorflow as tf
 # K.set_session(K.tf.compat.v1.Session(config=K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), 
 # inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
 tf.config.threading.set_inter_op_parallelism_threads(
-    os.environ['OMP_NUM_THREADS']
+    int(os.environ['OMP_NUM_THREADS'])
 )
 
 # config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=0, 
