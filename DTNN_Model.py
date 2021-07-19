@@ -24,7 +24,7 @@ import pandas as pd
 
 # update task count as list ["task1", "task2"..]
 # TODO check that transformers are applied
-loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=65))
+loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
 data = loader.create_dataset("Datasets/dataset_1000.csv")
 
 # Splits dataset into train/validation/test
@@ -73,6 +73,7 @@ model = dc.models.DTNNModel(
 model = dc.models.DTNNModel(
     n_tasks = task_count,
     n_embedding=50,
+    distance_max=24,
     mode="regression",
     dropout=0.2,
     learning_rate=0.001
