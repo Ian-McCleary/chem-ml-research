@@ -3,8 +3,11 @@ import os
 import tensorflow as tf
 
 # https://www.tensorflow.org/api_docs/python/tf/config/threading/set_inter_op_parallelism_threads
-K.set_session(K.tf.compat.v1.Session(config=K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), 
-inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
+# K.set_session(K.tf.compat.v1.Session(config=K.tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), 
+# inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']))))
+tf.config.threading.set_inter_op_parallelism_threads(
+    os.environ['OMP_NUM_THREADS']
+)
 
 # config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=0, 
 #                        inter_op_parallelism_threads=0,
@@ -94,7 +97,7 @@ print("losses")
 print(valid_losses)
 
 df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-df.to_csv("DTNN_fixed_learn_loss.csv")
+df.to_csv("DTNN_fixed_learn_loss2.csv")
 
 # model.fit(train_dataset)
 # How well the model fits the training subset of our data
