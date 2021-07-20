@@ -20,16 +20,17 @@ np.random.seed(dataseed)
 tf.random.set_seed(dataseed)
 
 
-
 for y in range(2):
       if y == 0:
             dset = "Datasets/dataset_1000.csv"
-            file_ending = "task_default.csv"
-            l_sizes=[1000]
+            file_ending = "task_no_weight.csv"
+            l_sizes=[1000, 1000, 1000, 1000]
+            weight_penalty = ""
       if y == 1:
             dset = "Datasets/dataset_3task_1000.csv"
-            file_ending = "task_4layer.csv"
+            file_ending = "task_l2_weight.csv"
             l_sizes = [1000, 1000, 1000, 1000]
+            weight_penalty = "l2"
 
       for x in range(3):
         if x == 0:
@@ -85,6 +86,7 @@ for y in range(2):
           n_tasks=task_count,
           n_features=n_features,
           layer_sizes=l_sizes,
+          weight_decay_penalty_type = weight_penalty,
           dropouts=0.2
           )
 
