@@ -81,7 +81,7 @@ def hyperparameter_optimization():
 
   # Splits dataset into train/validation/test
   splitter = dc.splits.RandomSplitter()
-  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, frac_train=0.8, frac_valid=0.2, seed=dataseed)
+  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, frac_train=0.75, frac_valid=0.2, frac_test=0.5, seed=dataseed)
   task_count = len(dataset.y[0])
   n_features = len(dataset.X[0])
 
