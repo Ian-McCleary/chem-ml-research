@@ -73,7 +73,8 @@ def hyperparameter_optimization():
   dataseed = randrange(1000)
   np.random.seed(dataseed)
   tf.random.set_seed(dataseed)
-  loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+  # loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+  loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
   data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 
   transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
@@ -118,7 +119,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   all_loss.append(train_losses)
   all_loss.append(valid_eval)
   df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
-  df.to_csv("mtr_optimized2.csv")
+  df.to_csv("mtr_optimized_1task.csv")
   return all_loss
     
 '''
