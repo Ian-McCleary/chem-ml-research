@@ -21,8 +21,7 @@ score_list = []
 
 
 def k_fold_validation(model):
-  for i in range(50):
-        
+  for i in range(50):    
     # Set the seed
     dataseed = randrange(1000)
     np.random.seed(dataseed)
@@ -158,7 +157,7 @@ model = dc.models.MultitaskRegressor(
     mode="regression"
   )
 
-train_loss(model, train_dataset, valid_dataset, metric, transformer)
+train_loss(model, train_dataset, valid_dataset, metric, [transformer])
 #file_name = "mtr_sensitivity_testing.csv"
 # df = pd.DataFrame(list(zip(train_losses, valid_losses, train, valid, test)), columns=["train_losses", "valid_losses", "train_score", "valid_score", "test_score"])
 #df = pd.DataFrame(list(zip(train_arr, valid_arr, test_arr)), columns=["train_scores", "valid_scores", "test_scores",])
