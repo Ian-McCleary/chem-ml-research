@@ -116,11 +116,12 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
   all_loss = []
-  for i in range(500):
+  for i in range(1000):
     loss = model.fit(train_dataset, nb_epoch=1)
     valid = model.evaluate(valid_dataset, metric, transformer)
+    train = model.evaluate(train_dataset, metric, transformer)
     print("loss: %s" % str(loss))
-    train_losses.append(loss)
+    train_losses.append(train)
     valid_eval.append(valid)
 
   print("losses")
