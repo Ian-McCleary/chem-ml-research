@@ -41,7 +41,7 @@ def k_fold_validation(model):
     print(task_count)
     #tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
     #train_dataset, valid_dataset, test_dataset = datasets
-    metric = dc.metrics.Metric(dc.metrics.rms_score)
+    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
     model.fit(train_dataset, nb_epoch=100)
     # How well the model fits the training subset of our data
@@ -104,7 +104,7 @@ def hyperparameter_optimization():
 
 
   optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
-  metric = dc.metrics.Metric(dc.metrics.rms_score)
+  metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
   best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
           params_dict, train_dataset, valid_dataset, metric, [transformer])
   print(best_hyperparams)
@@ -149,17 +149,17 @@ train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dat
 task_count = len(dataset.y[0])
 n_features = len(dataset.X[0])
 
-metric = dc.metrics.Metric(dc.metrics.rms_score)
+metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
 # model = hyperparameter_optimization()
 #k_fold_validation(model)
 model = dc.models.MultitaskRegressor(
     n_tasks=task_count,
     n_features=n_features,
-    layer_sizes=[1000, 1000, 1000, 1000, 1000],
+    layer_sizes=[1000, 1000, 1000, 1000, 1000, 1000],
     weight_decay_penalty_type ="l2",
-    dropouts=0.5,
-    learning_rate=0.001,
+    dropouts=0.2,
+    learning_rate=0.0001,
     mode="regression"
   )
 
