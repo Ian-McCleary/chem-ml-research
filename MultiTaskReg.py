@@ -26,7 +26,7 @@ def k_fold_validation(model):
     dataseed = randrange(1000)
     np.random.seed(dataseed)
     tf.random.set_seed(dataseed)
-    loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
     data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 
     transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
@@ -116,7 +116,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
   all_loss = []
-  for i in range(300):
+  for i in range(500):
     loss = model.fit(train_dataset, nb_epoch=1)
     valid = model.evaluate(valid_dataset, metric, transformer)
     print("loss: %s" % str(loss))
@@ -136,7 +136,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
 dataseed = randrange(1000)
 np.random.seed(dataseed)
 tf.random.set_seed(dataseed)
-loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
 data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 
 transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
@@ -155,9 +155,9 @@ metric = dc.metrics.Metric(dc.metrics.rms_score)
 model = dc.models.MultitaskRegressor(
     n_tasks=task_count,
     n_features=n_features,
-    layer_sizes=[1000, 1000, 1000, 1000],
+    layer_sizes=[1000, 1000, 1000, 1000, 1000],
     weight_decay_penalty_type ="l2",
-    dropouts=0.2,
+    dropouts=0.5,
     learning_rate=0.001,
     mode="regression"
   )
