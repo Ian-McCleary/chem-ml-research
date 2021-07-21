@@ -116,20 +116,20 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
   all_loss = []
-  model.fit(dataset=train_dataset, nb_epoch=100, all_losses=all_loss)
-  #for i in range(300):
-  #  loss = model.fit(train_dataset, nb_epoch=1)
-  #  valid = model.evaluate(valid_dataset, metric, transformer)
-  #  print("loss: %s" % str(loss))
-  #  train_losses.append(loss)
+  for i in range(300):
+    loss = model.fit(train_dataset, nb_epoch=1)
+    valid = model.evaluate(valid_dataset, metric, transformer)
+    print("loss: %s" % str(loss))
+    train_losses.append(loss)
+    valid_eval.append(valid)
 
   print("losses")
   print(all_loss)
   print("\n")
   print("Valid_dataset losses:") 
   file_name = "mtr_loss_recalculated.csv"
-  #df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
-  df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
+  df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
+  #df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
   df.to_csv(file_name)     
 
 
