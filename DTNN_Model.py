@@ -23,18 +23,20 @@ tf.random.set_seed(dataseed)
 # TODO check that transformers are applied
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
 data = loader.create_dataset("Datasets/dataset_1000.csv")
+transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
+dataset = transformer.transform(data)
 
 # Splits dataset into train/validation/test
 splitter = dc.splits.RandomSplitter()
-train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=data, seed=dataseed)
+train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
 task_count = len(train_dataset.y[0])
 
 
 metrics = [
-    dc.metrics.Metric(dc.metrics.rms_score)
+    dc.metrics.Metric(dc.metrics.mean_absolute_error)
     #dc.metrics.Metric(dc.metrics.r2_score)
     ]
-metric = dc.metrics.Metric(dc.metrics.rms_score)
+metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 '''
 # parameter optimization
 params_dict = {
@@ -77,26 +79,23 @@ model = dc.models.DTNNModel(
 )
 # Fit trained model
 # test
+valid_losses = []
 train_losses = []
 for i in range(500):
   loss = model.fit(train_dataset, nb_epoch=1)
+  valid = model.evaluate(valid_dataset, metric, transformer)
+  train = model.evaluate(train_dataset, metric, transformer)
   print("loss: %s" % str(loss))
-  train_losses.append(loss)
+  train_losses.append(train)
+  valid_losses.append(valid)
+  
 print("losses")
 print(train_losses)
 print("\n")
 print("Valid_dataset losses:")
 
-valid_losses = []
-for i in range(500):
-    loss = model.fit(valid_dataset, nb_epoch=1)
-    print("loss: %s" % str(loss))
-    valid_losses.append(loss)
-print("losses")
-print(valid_losses)
-
 df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-df.to_csv("DTNN_fixed_learn_loss2.csv")
+df.to_csv("DTNN_fixed_learn_loss.csv")
 
 # model.fit(train_dataset)
 # How well the model fits the training subset of our data
