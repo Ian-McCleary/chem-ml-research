@@ -81,7 +81,7 @@ def hyperparameter_optimization():
 
   # Splits dataset into train/validation/test
   splitter = dc.splits.RandomSplitter()
-  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
+  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, frac_train=0.8, frac_valid=0.2, seed=dataseed)
   task_count = len(dataset.y[0])
   n_features = len(dataset.X[0])
 
@@ -89,8 +89,8 @@ def hyperparameter_optimization():
       'n_tasks': [task_count],
       'n_features': [n_features],
       'layer_sizes': [[256, 512, 1024], [1024, 1024, 1024], [1024, 512, 256]],
-      'dropouts': [0.2, 0.5],
-      'learning_rate': [0.001, 0.0001]
+      'dropouts': [0.1, 0.2, 0.5],
+      'learning_rate': [0.001, 0.0001, 0.00001]
   }
   #print(data.y)
 
@@ -118,7 +118,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   all_loss.append(train_losses)
   all_loss.append(valid_eval)
   df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
-  df.to_csv("mtr_optimized.csv")
+  df.to_csv("mtr_optimized2.csv")
   return all_loss
     
 '''
