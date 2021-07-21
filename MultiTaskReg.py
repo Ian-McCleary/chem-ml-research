@@ -76,7 +76,7 @@ def hyperparameter_optimization():
   loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
   data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 
-  transformer = [dc.trans.NormalizationTransformer(dataset=data, transform_y=True)]
+  transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
   dataset = transformer.transform(data)
 
   # Splits dataset into train/validation/test
@@ -100,7 +100,7 @@ def hyperparameter_optimization():
   best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
           params_dict, train_dataset, valid_dataset, metric, [transformer])
   print(best_hyperparams)
-  train_loss(best_model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
+  train_loss(best_model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=[transformer])
 
 
 
@@ -152,7 +152,7 @@ for i in range(3):
       learning_rate=0.0001,
       mode="regression"
     )
-  both_list = train_loss(model, train_dataset, valid_dataset, metric, transformer)
+  both_list = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
   evaluations.append(both_list[0])
   evaluations.append(both_list[1])
 
