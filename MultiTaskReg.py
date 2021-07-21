@@ -152,7 +152,7 @@ for i in range(3):
   model = dc.models.MultitaskRegressor(
       n_tasks=task_count,
       n_features=n_features,
-      layer_sizes=[1000, 1000, 1000],
+      layer_sizes=[1000, 1000, 1000, 1000],
       weight_decay_penalty_type ="l2",
       dropouts=0.2,
       learning_rate=0.0001,
