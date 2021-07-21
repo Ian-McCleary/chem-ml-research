@@ -44,6 +44,33 @@ def start_training():
   find_learn_rate(task_count,valid_dataset)
 
 
+def k_fold_cross_validation():
+  # Set the seed
+  dataseed = randrange(1000)
+  np.random.seed(dataseed)
+  tf.random.set_seed(dataseed)
+  # update task count as list ["task1", "task2"..]
+  loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
+  data = loader.create_dataset("Datasets/dataset_10000.csv")
+  transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
+  dataset = transformer.transform(data)
+
+  # Splits dataset into train/validation/test
+  splitter = dc.splits.RandomSplitter()
+  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
+  task_count = len(train_dataset.y[0])
+
+  # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
+  metric = dc.metrics.Metric(dc.metrics.rms_score)
+  model = dc.models.GraphConvModel(
+    n_tasks=task_count,
+    number_atom_features=100,
+    dense_layer_size=128,
+    graph_conv_layers=[64, 64],
+    dropouts=0.2,
+    learning_rate=0.001,
+    mode="regression"
+    
   # parameter optimization
   '''
   params_dict = {
