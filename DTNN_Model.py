@@ -21,7 +21,7 @@ tf.random.set_seed(dataseed)
 
 # update task count as list ["task1", "task2"..]
 # TODO check that transformers are applied
-loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
+loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
 data = loader.create_dataset("Datasets/dataset_1000.csv")
 transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
 dataset = transformer.transform(data)
@@ -95,7 +95,7 @@ print("\n")
 print("Valid_dataset losses:")
 
 df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-df.to_csv("DTNN_fixed_learn_loss.csv")
+df.to_csv("DTNN_fixed_learn_loss_3task.csv")
 
 # model.fit(train_dataset)
 # How well the model fits the training subset of our data

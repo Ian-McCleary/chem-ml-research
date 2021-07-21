@@ -149,20 +149,13 @@ def find_learn_rate(task_count, train_dataset):
 def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
   # Fit trained model
   train_losses = []
-  for i in range(100):
-    loss = model.fit(train_dataset, nb_epoch=1)
-    print("loss: %s" % str(loss))
-    train_losses.append(loss)
-  print("losses")
-  print(train_losses)
-
   valid_losses = []
   for i in range(100):
-    loss = model.fit(valid_dataset, nb_epoch=1)
-    print("loss: %s" % str(loss))
-    valid_losses.append(loss)
-  print("losses")
-  print(valid_losses)
+    loss = model.fit(train_dataset, nb_epoch=1)
+    valid = model.evaluate(valid_dataset, metric, [transformer])
+    train = model.evaluate(train_dataset, metric, [transformer])
+    train_losses.append(train)
+    train_losses.append(valid)
 
   # file_name = "loss_" + str(l_rate) + ".csv"
   df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
