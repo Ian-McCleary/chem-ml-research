@@ -43,6 +43,16 @@ def k_fold_validation(model):
     #train_dataset, valid_dataset, test_dataset = datasets
     metric = dc.metrics.Metric(dc.metrics.rms_score)
 
+    model.fit(train_dataset, nb_epoch=100)
+    # How well the model fits the training subset of our data
+    train_scores = model.evaluate(train_dataset, metric)
+    # Validation of the model over several training iterations.
+    valid_score = model.evaluate(valid_dataset, metric)
+    # How well the model generalizes the rest of the data
+    test_score = model.evaluate(test_dataset, metric)
+    train_arr.append(train_scores)
+    valid_arr.append(valid_score)
+    test_arr.append(test_score)
     '''
     # Fit trained model
     # test
@@ -64,16 +74,7 @@ def k_fold_validation(model):
     print("losses")
     print(valid_losses)
     '''
-    model.fit(train_dataset, nb_epoch=100)
-    # How well the model fits the training subset of our data
-    train_scores = model.evaluate(train_dataset, metric)
-    # Validation of the model over several training iterations.
-    valid_score = model.evaluate(valid_dataset, metric)
-    # How well the model generalizes the rest of the data
-    test_score = model.evaluate(test_dataset, metric)
-    train_arr.append(train_scores)
-    valid_arr.append(valid_score)
-    test_arr.append(test_score)
+
 
 
 def hyperparameter_optimization():
@@ -114,17 +115,21 @@ def hyperparameter_optimization():
 def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
-  for i in range(300):
-    loss = model.fit(train_dataset, nb_epoch=1)
-    valid = model.evaluate(valid_dataset, metric, transformer)
-    print("loss: %s" % str(loss))
-    train_losses.append(loss)
+  all_loss = []
+  model.fit(dataset=train_dataset, nb_epoch=100, all_losses=all_loss)
+  #for i in range(300):
+  #  loss = model.fit(train_dataset, nb_epoch=1)
+  #  valid = model.evaluate(valid_dataset, metric, transformer)
+  #  print("loss: %s" % str(loss))
+  #  train_losses.append(loss)
+
   print("losses")
-  print(train_losses)
+  print(all_loss)
   print("\n")
   print("Valid_dataset losses:") 
   file_name = "mtr_loss_recalculated.csv"
-  df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
+  #df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
+  df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
   df.to_csv(file_name)     
 
 
