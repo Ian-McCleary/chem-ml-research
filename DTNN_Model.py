@@ -83,8 +83,8 @@ valid_losses = []
 train_losses = []
 for i in range(500):
   loss = model.fit(train_dataset, nb_epoch=1)
-  valid = model.evaluate(valid_dataset, metric, transformer)
-  train = model.evaluate(train_dataset, metric, transformer)
+  valid = model.evaluate(valid_dataset, metric, [transformer])
+  train = model.evaluate(train_dataset, metric, [transformer])
   print("loss: %s" % str(loss))
   train_losses.append(train)
   valid_losses.append(valid)
