@@ -116,8 +116,8 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     print("loss: %s" % str(loss))
     train_losses.append(train)
     valid_eval.append(valid)
-  all_loss.append(train_losses.mean_absolute_error)
-  all_loss.append(valid_eval.mean_absolute_error)
+  all_loss.append(train_losses)
+  all_loss.append(valid_eval)
   df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
   df.to_csv("mtr_optimized_1task.csv")
   return all_loss
