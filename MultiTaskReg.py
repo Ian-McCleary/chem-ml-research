@@ -101,7 +101,7 @@ def hyperparameter_optimization():
   best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
           params_dict, train_dataset, valid_dataset, metric, [transformer])
   print(best_hyperparams)
-  train_loss(best_model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=[transformer])
+  #train_loss(best_model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=[transformer])
 
 
 
@@ -116,20 +116,20 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     print("loss: %s" % str(loss))
     train_losses.append(train)
     valid_eval.append(valid)
-  all_loss.append(train_losses)
-  all_loss.append(valid_eval)
+  all_loss.append(train_losses.mean_absolute_error)
+  all_loss.append(valid_eval.mean_absolute_error)
   df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
   df.to_csv("mtr_optimized_1task.csv")
   return all_loss
     
-'''
+
 evaluations = []
 for i in range(3):
   dataseed = randrange(1000)
   np.random.seed(dataseed)
   tf.random.set_seed(dataseed)
   loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-  data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+  data = loader.create_dataset("Datasets/dataset_3task_10000.csv")
 
   transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
   dataset = transformer.transform(data)
@@ -147,17 +147,17 @@ for i in range(3):
   model = dc.models.MultitaskRegressor(
       n_tasks=task_count,
       n_features=n_features,
-      layer_sizes=[1000, 1000, 1000, 1000],
+      layer_sizes=[256, 512, 1024],
       weight_decay_penalty_type ="l2",
       dropouts=0.2,
-      learning_rate=0.0001,
+      learning_rate=0.001,
       mode="regression"
     )
   both_list = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
   evaluations.append(both_list[0])
   evaluations.append(both_list[1])
 
-'''
+
 hyperparameter_optimization()
 #file_name = "mtr_loss_5.csv"
 #df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5])), columns=[
