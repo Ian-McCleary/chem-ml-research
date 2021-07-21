@@ -65,14 +65,6 @@ def k_fold_validation(model):
     print(train_losses)
     print("\n")
     print("Valid_dataset losses:")
-
-    valid_losses = []
-    for i in range(300):
-        loss = model.fit(valid_dataset, nb_epoch=1)
-        print("loss: %s" % str(loss))
-        valid_losses.append(loss)
-    print("losses")
-    print(valid_losses)
     '''
 
 
@@ -84,7 +76,7 @@ def hyperparameter_optimization():
   loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
   data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 
-  transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
+  transformer = [dc.trans.NormalizationTransformer(dataset=data, transform_y=True)]
   dataset = transformer.transform(data)
 
   # Splits dataset into train/validation/test
@@ -96,7 +88,7 @@ def hyperparameter_optimization():
   params_dict = {
       'n_tasks': [task_count],
       'n_features': [n_features],
-      'layer_sizes': [[500, 500, 500], [1000, 1000, 1000], [1500, 1500, 1500]],
+      'layer_sizes': [[256, 512, 1024], [1024, 1024, 1024], [1024, 512, 256]],
       'dropouts': [0.2, 0.5],
       'learning_rate': [0.001, 0.0001]
   }
@@ -108,7 +100,7 @@ def hyperparameter_optimization():
   best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
           params_dict, train_dataset, valid_dataset, metric, [transformer])
   print(best_hyperparams)
-  return best_model
+  train_loss(best_model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
 
 
 
@@ -125,9 +117,11 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     valid_eval.append(valid)
   all_loss.append(train_losses)
   all_loss.append(valid_eval)
+  df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
+  df.to_csv("mtr_optimized.csv")
   return all_loss
     
-
+'''
 evaluations = []
 for i in range(3):
   dataseed = randrange(1000)
@@ -158,15 +152,17 @@ for i in range(3):
       learning_rate=0.0001,
       mode="regression"
     )
-  both_list = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
+  both_list = train_loss(model, train_dataset, valid_dataset, metric, transformer)
   evaluations.append(both_list[0])
   evaluations.append(both_list[1])
 
-file_name = "mtr_loss_5.csv"
-df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5])), columns=[
-  "train_scores_1", "valid_scores_1","train_scores_2", "valid_scores_2","train_scores_3", "valid_scores_3"])
+'''
+hyperparameter_optimization()
+#file_name = "mtr_loss_5.csv"
+#df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5])), columns=[
+#  "train_scores_1", "valid_scores_1","train_scores_2", "valid_scores_2","train_scores_3", "valid_scores_3"])
 #df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
-df.to_csv(file_name) 
+#df.to_csv(file_name) 
 #file_name = "mtr_sensitivity_testing.csv"
 # df = pd.DataFrame(list(zip(train_losses, valid_losses, train, valid, test)), columns=["train_losses", "valid_losses", "train_score", "valid_score", "test_score"])
 #df = pd.DataFrame(list(zip(train_arr, valid_arr, test_arr)), columns=["train_scores", "valid_scores", "test_scores",])
