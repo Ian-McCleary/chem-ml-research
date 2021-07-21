@@ -116,54 +116,57 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
   all_loss = []
-  for i in range(1000):
+  for i in range(250):
     loss = model.fit(train_dataset, nb_epoch=1)
     valid = model.evaluate(valid_dataset, metric, transformer)
     train = model.evaluate(train_dataset, metric, transformer)
     print("loss: %s" % str(loss))
     train_losses.append(train)
     valid_eval.append(valid)
+  all_loss.append(train_losses)
+  all_loss.append(valid_eval)
+  return all_loss
+    
 
-  print("losses")
-  print(all_loss)
-  print("\n")
-  print("Valid_dataset losses:") 
-  file_name = "mtr_loss_recalculated.csv"
-  df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
-  #df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
-  df.to_csv(file_name)     
+evaluations = []
+for i in range(3):
+  dataseed = randrange(1000)
+  np.random.seed(dataseed)
+  tf.random.set_seed(dataseed)
+  loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+  data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 
+  transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
+  dataset = transformer.transform(data)
 
-dataseed = randrange(1000)
-np.random.seed(dataseed)
-tf.random.set_seed(dataseed)
-loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+  # Splits dataset into train/validation/test
+  splitter = dc.splits.RandomSplitter()
+  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
+  task_count = len(dataset.y[0])
+  n_features = len(dataset.X[0])
 
-transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
-dataset = transformer.transform(data)
+  metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
-# Splits dataset into train/validation/test
-splitter = dc.splits.RandomSplitter()
-train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
-task_count = len(dataset.y[0])
-n_features = len(dataset.X[0])
+  # model = hyperparameter_optimization()
+  #k_fold_validation(model)
+  model = dc.models.MultitaskRegressor(
+      n_tasks=task_count,
+      n_features=n_features,
+      layer_sizes=[1000, 1000, 1000],
+      weight_decay_penalty_type ="l2",
+      dropouts=0.2,
+      learning_rate=0.0001,
+      mode="regression"
+    )
+  both_list = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
+  evaluations.append(both_list[0])
+  evaluations.append(both_list[1])
 
-metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-
-# model = hyperparameter_optimization()
-#k_fold_validation(model)
-model = dc.models.MultitaskRegressor(
-    n_tasks=task_count,
-    n_features=n_features,
-    layer_sizes=[1000, 1000, 1000, 1000, 1000, 1000],
-    weight_decay_penalty_type ="l2",
-    dropouts=0.2,
-    learning_rate=0.0001,
-    mode="regression"
-  )
-
-train_loss(model, train_dataset, valid_dataset, metric, [transformer])
+file_name = "mtr_loss_5.csv"
+df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5])), columns=[
+  "train_scores_1", "valid_scores_1","train_scores_2", "valid_scores_2","train_scores_3", "valid_scores_3"])
+#df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
+df.to_csv(file_name) 
 #file_name = "mtr_sensitivity_testing.csv"
 # df = pd.DataFrame(list(zip(train_losses, valid_losses, train, valid, test)), columns=["train_losses", "valid_losses", "train_score", "valid_score", "test_score"])
 #df = pd.DataFrame(list(zip(train_arr, valid_arr, test_arr)), columns=["train_scores", "valid_scores", "test_scores",])
