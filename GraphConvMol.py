@@ -26,7 +26,7 @@ def start_training():
       
   # update task count as list ["task1", "task2"..]
   loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
-  data = loader.create_dataset("Datasets/dataset_10000.csv")
+  data = loader.create_dataset("Datasets/dataset_1000.csv")
   transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
   dataset = transformer.transform(data)
 
@@ -41,7 +41,7 @@ def start_training():
   # model = param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
   # model = fixed_param_model(task_count)
   #loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
-  find_learn_rate(task_count,valid_dataset)
+  find_learn_rate(task_count,train_dataset)
 
 def k_fold_cross_validation():
   # Set the seed
@@ -50,7 +50,7 @@ def k_fold_cross_validation():
   tf.random.set_seed(dataseed)
   # update task count as list ["task1", "task2"..]
   loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
-  data = loader.create_dataset("Datasets/dataset_10000.csv")
+  data = loader.create_dataset("Datasets/dataset_1000.csv")
   transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
   dataset = transformer.transform(data)
 
@@ -123,7 +123,7 @@ def fixed_param_model(task_count):
   )
   return model
 
-def find_learn_rate(task_count, valid_dataset):
+def find_learn_rate(task_count, train_dataset):
   l_rate = 0.00001
   learn_arr = []
   loss_arr = []
@@ -137,12 +137,12 @@ def find_learn_rate(task_count, valid_dataset):
       learning_rate=l_rate,
       mode="regression"
     )
-    loss = model.fit(valid_dataset, nb_epoch=5)
+    loss = model.fit(train_dataset, nb_epoch=5)
     loss_arr.append(loss)
     learn_arr.append(l_rate)
-    l_rate = l_rate + 0.00001
+    l_rate = l_rate + 0.0002
 
-  df = pd.DataFrame(list(zip(learn_arr, loss_arr)), columns=["learning_rate", "validity_loss"])
+  df = pd.DataFrame(list(zip(learn_arr, loss_arr)), columns=["learning_rate", "training_loss"])
   df.to_csv("gcm_learning_curve3.csv")
 
 # Calculate loss over multiple training rounds
