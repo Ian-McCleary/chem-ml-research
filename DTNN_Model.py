@@ -22,7 +22,7 @@ tf.random.set_seed(dataseed)
 # update task count as list ["task1", "task2"..]
 # TODO check that transformers are applied
 loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
-data = loader.create_dataset("Datasets/dataset_1000.csv")
+data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
 dataset = transformer.transform(data)
 
