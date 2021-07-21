@@ -111,9 +111,55 @@ def hyperparameter_optimization():
   return best_model
 
 
-model = hyperparameter_optimization()
-k_fold_validation(model)
-file_name = "mtr_sensitivity_testing.csv"
+
+def train_loss(model, train_dataset, valid_dataset, metric, transformer):
+  train_losses = []
+  valid_eval = []
+  for i in range(300):
+    loss = model.fit(train_dataset, nb_epoch=1)
+    valid = model.evaluate(valid_dataset, metric, transformer)
+    print("loss: %s" % str(loss))
+    train_losses.append(loss)
+  print("losses")
+  print(train_losses)
+  print("\n")
+  print("Valid_dataset losses:") 
+  file_name = "mtr_loss_recalculated.csv"
+  df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
+  df.to_csv(file_name)     
+
+
+dataseed = randrange(1000)
+np.random.seed(dataseed)
+tf.random.set_seed(dataseed)
+loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+
+transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
+dataset = transformer.transform(data)
+
+# Splits dataset into train/validation/test
+splitter = dc.splits.RandomSplitter()
+train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
+task_count = len(dataset.y[0])
+n_features = len(dataset.X[0])
+
+metric = dc.metrics.Metric(dc.metrics.rms_score)
+
+# model = hyperparameter_optimization()
+#k_fold_validation(model)
+model = dc.models.MultitaskRegressor(
+    n_tasks=task_count,
+    n_features=n_features,
+    layer_sizes=[1000, 1000, 1000, 1000],
+    weight_decay_penalty_type ="l2",
+    dropouts=0.2,
+    learning_rate=0.001,
+    mode="regression"
+  )
+
+train_loss(model, train_dataset, valid_dataset, metric, transformer)
+#file_name = "mtr_sensitivity_testing.csv"
 # df = pd.DataFrame(list(zip(train_losses, valid_losses, train, valid, test)), columns=["train_losses", "valid_losses", "train_score", "valid_score", "test_score"])
-df = pd.DataFrame(list(zip(train_arr, valid_arr, test_arr)), columns=["train_scores", "valid_scores", "test_scores",])
-df.to_csv(file_name)
+#df = pd.DataFrame(list(zip(train_arr, valid_arr, test_arr)), columns=["train_scores", "valid_scores", "test_scores",])
+#df.to_csv(file_name)

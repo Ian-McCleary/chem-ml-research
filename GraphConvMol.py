@@ -40,9 +40,8 @@ def start_training():
 
   # model = param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
   # model = fixed_param_model(task_count)
-  # loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
+  #loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
   find_learn_rate(task_count,valid_dataset)
-
 
 def k_fold_cross_validation():
   # Set the seed
@@ -70,28 +69,29 @@ def k_fold_cross_validation():
     dropouts=0.2,
     learning_rate=0.001,
     mode="regression"
-    
+  )
+
   # parameter optimization
-  '''
-  params_dict = {
-      'n_tasks': [task_count],
-      'number_atom_features': [15, 30, 75, 100, 150],
-      'graph_conv_layers': [[32, 32], [64,64], [128,128]],
-      'dense_layer_size': [8, 16, 32, 64, 128],
-      'dropouts': [0.1, 0.2, 0.5, 0.9],
-      'learning_rate': [0.001, 0.0001, 0.00001, 0.000001, 0.0000001],
-      'mode': ["regression"],
-  }
-  '''
+'''
+params_dict = {
+    'n_tasks': [task_count],
+    'number_atom_features': [15, 30, 75, 100, 150],
+    'graph_conv_layers': [[32, 32], [64,64], [128,128]],
+    'dense_layer_size': [8, 16, 32, 64, 128],
+    'dropouts': [0.1, 0.2, 0.5, 0.9],
+    'learning_rate': [0.001, 0.0001, 0.00001, 0.000001, 0.0000001],
+    'mode': ["regression"],
+}
+'''
 def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer):
   params_dict = {
-      'n_tasks': [task_count],
-      'number_atom_features': [75, 100, 150],
-      'graph_conv_layers': [[32, 32], [64,64]],
-      'dense_layer_size': [64, 128],
-      'dropouts': [0.2, 0.5],
-      'learning_rate': [0.001, 0.0001],
-      'mode': ["regression"],
+    'n_tasks': [task_count],
+    'number_atom_features': [75, 100, 150],
+    'graph_conv_layers': [[32, 32], [64,64]],
+    'dense_layer_size': [64, 128],
+    'dropouts': [0.2, 0.5],
+    'learning_rate': [0.001, 0.0001],
+    'mode': ["regression"],
   }
 
   optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
@@ -107,18 +107,7 @@ def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, m
   print(best_hyperparams[1])
   print(best_hyperparams[2])
 
-
-  # supports width of channels from convolutional layers and dropout for each layer.
-  model = dc.models.GraphConvModel(
-    n_tasks=task_count,
-    number_atom_features=best_hyperparams[1],
-    graph_conv_layers=best_hyperparams[2],
-    dense_layer_size=best_hyperparams[3],
-    dropouts=best_hyperparams[4],
-    learning_rate=best_hyperparams[5],
-    mode="regression"
-  )
-  return model
+  return best_model
 
 
 def fixed_param_model(task_count):
