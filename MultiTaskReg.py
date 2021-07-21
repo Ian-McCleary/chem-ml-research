@@ -129,7 +129,7 @@ for i in range(3):
   np.random.seed(dataseed)
   tf.random.set_seed(dataseed)
   loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-  data = loader.create_dataset("Datasets/dataset_3task_10000.csv")
+  data = loader.create_dataset("Datasets/dataset_10000.csv")
 
   transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
   dataset = transformer.transform(data)
@@ -158,12 +158,12 @@ for i in range(3):
   evaluations.append(both_list[1])
 
 
-hyperparameter_optimization()
-#file_name = "mtr_loss_5.csv"
-#df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5])), columns=[
-#  "train_scores_1", "valid_scores_1","train_scores_2", "valid_scores_2","train_scores_3", "valid_scores_3"])
+#hyperparameter_optimization()
+file_name = "mtr_loss_3iter_10k.csv"
+df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5])), columns=[
+  "train_scores_1", "valid_scores_1","train_scores_2", "valid_scores_2","train_scores_3", "valid_scores_3"])
 #df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
-#df.to_csv(file_name) 
+df.to_csv(file_name) 
 #file_name = "mtr_sensitivity_testing.csv"
 # df = pd.DataFrame(list(zip(train_losses, valid_losses, train, valid, test)), columns=["train_losses", "valid_losses", "train_score", "valid_score", "test_score"])
 #df = pd.DataFrame(list(zip(train_arr, valid_arr, test_arr)), columns=["train_scores", "valid_scores", "test_scores",])
