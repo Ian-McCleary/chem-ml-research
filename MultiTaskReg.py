@@ -109,7 +109,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
   all_loss = []
-  for i in range(500):
+  for i in range(1000):
     loss = model.fit(train_dataset, nb_epoch=1)
     valid = model.evaluate(valid_dataset, metric, transformer)
     train = model.evaluate(train_dataset, metric, transformer)
@@ -158,8 +158,8 @@ for i in range(4):
       n_features=n_features,
       layer_sizes=[256, 512, 1024],
       weight_decay_penalty_type ="l2",
-      dropouts=0.2,
-      learning_rate=0.001,
+      dropouts=0.1,
+      learning_rate=0.0001,
       mode="regression"
     )
   both_list = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
