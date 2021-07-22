@@ -93,9 +93,7 @@ def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, m
     'learning_rate': [0.001, 0.0001],
     'mode': ["regression"],
   }
-
   optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
-  #transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
   best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
                                                                           metric, [transformer])                                                                  
   print(all_results)
