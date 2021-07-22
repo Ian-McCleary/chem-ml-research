@@ -36,12 +36,12 @@ def start_training():
   task_count = len(train_dataset.y[0])
 
   # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
-  metric = dc.metrics.Metric(dc.metrics.rms_score)
+  metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
-  # model = param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
+  model = param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
   # model = fixed_param_model(task_count)
-  #loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
-  find_learn_rate(task_count,train_dataset)
+  loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
+  #find_learn_rate(task_count,train_dataset)
 
 def k_fold_cross_validation():
   # Set the seed
@@ -60,7 +60,7 @@ def k_fold_cross_validation():
   task_count = len(train_dataset.y[0])
 
   # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
-  metric = dc.metrics.Metric(dc.metrics.rms_score)
+  metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
   model = dc.models.GraphConvModel(
     n_tasks=task_count,
     number_atom_features=100,
@@ -87,7 +87,7 @@ def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, m
   params_dict = {
     'n_tasks': [task_count],
     'number_atom_features': [75, 100, 150],
-    'graph_conv_layers': [[32, 32], [64,64]],
+    'graph_conv_layers': [[32, 32], [64,64], [128, 128]],
     'dense_layer_size': [64, 128],
     'dropouts': [0.2, 0.5],
     'learning_rate': [0.001, 0.0001],
@@ -101,12 +101,6 @@ def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, m
   print(all_results)
   print("\n")
   print(best_hyperparams)
-
-  # Single evaluation model
-  print("Hyperparam list")
-  print(best_hyperparams[1])
-  print(best_hyperparams[2])
-
   return best_model
 
 
@@ -150,7 +144,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
   # Fit trained model
   train_losses = []
   valid_losses = []
-  for i in range(100):
+  for i in range(500):
     loss = model.fit(train_dataset, nb_epoch=1)
     valid = model.evaluate(valid_dataset, metric, [transformer])
     train = model.evaluate(train_dataset, metric, [transformer])
