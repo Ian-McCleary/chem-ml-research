@@ -109,7 +109,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
   all_loss = []
-  for i in range(250):
+  for i in range(1000):
     loss = model.fit(train_dataset, nb_epoch=1)
     valid = model.evaluate(valid_dataset, metric, transformer)
     train = model.evaluate(train_dataset, metric, transformer)
@@ -118,25 +118,34 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     valid_eval.append(valid)
   all_loss.append(train_losses)
   all_loss.append(valid_eval)
-  df = pd.DataFrame(list(zip(train_losses, valid_eval)), columns=["train_scores", "valid_scores"])
-  df.to_csv("mtr_optimized_1task.csv")
   return all_loss
-    
+
+
 
 evaluations = []
-for i in range(3):
-  dataseed = randrange(1000)
-  np.random.seed(dataseed)
-  tf.random.set_seed(dataseed)
-  loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-  data = loader.create_dataset("Datasets/dataset_10000.csv")
+dataseed = randrange(1000)
+np.random.seed(dataseed)
+tf.random.set_seed(dataseed)
+for i in range(4):
+  if i == 0:
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    data = loader.create_dataset("Datasets/dataset_10000.csv")
+  elif (i == 1):
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.RDKitDescriptors())
+    data = loader.create_dataset("Datasets/dataset_10000.csv")
+  elif i == 2:
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrixEig(max_atoms=70, remove_hydrogens=True, seed=dataseed))
+    data = loader.create_dataset("Datasets/dataset_10000.csv")
+  elif i == 3:
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.RdkitGridFeaturizer())
+    data = loader.create_dataset("Datasets/dataset_10000.csv")
 
   transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
   dataset = transformer.transform(data)
 
   # Splits dataset into train/validation/test
   splitter = dc.splits.RandomSplitter()
-  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
+  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset,frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
   task_count = len(dataset.y[0])
   n_features = len(dataset.X[0])
 
@@ -159,9 +168,9 @@ for i in range(3):
 
 
 #hyperparameter_optimization()
-file_name = "mtr_loss_3iter_10k.csv"
-df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5])), columns=[
-  "train_scores_1", "valid_scores_1","train_scores_2", "valid_scores_2","train_scores_3", "valid_scores_3"])
+file_name = "mtr_featurizer_test.csv"
+df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5],evaluations[6], evaluations[7])), columns=[
+  "train_scores_cfp", "valid_scores_cfp","train_scores_rdkit", "valid_scores_rdkit","train_scores_cme", "valid_scores_cme","train_scores_rdkitgrid", "valid_scores_rdkitgrid",])
 #df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
 df.to_csv(file_name) 
 #file_name = "mtr_sensitivity_testing.csv"
