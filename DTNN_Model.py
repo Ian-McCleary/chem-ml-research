@@ -83,8 +83,8 @@ valid_losses = []
 train_losses = []
 for i in range(500):
   loss = model.fit(train_dataset, nb_epoch=1)
-  valid = model.evaluate(valid_dataset, metric, [transformer])
-  train = model.evaluate(train_dataset, metric, [transformer])
+  valid = model.evaluate(valid_dataset, metric, [transformer], per_task_metrics=True)
+  train = model.evaluate(train_dataset, metric, [transformer], per_task_metrics=True)
   print("loss: %s" % str(loss))
   train_losses.append(train)
   valid_losses.append(valid)
@@ -95,7 +95,7 @@ print("\n")
 print("Valid_dataset losses:")
 
 df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
-df.to_csv("DTNN_fixed_learn_loss_3task.csv")
+df.to_csv("DTNN_3task_seperate_metric.csv")
 
 # model.fit(train_dataset)
 # How well the model fits the training subset of our data
