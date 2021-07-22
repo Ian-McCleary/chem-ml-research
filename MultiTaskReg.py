@@ -109,7 +109,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
   all_loss = []
-  for i in range(1000):
+  for i in range(500):
     loss = model.fit(train_dataset, nb_epoch=1)
     valid = model.evaluate(valid_dataset, metric, transformer)
     train = model.evaluate(train_dataset, metric, transformer)
