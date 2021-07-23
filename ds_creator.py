@@ -48,10 +48,12 @@ def start_ds_creation(args):
                     failed_arr.append(molecule)
                     continue
                 if args.reverse_isomerization:
-                    output_arr[output_count, mol_count] = au_to_ev(get_barrier_height(neb_path))
+                    output_arr[output_count, mol_count] = au_to_ev(
+                        get_barrier_height(neb_path))
                     output_count += 1
                 if args.eisomerization:
-                    output_arr[output_count, mol_count] = au_to_ev(get_meta_energy_dif(neb_path))
+                    output_arr[output_count, mol_count] = au_to_ev(
+                        get_meta_energy_dif(neb_path))
                     output_count += 1
                 if args.vertical_excitation:
                     rel_gs_folder = get_gs_ex_path(mol_path, "gs")
@@ -59,34 +61,40 @@ def start_ds_creation(args):
                     gs = get_total_electronic(rel_gs_folder)
                     ex = get_total_electronic(rel_ex_folder)
                     total_electronic_difference = ex - gs
-                    output_arr[output_count, mol_count] = au_to_ev(total_electronic_difference)
+                    output_arr[output_count, mol_count] = au_to_ev(
+                        total_electronic_difference)
                     output_count += 1
 
                 mol_count += 1
                 print("\n")
             else:
                 failed_arr.append(molecule)
-                print("Invalid molecule filepath " + mol_path + " (This may not be a folder)\n")
+                print("Invalid molecule filepath " +
+                      mol_path + " (This may not be a folder)\n")
             if mol_count >= args.count:
                 break
         if mol_count >= args.count:
             break
 
-    create_save_dataset(id_arr, smiles_arr, output_arr, output_count, failed_arr)
-
+    create_save_dataset(id_arr, smiles_arr, output_arr,
+                        output_count, failed_arr)
 
 
 # Create and save the dataset. Weight vector to be added here
 # Featurizing should be done in ML model, deepchem CSVLoader class
 def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr):
     if output_count == 1:
-        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0])), columns=["ids", "smiles", "task1"])
+        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0])), columns=[
+                          "ids", "smiles", "task1"])
     elif output_count == 2:
-        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1])), columns=["ids", "smiles", "task1", "task2"])
+        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1])), columns=[
+                          "ids", "smiles", "task1", "task2"])
     elif output_count == 3:
-        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=["ids", "smiles", "task1", "task2", "task3"])
+        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=[
+                          "ids", "smiles", "task1", "task2", "task3"])
     df.to_csv('dataset_15000.csv')
-    failed_df = pd.DataFrame(list(zip(failed_arr)), columns=["Failed Molecules"])
+    failed_df = pd.DataFrame(list(zip(failed_arr)),
+                             columns=["Failed Molecules"])
     failed_df.to_csv("failed_molecules")
     print("DONE!")
 
@@ -117,7 +125,7 @@ def get_total_electronic(folder_path):
         all_lines = f.readlines()
         line = all_lines[7]
         total_electronic = float(line[7:-34])
-        #print(total_electronic)
+        # print(total_electronic)
         return total_electronic
 
 
@@ -133,7 +141,7 @@ def get_meta_energy_dif(neb_path):
         stable_float = float(stable_line[23:-7])
         meta_float = float(meta_line[23:-7])
         energy = meta_float - stable_float
-        #print(energy)
+        # print(energy)
         return energy
 
 

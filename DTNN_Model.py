@@ -1,106 +1,147 @@
+import time
+from random import randrange
+import pandas as pd
+import numpy as np
+import deepchem as dc
+from rdkit import Chem
 import os
 import tensorflow as tf
 
-config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), 
-                        inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']),
-                        device_count = {'CPU': int(os.environ['OMP_NUM_THREADS'])})
+config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']),
+                                  inter_op_parallelism_threads=int(
+                                      os.environ['OMP_NUM_THREADS']),
+                                  device_count={'CPU': int(os.environ['OMP_NUM_THREADS'])})
 
 session = tf.compat.v1.Session(config=config)
 tf.compat.v1.keras.backend.set_session(session)
 
-from rdkit import Chem
-import deepchem as dc
-import numpy as np
-import pandas as pd
-from random import randrange
 
 # Set the seed
 dataseed = randrange(1000)
 np.random.seed(dataseed)
 tf.random.set_seed(dataseed)
+times = []
+for i in range(6):
+    if i == 0:
+        start_time = time.time()
+        loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
+                                   id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
+        data = loader.create_dataset("Datasets/dataset_500.csv")
+    if i == 1:
+        start_time = time.time()
+        loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
+                                   id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
+        data = loader.create_dataset("Datasets/dataset_1000.csv")
+    if i == 2:
+        start_time = time.time()
+        loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
+                                   id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
+        data = loader.create_dataset("Datasets/dataset_5000.csv")
+    if i == 3:
+        start_time = time.time()
+        loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
+                                   id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
+        data = loader.create_dataset("Datasets/dataset_7000.csv")
+    if i == 4:
+        start_time = time.time()
+        loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
+                                   id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
+        data = loader.create_dataset("Datasets/dataset_10000.csv")
+    if i == 5:
+        start_time = time.time()
+        loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
+                                   id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
+        data = loader.create_dataset("Datasets/dataset_15000.csv")
 
-# update task count as list ["task1", "task2"..]
-# TODO check that transformers are applied
-loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
-data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
-transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
-dataset = transformer.transform(data)
+    transformer = dc.trans.NormalizationTransformer(
+        dataset=data, transform_y=True)
+    dataset = transformer.transform(data)
 
-# Splits dataset into train/validation/test
-splitter = dc.splits.RandomSplitter()
-train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
-task_count = len(train_dataset.y[0])
+    # Splits dataset into train/validation/test
+    splitter = dc.splits.RandomSplitter()
+    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
+        dataset=dataset, seed=dataseed)
+    task_count = len(train_dataset.y[0])
 
-
-metrics = [
-    dc.metrics.Metric(dc.metrics.mean_absolute_error)
-    #dc.metrics.Metric(dc.metrics.r2_score)
+    metrics = [
+        dc.metrics.Metric(dc.metrics.mean_absolute_error)
+        # dc.metrics.Metric(dc.metrics.r2_score)
     ]
-metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-'''
-# parameter optimization
-params_dict = {
-    'n_tasks': [task_count],
-    'n_embedding': [5, 10, 50, 100],
-    'dropouts': [0.2, 0.5],
-    'learning_rate': [0.001, 0.0001]
-}
+    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
-optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
-transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
-best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
-                                                                         metric, transformers)                                                                  
-print(all_results)
-print("\n")
-print(best_hyperparams)
+    '''
+    # parameter optimization
+    params_dict = {
+        'n_tasks': [task_count],
+        'n_embedding': [5, 10, 50, 100],
+        'dropouts': [0.2, 0.5],
+        'learning_rate': [0.001, 0.0001]
+    }
 
-# Single evaluation model
-# Single task: params (1, 50, 0.2, 1e-06)
-print("Hyperparam list")
-print(best_hyperparams[1])
-print(best_hyperparams[2])
+    optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
+    transformers = [dc.trans.NormalizationTransformer(transform_y=True, dataset=data)]
+    best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
+                                                                            metric, transformers)                                                                  
+    print(all_results)
+    print("\n")
+    print(best_hyperparams)
 
-model = dc.models.DTNNModel(
-    n_tasks=task_count,
-    n_embedding=best_hyperparams[1],
-    mode="regression",
-    dropout=best_hyperparams[2],
-    learning_rate=best_hyperparams[3]
-)
-'''
+    # Single evaluation model
+    # Single task: params (1, 50, 0.2, 1e-06)
+    print("Hyperparam list")
+    print(best_hyperparams[1])
+    print(best_hyperparams[2])
 
-model = dc.models.DTNNModel(
-    n_tasks = task_count,
-    n_embedding=50,
-    distance_max=24,
-    mode="regression",
-    dropout=0.2,
-    learning_rate=0.001
-)
-# Fit trained model
-# test
-valid_losses = []
-train_losses = []
-train_mean = []
-train_task1 = []
-train_task2 = []
-train_task3 = []
-for i in range(500):
-  loss = model.fit(train_dataset, nb_epoch=1)
-  valid = model.evaluate(valid_dataset, metric, [transformer], per_task_metrics=True)
-  train = model.evaluate(train_dataset, metric, [transformer], per_task_metrics=True)
-  print("loss: %s" % str(loss))
-  train_mean.append(train[0])
-  train_task1.append(train)
-  train_losses.append(train)
-  valid_losses.append(valid)
-  
+    model = dc.models.DTNNModel(
+        n_tasks=task_count,
+        n_embedding=best_hyperparams[1],
+        mode="regression",
+        dropout=best_hyperparams[2],
+        learning_rate=best_hyperparams[3]
+    )
+    '''
+
+    model = dc.models.DTNNModel(
+        n_tasks=task_count,
+        n_embedding=50,
+        distance_max=24,
+        mode="regression",
+        dropout=0.2,
+        learning_rate=0.001
+    )
+    # Fit trained model
+    # test
+    valid_losses = []
+    train_losses = []
+    train_mean = []
+    train_task1 = []
+    train_task2 = []
+    train_task3 = []
+for i in range(250):
+    loss = model.fit(train_dataset, nb_epoch=1)
+    valid = model.evaluate(valid_dataset, metric, [
+                           transformer], per_task_metrics=False)
+    train = model.evaluate(train_dataset, metric, [
+                           transformer], per_task_metrics=False)
+    print("loss: %s" % str(loss))
+    train_mean.append(train[0])
+    train_task1.append(train)
+    train_losses.append(train)
+    valid_losses.append(valid)
+    end_time = time.time()-start_time()
+    times.append(end_time)
+
 print("losses")
 print(train_losses)
 print("\n")
 print("Valid_dataset losses:")
 
-df = pd.DataFrame(list(zip(train_losses, valid_losses)), columns=["train_losses", "valid_losses"])
+tdf = pd.DataFrame(list(zip(times)),
+                  columns=["times(sec)"])
+tdf.to_csv("dtnn_times.csv")
+
+df = pd.DataFrame(list(zip(train_losses, valid_losses)),
+                  columns=["train_losses", "valid_losses"])
 df.to_csv("DTNN_3task_seperate_metric.csv")
 
 # model.fit(train_dataset)
