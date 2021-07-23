@@ -131,7 +131,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   train_losses = []
   valid_eval = []
   all_loss = []
-  for i in range(1000):
+  for i in range(250):
     loss = model.fit(train_dataset, nb_epoch=1)
     valid = model.evaluate(valid_dataset, metric, transformer)
     train = model.evaluate(train_dataset, metric, transformer)
@@ -191,7 +191,7 @@ for i in range(4):
 
 
 #hyperparameter_optimization()
-file_name = "mtr_featurizer_test.csv"
+file_name = "mtr_featurizer_test3.csv"
 df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5],evaluations[6], evaluations[7])), columns=[
   "train_scores_cfp", "valid_scores_cfp","train_scores_rdkit", "valid_scores_rdkit","train_scores_cme", "valid_scores_cme","train_scores_rdkitgrid", "valid_scores_rdkitgrid",])
 #df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
