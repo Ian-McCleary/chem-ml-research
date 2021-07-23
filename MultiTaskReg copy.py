@@ -1,5 +1,6 @@
 import tensorflow as tf
 import os
+import time
 
 config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']), 
                         inter_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']),
@@ -145,133 +146,80 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
 
 
 evaluations = []
+times = []
 # dataseed = randrange(1000)
 dataseed = 37295
 np.random.seed(dataseed)
 tf.random.set_seed(dataseed)
-i = 2
-for i in range(4):
+#i = 2
+for i in range(6):
   if i == 0:
+    start_time = time.time()
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    data = loader.create_dataset("Datasets/dataset_500.csv")
+  elif (i == 1):
+    start_time = time.time()
+    #loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.RDKitDescriptors())
+    #data = loader.create_dataset("Datasets/dataset_10000.csv")
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    data = loader.create_dataset("Datasets/dataset_1000.csv")
+  elif i == 2:
+    start_time = time.time()
+    #loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrixEig(max_atoms=70, remove_hydrogens=True, seed=dataseed))
+    #data = loader.create_dataset("Datasets/dataset_10000.csv")
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    data = loader.create_dataset("Datasets/dataset_5000.csv")
+  elif i == 3:
+    start_time = time.time()
+    #loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.RdkitGridFeaturizer())
+    #data = loader.create_dataset("Datasets/dataset_10000.csv")
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    data = loader.create_dataset("Datasets/dataset_7000.csv")
+  elif i == 4:
+    start_time = time.time()
     loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
     data = loader.create_dataset("Datasets/dataset_10000.csv")
-    transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
-    dataset = transformer.transform(data)
+  elif i == 5:
+    start_time = time.time()
+    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    data = loader.create_dataset("Datasets/dataset_15000.csv")
 
-    # Splits dataset into train/validation/test
-    splitter = dc.splits.RandomSplitter()
-    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset,frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
-    task_count = len(dataset.y[0])
-    n_features = len(dataset.X[0])
+  transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
+  dataset = transformer.transform(data)
 
-    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
+  # Splits dataset into train/validation/test
+  splitter = dc.splits.RandomSplitter()
+  train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset,frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
+  task_count = len(dataset.y[0])
+  n_features = len(dataset.X[0])
 
-    # model = hyperparameter_optimization()
-    #k_fold_validation(model)
-    model1 = None
-    model1 = dc.models.MultitaskRegressor(
-        n_tasks=task_count,
-        n_features=n_features,
-        layer_sizes=[256, 512, 1024],
-        weight_decay_penalty_type ="l2",
-        dropouts=0.1,
-        learning_rate=0.0001,
-        mode="regression"
-      )
-    both_list = train_loss(model1, train_dataset, valid_dataset, metric, [transformer])
-    evaluations.append(both_list[0])
-    evaluations.append(both_list[1])
-  elif (i == 1):
-    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.RDKitDescriptors())
-    data = loader.create_dataset("Datasets/dataset_10000.csv")
-    transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
-    dataset = transformer.transform(data)
+  metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
-    # Splits dataset into train/validation/test
-    splitter = dc.splits.RandomSplitter()
-    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset,frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
-    task_count = len(dataset.y[0])
-    n_features = len(dataset.X[0])
+  # model = hyperparameter_optimization()
+  #k_fold_validation(model)
+  model = None
+  model = dc.models.MultitaskRegressor(
+      n_tasks=task_count,
+      n_features=n_features,
+      layer_sizes=[256, 512, 1024],
+      weight_decay_penalty_type ="l2",
+      dropouts=0.1,
+      learning_rate=0.0001,
+      mode="regression"
+    )
+  both_list = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
+  end_time = time.time() - start_time
+  print("--- %s seconds ---" % (end_time))
+  evaluations.append(both_list[0])
+  evaluations.append(both_list[1])
 
-    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-
-    # model = hyperparameter_optimization()
-    #k_fold_validation(model)
-    model2 = None
-    model2 = dc.models.MultitaskRegressor(
-        n_tasks=task_count,
-        n_features=n_features,
-        layer_sizes=[256, 512, 1024],
-        weight_decay_penalty_type ="l2",
-        dropouts=0.1,
-        learning_rate=0.0001,
-        mode="regression"
-      )
-    both_list = train_loss(model2, train_dataset, valid_dataset, metric, [transformer])
-    evaluations.append(both_list[0])
-    evaluations.append(both_list[1])
-  elif i == 2:
-    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrixEig(max_atoms=70, remove_hydrogens=True, seed=dataseed))
-    data = loader.create_dataset("Datasets/dataset_10000.csv")
-    transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
-    dataset = transformer.transform(data)
-
-    # Splits dataset into train/validation/test
-    splitter = dc.splits.RandomSplitter()
-    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset,frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
-    task_count = len(dataset.y[0])
-    n_features = len(dataset.X[0])
-
-    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-
-    # model = hyperparameter_optimization()
-    #k_fold_validation(model)
-    model3 = None
-    model3 = dc.models.MultitaskRegressor(
-        n_tasks=task_count,
-        n_features=n_features,
-        layer_sizes=[256, 512, 1024],
-        weight_decay_penalty_type ="l2",
-        dropouts=0.1,
-        learning_rate=0.0001,
-        mode="regression"
-      )
-    both_list = train_loss(model3, train_dataset, valid_dataset, metric, [transformer])
-    evaluations.append(both_list[0])
-    evaluations.append(both_list[1])
-  elif i == 3:
-    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.RdkitGridFeaturizer())
-    data = loader.create_dataset("Datasets/dataset_10000.csv")
-    transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
-    dataset = transformer.transform(data)
-
-    # Splits dataset into train/validation/test
-    splitter = dc.splits.RandomSplitter()
-    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset,frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
-    task_count = len(dataset.y[0])
-    n_features = len(dataset.X[0])
-
-    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-
-    # model = hyperparameter_optimization()
-    #k_fold_validation(model)
-    model4 = None
-    model4 = dc.models.MultitaskRegressor(
-        n_tasks=task_count,
-        n_features=n_features,
-        layer_sizes=[256, 512, 1024],
-        weight_decay_penalty_type ="l2",
-        dropouts=0.1,
-        learning_rate=0.0001,
-        mode="regression"
-      )
-    both_list = train_loss(model4, train_dataset, valid_dataset, metric, [transformer])
-    evaluations.append(both_list[0])
-    evaluations.append(both_list[1])
 
 #hyperparameter_optimization()
-file_name = "mtr_featurizer_test_redone.csv"
-df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5],evaluations[6], evaluations[7])), columns=[
-  "train_scores_cfp", "valid_scores_cfp","train_scores_rdkit", "valid_scores_rdkit","train_scores_cme", "valid_scores_cme","train_scores_rdkitgrid", "valid_scores_rdkitgrid",])
+file_name = "mtr_time.csv"
+df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5],evaluations[6], evaluations[7],
+evaluations[8], evaluations[9],evaluations[10], evaluations[11])), columns=[
+  "train_scores_500", "valid_scores_500","train_scores_1000", "valid_scores_1000","train_scores_5000", "valid_scores_5000","train_scores_7000", "valid_scores_7000",
+  "train_scores_10000", "valid_scores_10000","train_scores_15000", "valid_scores_15000"])
 #df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
 df.to_csv(file_name) 
 #file_name = "mtr_sensitivity_testing.csv"
