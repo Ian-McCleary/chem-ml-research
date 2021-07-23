@@ -215,7 +215,7 @@ for i in range(6):
   evaluations.append(both_list[1])
 
 time1 = pd.DataFrame(list(zip(times)), columns=["times"])
-time1.to_csv("mtr_time.csv")
+time1.to_csv("mtr_time1.csv")
 #hyperparameter_optimization()
 file_name = "mtr_time.csv"
 df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5],evaluations[6], evaluations[7],
