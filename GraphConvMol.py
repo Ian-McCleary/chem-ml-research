@@ -25,7 +25,7 @@ tf.random.set_seed(dataseed)
 def start_training():
       
   # update task count as list ["task1", "task2"..]
-  loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer(per_atom_fragmentation=False))
+  loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.ConvMolFeaturizer())
   data = loader.create_dataset("Datasets/dataset_1000.csv")
   transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
   dataset = transformer.transform(data)
