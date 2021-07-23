@@ -145,9 +145,11 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
 
 
 evaluations = []
-dataseed = randrange(1000)
+# dataseed = randrange(1000)
+dataseed = 37295
 np.random.seed(dataseed)
 tf.random.set_seed(dataseed)
+i = 2
 for i in range(4):
   if i == 0:
     loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
@@ -191,7 +193,7 @@ for i in range(4):
 
 
 #hyperparameter_optimization()
-file_name = "mtr_featurizer_test3.csv"
+file_name = "mtr_featurizer_test_last2.csv"
 df = pd.DataFrame(list(zip(evaluations[0], evaluations[1], evaluations[2], evaluations[3], evaluations[4], evaluations[5],evaluations[6], evaluations[7])), columns=[
   "train_scores_cfp", "valid_scores_cfp","train_scores_rdkit", "valid_scores_rdkit","train_scores_cme", "valid_scores_cme","train_scores_rdkitgrid", "valid_scores_rdkitgrid",])
 #df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
