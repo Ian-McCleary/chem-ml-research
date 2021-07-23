@@ -143,7 +143,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
   return all_loss
 
 
-'''
+
 evaluations = []
 dataseed = randrange(1000)
 np.random.seed(dataseed)
@@ -175,6 +175,7 @@ for i in range(4):
 
   # model = hyperparameter_optimization()
   #k_fold_validation(model)
+  model = None
   model = dc.models.MultitaskRegressor(
       n_tasks=task_count,
       n_features=n_features,
@@ -219,3 +220,4 @@ n_features = len(dataset.X[0])
 metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
 find_learn_rate(task_count=task_count, train_dataset=train_dataset)
+'''
