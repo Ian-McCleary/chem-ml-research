@@ -17,7 +17,7 @@ tf.compat.v1.keras.backend.set_session(session)
 
 
 # Set the seed
-dataseed = randrange(1000)
+dataseed = 8675309
 np.random.seed(dataseed)
 tf.random.set_seed(dataseed)
 
@@ -25,7 +25,7 @@ tf.random.set_seed(dataseed)
 
 
 def start_training():
-
+    
     # update task count as list ["task1", "task2"..]
     loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
                                id_field="ids", featurizer=dc.feat.ConvMolFeaturizer())
@@ -43,9 +43,9 @@ def start_training():
     # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
-    model = param_optimization(
-        train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
-    # model = fixed_param_model(task_count)
+    #model = param_optimization(
+    #    train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
+    model = fixed_param_model(task_count)
     loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
     # find_learn_rate(task_count,train_dataset)
 
@@ -112,15 +112,16 @@ def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, m
     print(best_hyperparams)
     return best_model
 
-
+# Parameter optimized for 10k, 1 task
 def fixed_param_model(task_count):
-    l_rate = 0.1
+    #l_rate = 0.00001
+    l_rate = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 100)
     model = dc.models.GraphConvModel(
         n_tasks=task_count,
-        number_atom_features=100,
-        dense_layer_size=128,
+        number_atom_features=75,
+        dense_layer_size=16,
         graph_conv_layers=[32, 32],
-        dropouts=0.2,
+        dropouts=0.5,
         learning_rate=l_rate,
         mode="regression"
     )
