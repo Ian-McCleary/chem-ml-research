@@ -48,12 +48,19 @@ def start_ds_creation(args):
                     failed_arr.append(molecule)
                     continue
                 if args.reverse_isomerization:
-                    output_arr[output_count, mol_count] = au_to_ev(
-                        get_barrier_height(neb_path))
+                    barrier_height = get_barrier_height(neb_path)
+                    if barrier_height == None:
+                        failed_arr.append(molecule)
+                        continue
+                    else:
+                        output_arr[output_count, mol_count] = au_to_ev(barrier_height)
                     output_count += 1
                 if args.eisomerization:
-                    output_arr[output_count, mol_count] = au_to_ev(
-                        get_meta_energy_dif(neb_path))
+                    eisomerization = get_meta_energy_dif(neb_path)
+                    if eisomerization == None:
+                        failed_arr.append(molecule)
+                    else:
+                        output_arr[output_count, mol_count] = au_to_ev(eisomerization)
                     output_count += 1
                 if args.vertical_excitation:
                     rel_gs_folder = get_gs_ex_path(mol_path, "gs")
@@ -66,11 +73,14 @@ def start_ds_creation(args):
                         continue
                     gs = get_total_electronic(rel_gs_folder)
                     ex = get_total_electronic(rel_ex_folder)
-                    total_electronic_difference = ex - gs
-                    output_arr[output_count, mol_count] = au_to_ev(
-                        total_electronic_difference)
+                    if gs == None or ex == None:
+                        failed_arr.append(molecule)
+                        continue
+                    else:
+                        total_electronic_difference = ex - gs
+                        output_arr[output_count, mol_count] = au_to_ev(
+                            total_electronic_difference)
                     output_count += 1
-
                 mol_count += 1
                 print("\n")
             else:
