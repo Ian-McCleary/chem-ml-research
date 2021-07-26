@@ -44,9 +44,11 @@ def start_training():
     n_features = len(dataset.X[0])
 
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
+    print("model \n")
     model = fixed_param_model(task_count=task_count, n_features=n_features)
+    print("loss train \n")
     all_loss = train_loss_over_epoch(model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
-
+    print("csv: ")
     # hyperparameter_optimization()
     file_name = "mtr_3task_multiple_metric.csv"
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1])), columns=[
