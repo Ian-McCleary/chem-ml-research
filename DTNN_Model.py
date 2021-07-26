@@ -70,7 +70,15 @@ def start_training():
             # dc.metrics.Metric(dc.metrics.r2_score)
         ]
         metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
+        model = fixed_param_model(task_count=task_count)
+        loss_list = train_loss_over_epoch(model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
+        end_time = time.time()
+        time_elapsed = end_time-start_time
+        times.append(time_elapsed)
 
+    df = pd.DataFrame(list(zip(times)),
+                    columns=["times(sec)"])
+    df.to_csv("dtnn_time_complexity.csv")
 
 def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     # parameter optimization
@@ -88,20 +96,7 @@ def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metri
     print(all_results)
     print("\n")
     print(best_hyperparams)
-
-    # Single evaluation model
-    # Single task: params (1, 50, 0.2, 1e-06)
-    print("Hyperparam list")
-    print(best_hyperparams[1])
-    print(best_hyperparams[2])
-
-    model = dc.models.DTNNModel(
-        n_tasks=task_count,
-        n_embedding=best_hyperparams[1],
-        mode="regression",
-        dropout=best_hyperparams[2],
-        learning_rate=best_hyperparams[3]
-    )
+    return best_model
 
 def fixed_param_model(task_count):
     model = dc.models.DTNNModel(
@@ -119,10 +114,7 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transform
     # test
     valid_losses = []
     train_losses = []
-    train_mean = []
-    train_task1 = []
-    train_task2 = []
-    train_task3 = []
+    all_losses = []
     for i in range(250):
         loss = model.fit(train_dataset, nb_epoch=1)
         valid = model.evaluate(valid_dataset, metric, [
@@ -134,10 +126,13 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transform
         # train_task1.append(train)
         train_losses.append(train)
         valid_losses.append(valid)
-
-    df = pd.DataFrame(list(zip(train_mean, valid_losses)),
-                    columns=["train_losses", "valid_losses"])
-    df.to_csv("DTNN_3task_seperate_metric.csv")
+    all_losses.append(train_losses)
+    all_losses.append(valid_losses)
+    return all_losses
+    
+    #df = pd.DataFrame(list(zip(train_mean, valid_losses)),
+     #               columns=["train_losses", "valid_losses"])
+    #df.to_csv("DTNN_3task_seperate_metric.csv")
 
 def main():
     # args = parse_args()
