@@ -93,7 +93,7 @@ def hyperparameter_optimization():
         'n_tasks': [task_count],
         'n_features': [n_features],
         'layer_sizes': [[256, 512, 1024], [1024, 1024, 1024], [1024, 512, 256]],
-        'dropouts': [0.1, 0.2, 0.5],
+        'dropouts': [0.1, 0.2, 0.5, 0.4],
         'learning_rate': [0.001, 0.0001, 0.00001]
     }
     # print(data.y)
