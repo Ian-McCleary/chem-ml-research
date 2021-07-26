@@ -58,6 +58,12 @@ def start_ds_creation(args):
                 if args.vertical_excitation:
                     rel_gs_folder = get_gs_ex_path(mol_path, "gs")
                     rel_ex_folder = get_gs_ex_path(mol_path, "ex")
+                    if not os.path.isdir(rel_gs_folder):
+                        failed_arr.append(molecule)
+                        continue
+                    elif not os.path.isdir(rel_ex_folder):
+                        failed_arr.append(molecule)
+                        continue
                     gs = get_total_electronic(rel_gs_folder)
                     ex = get_total_electronic(rel_ex_folder)
                     total_electronic_difference = ex - gs

@@ -29,7 +29,7 @@ def start_training():
     # update task count as list ["task1", "task2"..]
     loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
                                id_field="ids", featurizer=dc.feat.ConvMolFeaturizer())
-    data = loader.create_dataset("Datasets/dataset_1000.csv")
+    data = loader.create_dataset("Datasets/dataset_10000.csv")
     transformer = dc.trans.NormalizationTransformer(
         transform_y=True, dataset=data)
     dataset = transformer.transform(data)
@@ -99,18 +99,16 @@ params_dict = {
 def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer):
     params_dict = {
         'n_tasks': [task_count],
-        'number_atom_features': [75, 100, 150],
+        'number_atom_features': [50, 75, 100, 150],
         'graph_conv_layers': [[32, 32], [64, 64], [128, 128]],
-        'dense_layer_size': [64, 128],
-        'dropouts': [0.2, 0.5],
-        'learning_rate': [0.001, 0.0001],
+        'dense_layer_size': [16, 32, 64, 128],
+        'dropouts': [0.2, 0.5, 0.1, 0.7],
+        'learning_rate': [0.001, 0.0001, 0.00001],
         'mode': ["regression"],
     }
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
     best_model, best_hyperparams, all_results = optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
                                                                             metric, [transformer])
-    print(all_results)
-    print("\n")
     print(best_hyperparams)
     return best_model
 
@@ -169,7 +167,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
     # file_name = "loss_" + str(l_rate) + ".csv"
     df = pd.DataFrame(list(zip(train_losses, valid_losses)),
                       columns=["train_losses", "valid_losses"])
-    df.to_csv("gcm_hyperparam.csv")
+    df.to_csv("gcm_broad_hyperparam.csv")
 
     print("Evaluating model")
     train_scores = model.evaluate(train_dataset, [metric], [transformer])
