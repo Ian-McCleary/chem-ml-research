@@ -117,17 +117,17 @@ for i in range(6):
     train_task1 = []
     train_task2 = []
     train_task3 = []
-for i in range(250):
-    loss = model.fit(train_dataset, nb_epoch=1)
-    valid = model.evaluate(valid_dataset, metric, [
-                           transformer], per_task_metrics=False)
-    train = model.evaluate(train_dataset, metric, [
-                           transformer], per_task_metrics=False)
-    print("loss: %s" % str(loss))
-    train_mean.append(train[0])
-    train_task1.append(train)
-    train_losses.append(train)
-    valid_losses.append(valid)
+    for i in range(250):
+        loss = model.fit(train_dataset, nb_epoch=1)
+        valid = model.evaluate(valid_dataset, metric, [
+                            transformer], per_task_metrics=False)
+        train = model.evaluate(train_dataset, metric, [
+                            transformer], per_task_metrics=False)
+        print("loss: %s" % str(loss))
+        # train_mean.append(train[0])
+        # train_task1.append(train)
+        train_losses.append(train)
+        valid_losses.append(valid)
     end_time = time.time()-start_time()
     times.append(end_time)
 
