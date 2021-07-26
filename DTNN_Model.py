@@ -140,7 +140,7 @@ tdf = pd.DataFrame(list(zip(times)),
                   columns=["times(sec)"])
 tdf.to_csv("dtnn_times.csv")
 
-df = pd.DataFrame(list(zip(train_losses, valid_losses)),
+df = pd.DataFrame(list(zip(train_mean, valid_losses)),
                   columns=["train_losses", "valid_losses"])
 df.to_csv("DTNN_3task_seperate_metric.csv")
 
