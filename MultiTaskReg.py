@@ -1,3 +1,4 @@
+from DTNN_Model import train_loss_over_epoch
 from random import randrange
 import pandas as pd
 import numpy as np
@@ -19,6 +20,40 @@ train_arr = []
 valid_arr = []
 test_arr = []
 score_list = []
+
+# Driver function
+def start_training():
+    evaluations = []
+    # dataseed = randrange(1000)
+    dataseed = 8675309
+    np.random.seed(dataseed)
+    tf.random.set_seed(dataseed)
+    loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
+                                featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+    
+    transformer = dc.trans.NormalizationTransformer(
+        dataset=data, transform_y=True)
+    dataset = transformer.transform(data)
+
+    # Splits dataset into train/validation/test
+    splitter = dc.splits.RandomSplitter()
+    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
+        dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
+    task_count = len(dataset.y[0])
+    n_features = len(dataset.X[0])
+
+    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
+    model = fixed_param_model(task_count=task_count, n_features=n_features)
+    all_loss = train_loss_over_epoch(model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
+
+    # hyperparameter_optimization()
+    file_name = "mtr_3task_multiple_metric.csv"
+    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1])), columns=[
+        "train_scores_cfp", "valid_scores_cfp"])
+
+    df.to_csv(file_name)
+
 
 
 def k_fold_validation(model):
@@ -57,22 +92,9 @@ def k_fold_validation(model):
         train_arr.append(train_scores)
         valid_arr.append(valid_score)
         test_arr.append(test_score)
-        '''
-    # Fit trained model
-    # test
-    train_losses = []
-    for i in range(300):
-      loss = model.fit(train_dataset, nb_epoch=1)
-      print("loss: %s" % str(loss))
-      train_losses.append(loss)
-    print("losses")
-    print(train_losses)
-    print("\n")
-    print("Valid_dataset losses:")
-    '''
 
 
-def hyperparameter_optimization():
+def hyperparameter_optimization(dataseed):
     # loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
     loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CircularFingerprint(size=4096, radius=4))
@@ -96,14 +118,13 @@ def hyperparameter_optimization():
         'dropouts': [0.1, 0.2, 0.5, 0.4],
         'learning_rate': [0.001, 0.0001, 0.00001]
     }
-    # print(data.y)
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
     best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
         params_dict, train_dataset, valid_dataset, metric, [transformer])
     print(best_hyperparams)
-    return train_loss(best_model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=[transformer])
+    return best_model
 
 
 def find_learn_rate(task_count, train_dataset):
@@ -139,6 +160,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
         valid = model.evaluate(valid_dataset, metric, transformer)
         train = model.evaluate(train_dataset, metric, transformer)
         print("loss: %s" % str(loss))
+        print(type(valid))
         train_losses.append(train)
         valid_eval.append(valid)
     all_loss.append(train_losses)
@@ -146,12 +168,18 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     return all_loss
 
 
-evaluations = []
-# dataseed = randrange(1000)
-dataseed = 37295
-np.random.seed(dataseed)
-tf.random.set_seed(dataseed)
-evaluations = hyperparameter_optimization()
+def fixed_param_model(task_count, n_features):
+    model = dc.models.MultitaskRegressor(
+        n_tasks=task_count,
+        n_features=n_features,
+        layer_sizes=[256, 512, 1024],
+        weight_decay_penalty_type="l2",
+        dropouts=0.1,
+        learning_rate=0.0001,
+        mode="regression"
+    )
+    return model
+
 '''
 loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids",
                             featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
@@ -186,19 +214,6 @@ both_list = train_loss(model, train_dataset,
                         valid_dataset, metric, [transformer])
 evaluations.append(both_list[0])
 evaluations.append(both_list[1])
-'''
-
-# hyperparameter_optimization()
-file_name = "mtr_broad_hyperparam.csv"
-df = pd.DataFrame(list(zip(evaluations[0], evaluations[1])), columns=[
-    "train_scores_cfp", "valid_scores_cfp"])
-#df = pd.DataFrame(list(zip(all_loss)), columns=["all_loss"])
-df.to_csv(file_name)
-#file_name = "mtr_sensitivity_testing.csv"
-# df = pd.DataFrame(list(zip(train_losses, valid_losses, train, valid, test)), columns=["train_losses", "valid_losses", "train_score", "valid_score", "test_score"])
-#df = pd.DataFrame(list(zip(train_arr, valid_arr, test_arr)), columns=["train_scores", "valid_scores", "test_scores",])
-# df.to_csv(file_name)
-'''
 
 dataseed = randrange(1000)
 np.random.seed(dataseed)
@@ -219,3 +234,11 @@ metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
 find_learn_rate(task_count=task_count, train_dataset=train_dataset)
 '''
+
+def main():
+    # args = parse_args()
+    start_training()
+
+if __name__ == "__main__":
+    main()
+
