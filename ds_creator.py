@@ -44,9 +44,11 @@ def start_ds_creation(args):
                 id_arr[mol_count] = molecule
                 output_count = 0
                 neb_path = get_neb_path(mol_path)
+                # Check that paths are valid. Further NoneType checks below after filepath checked.
                 if not os.path.isdir(neb_path):
                     failed_arr.append(molecule)
                     continue
+                # Reverse Isomerization
                 if args.reverse_isomerization:
                     barrier_height = get_barrier_height(neb_path)
                     if barrier_height == None:
@@ -55,6 +57,7 @@ def start_ds_creation(args):
                     else:
                         output_arr[output_count, mol_count] = au_to_ev(barrier_height)
                     output_count += 1
+                # Isomerization
                 if args.eisomerization:
                     eisomerization = get_meta_energy_dif(neb_path)
                     if eisomerization == None:
@@ -62,6 +65,7 @@ def start_ds_creation(args):
                     else:
                         output_arr[output_count, mol_count] = au_to_ev(eisomerization)
                     output_count += 1
+                # Vertical excitation energies
                 if args.vertical_excitation:
                     rel_gs_folder = get_gs_ex_path(mol_path, "gs")
                     rel_ex_folder = get_gs_ex_path(mol_path, "ex")
@@ -200,6 +204,7 @@ def get_smiles(rel_molecule_path, molecule_name):
         return smile
 
 
+# Args parser
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("count",
@@ -225,6 +230,7 @@ def parse_args():
     return parser.parse_args()
 
 
+# main function
 def main():
     args = parse_args()
     start_ds_creation(args)
