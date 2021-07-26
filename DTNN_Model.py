@@ -107,6 +107,7 @@ def fixed_param_model(task_count):
         dropout=0.2,
         learning_rate=0.001
     )
+    return model
 
 
 def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
