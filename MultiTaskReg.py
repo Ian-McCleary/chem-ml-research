@@ -185,8 +185,8 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
         valid_eiso.append(valid[1]["mean_absolute_error"][0])
         valid_riso.append(valid[1]["mean_absolute_error"][1])
         valid_vert.append(valid[1]["mean_absolute_error"][2])
-    #all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
-    #all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
+    # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
+    # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
     all_loss.append(train_mean)
     all_loss.append(train_eiso)
     all_loss.append(train_riso)
@@ -204,7 +204,7 @@ def fixed_param_model(task_count, n_features):
     model = dc.models.MultitaskRegressor(
         n_tasks=task_count,
         n_features=n_features,
-        layer_sizes=[16, 32, 64],
+        layer_sizes=[32, 64, 128],
         weight_decay_penalty_type="l2",
         dropouts=0.3,
         learning_rate=0.0001,
