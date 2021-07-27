@@ -50,7 +50,7 @@ def start_training():
     all_loss = train_loss(model,train_dataset,valid_dataset,metric,[transformer])
     print("csv: ")
     # hyperparameter_optimization()
-    file_name = "mtr_3task_multiple_metric.csv"
+    file_name = "mtr_3task_lowlayer.csv"
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])), columns=[
         "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso", "valid_riso", "valid_vert"])
 
@@ -204,9 +204,9 @@ def fixed_param_model(task_count, n_features):
     model = dc.models.MultitaskRegressor(
         n_tasks=task_count,
         n_features=n_features,
-        layer_sizes=[256, 512, 1024],
+        layer_sizes=[16, 32, 64],
         weight_decay_penalty_type="l2",
-        dropouts=0.1,
+        dropouts=0.3,
         learning_rate=0.0001,
         mode="regression"
     )
