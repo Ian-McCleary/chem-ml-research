@@ -85,14 +85,18 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transform
                             transformer], per_task_metrics=True)
         print(type(valid))
         print(valid)
+        print(valid[0]["mean_absolute_error"])
+        print(valid[1]["mean_absolute_error"])
+        print(valid[1]["mean_absolute_error"][0])
         print("\n")
+
         #print("loss: %s" % str(loss))
         # train_mean.append(train[0])
         # train_task1.append(train)
         train_losses.append(train)
         valid_losses.append(valid)
     all_losses.append(train_losses)
-    print("train loss length: " + len(train_losses))
+    print("train loss length: " + str(len(train_losses)))
     all_losses.append(valid_losses)
     return all_losses
     
