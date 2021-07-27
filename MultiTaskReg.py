@@ -116,8 +116,8 @@ def hyperparameter_optimization(dataseed):
     params_dict = {
         'n_tasks': [task_count],
         'n_features': [n_features],
-        'layer_sizes': [[256, 512, 1024], [1024, 1024, 1024], [1024, 512, 256]],
-        'dropouts': [0.1, 0.2, 0.5, 0.4],
+        'layer_sizes': [[256, 512, 1024], [128, 256, 512], [64, 128, 256]],
+        'dropouts': [0.1, 0.2, 0.5, 0.4, 0.6],
         'learning_rate': [0.001, 0.0001, 0.00001]
     }
 
