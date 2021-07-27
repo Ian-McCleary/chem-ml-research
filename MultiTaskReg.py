@@ -51,8 +51,8 @@ def start_training():
     print("csv: ")
     # hyperparameter_optimization()
     file_name = "mtr_3task_multiple_metric.csv"
-    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1])), columns=[
-        "train_scores_cfp", "valid_scores_cfp"])
+    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])), columns=[
+        "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso", "valid_riso", "valid_vert"])
 
     df.to_csv(file_name)
 
@@ -152,25 +152,41 @@ def find_learn_rate(task_count, train_dataset):
                       "learning_rate", "training_loss"])
     df.to_csv("mtr_learning_curve.csv")
 
-
+# train loss over epochs
+# If per task metric is true, datatype = tuple(dict, dict{[array]})
 def train_loss(model, train_dataset, valid_dataset, metric, transformer):
-    train_losses = []
-    valid_eval = []
+    train_mean = []
+    train_eiso = []
+    train_riso = []
+    train_vert = []
+
+    valid_mean = []
+    valid_eiso = []
+    valid_riso = []
+    valid_vert = []
     all_loss = []
+
     for i in range(250):
         loss = model.fit(train_dataset, nb_epoch=1)
-        valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
         train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
+        valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
         print("loss: %s" % str(loss))
         print(type(valid))
         print(valid)
-        print(valid[0]["mean_absolute_error"])
-        print(valid[1]["mean_absolute_error"])
-        print(valid[1]["mean_absolute_error"][0])
-        train_losses.append(train)
-        valid_eval.append(valid)
-    all_loss.append(train_losses)
-    all_loss.append(valid_eval)
+        #print(valid[0]["mean_absolute_error"])
+        #print(valid[1]["mean_absolute_error"])
+        #print(valid[1]["mean_absolute_error"][0])
+        train_mean.append(train[0]["mean_absolute_error"])
+        train_eiso.append(train[1]["mean_absolute_error"][0])
+        train_riso.append(train[1]["mean_absolute_error"][1])
+        train_vert.append(train[1]["mean_absolute_error"][2])
+
+        valid_mean.append(valid[0]["mean_absolute_error"])
+        valid_eiso.append(valid[1]["mean_absolute_error"][0])
+        valid_riso.append(valid[1]["mean_absolute_error"][1])
+        valid_vert.append(valid[1]["mean_absolute_error"][2])
+    all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
+    all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
     return all_loss
 
 
