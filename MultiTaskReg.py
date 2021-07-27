@@ -47,7 +47,7 @@ def start_training():
     print("model \n")
     model = fixed_param_model(task_count=task_count, n_features=n_features)
     print("loss train \n")
-    all_loss = train_loss(model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
+    all_loss = train_loss(model,train_dataset,valid_dataset,metric,[transformer])
     print("csv: ")
     # hyperparameter_optimization()
     file_name = "mtr_3task_multiple_metric.csv"
