@@ -51,7 +51,7 @@ def start_training():
     print("csv: ")
     # hyperparameter_optimization()
     file_name = "mtr_3task_multiple_metric.csv"
-    df = pd.DataFrame(list(zip(data = all_loss)), columns=[
+    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])), columns=[
         "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso", "valid_riso", "valid_vert"])
 
     df.to_csv(file_name)
@@ -196,6 +196,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     all_loss.append(valid_eiso)
     all_loss.append(valid_riso)
     all_loss.append(valid_vert)
+    print(len(all_loss))
     return all_loss
 
 
