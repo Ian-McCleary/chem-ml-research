@@ -29,7 +29,7 @@ def start_training():
     np.random.seed(dataseed)
     tf.random.set_seed(dataseed)
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
-                                featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+                                featurizer=dc.feat.CircularFingerprint(size=4096, radius=4))
     data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
     
     transformer = dc.trans.NormalizationTransformer(
@@ -45,12 +45,13 @@ def start_training():
 
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
     print("model \n")
-    model = fixed_param_model(task_count=task_count, n_features=n_features)
+    #model = fixed_param_model(task_count=task_count, n_features=n_features)
+    model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
     print("loss train \n")
-    all_loss = train_loss(model,train_dataset,valid_dataset,metric,[transformer])
+    all_loss = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
     print("csv: ")
     # hyperparameter_optimization()
-    file_name = "mtr_3task_midlayer.csv"
+    file_name = "mtr_3task_hyperparam.csv"
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])), columns=[
         "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso", "valid_riso", "valid_vert"])
 
@@ -96,22 +97,9 @@ def k_fold_validation(model):
         test_arr.append(test_score)
 
 
-def hyperparameter_optimization(dataseed):
-    # loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-    loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids",
-                               featurizer=dc.feat.CircularFingerprint(size=4096, radius=4))
-    data = loader.create_dataset("Datasets/dataset_10000.csv")
-
-    transformer = dc.trans.NormalizationTransformer(
-        dataset=data, transform_y=True)
-    dataset = transformer.transform(data)
-
-    # Splits dataset into train/validation/test
-    splitter = dc.splits.RandomSplitter()
-    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
-        dataset=dataset, frac_train=0.75, frac_valid=0.25, frac_test=0.00, seed=dataseed)
-    task_count = len(dataset.y[0])
-    n_features = len(dataset.X[0])
+def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
+    task_count = len(train_dataset.y[0])
+    n_features = len(train_dataset.X[0])
 
     params_dict = {
         'n_tasks': [task_count],
@@ -122,7 +110,6 @@ def hyperparameter_optimization(dataseed):
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
-    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
     best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
         params_dict, train_dataset, valid_dataset, metric, [transformer])
     print(best_hyperparams)
