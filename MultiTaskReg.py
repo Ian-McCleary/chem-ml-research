@@ -185,8 +185,17 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
         valid_eiso.append(valid[1]["mean_absolute_error"][0])
         valid_riso.append(valid[1]["mean_absolute_error"][1])
         valid_vert.append(valid[1]["mean_absolute_error"][2])
-    all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
-    all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
+    #all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
+    #all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
+    all_loss.append(train_mean)
+    all_loss.append(train_eiso)
+    all_loss.append(train_riso)
+    all_loss.append(train_vert)
+
+    all_loss.append(valid_mean)
+    all_loss.append(valid_eiso)
+    all_loss.append(valid_riso)
+    all_loss.append(valid_vert)
     return all_loss
 
 
