@@ -58,7 +58,7 @@ def cnn_start_training():
         columns=[
             "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
             "valid_riso", "valid_vert"])
-    df.to_csv("rmr_fixed_param.csv")
+    df.to_csv("cnn_fixed_param.csv")
 
 
 def cnn_loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
