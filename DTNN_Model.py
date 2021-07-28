@@ -40,7 +40,7 @@ def start_training():
     loss_list = train_loss_over_epoch(model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
 
     df = pd.DataFrame(list(zip(loss_list[0], loss_list[1])),columns=["training_loss", "valid_loss"])
-    df.to_csv("dtnn_3task_metric.csv")
+    df.to_csv("dtnn_3task_metric_hyper.csv")
 
 def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     # parameter optimization
