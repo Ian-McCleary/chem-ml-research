@@ -6,7 +6,7 @@ import deepchem as dc
 from rdkit import Chem
 import tensorflow as tf
 import os
-
+# https://machinelearningmastery.com/convolutional-layers-for-deep-learning-neural-networks/
 config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']),
                                   inter_op_parallelism_threads=int(
                                       os.environ['OMP_NUM_THREADS']),
