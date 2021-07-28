@@ -33,11 +33,12 @@ def cnn_start_training():
                                featurizer=dc.feat.CoulombMatrix(max_atoms=max_a))
     data_cm = loader_cm.create_dataset("Datasets/dataset_3task_1000.csv")
     # Attempt to use 2 featurizers
-    input_x = np.ones(data_cm.X, dtype=None)
+    input_x = data_cm.X
     for i in range(len(input_x)):
         single_cell = [data_cm.X[i], data_cm.X[i]]
         input_x[i] = single_cell
     data_cm.X = input_x
+    print(data_cm.X[0])
     transformer = dc.trans.NormalizationTransformer(
         dataset=data_cm, transform_y=True)
     dataset = transformer.transform(data_cm)
