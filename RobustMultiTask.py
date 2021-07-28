@@ -19,7 +19,7 @@ tf.compat.v1.keras.backend.set_session(session)
 
 
 
-def start_training():
+def rmr_start_training():
 
     # Set the seed
     dataseed = 8675309
@@ -39,7 +39,7 @@ def start_training():
     train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
         dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
     task_count = len(dataset.y[0])
-    n_features = len(dataset.X[0])
+    n_features = len(dataset.X_shape)
 
     metric = dc.metrics.Metric(dc.metrics.r2_score)
     model = rmr_fixed_param_model(task_count, n_features)
@@ -119,7 +119,7 @@ def rmr_fixed_param_model(n_tasks, n_features):
 
 def main():
     # args = parse_args()
-    start_training()
+    rmr_start_training()
 
 
 if __name__ == "__main__":
