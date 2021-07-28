@@ -55,7 +55,7 @@ def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metri
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
-    best_model, best_hyperparams, all_results =  optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
+    best_model, best_hyperparams, all_results = optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
                                                                             metric, [transformer])
     print(all_results)
     print("\n")

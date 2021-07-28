@@ -1,4 +1,3 @@
-from DTNN_Model import train_loss_over_epoch
 from random import randrange
 import pandas as pd
 import numpy as np
