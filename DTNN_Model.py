@@ -37,7 +37,7 @@ def start_training():
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
     #model = fixed_param_model(task_count=task_count)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    loss_list = train_loss_over_epoch(model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
+    loss_list = train_loss_over_epoch(model,train_dataset, valid_dataset, metric, [transformer])
 
     df = pd.DataFrame(list(zip(loss_list[0], loss_list[1])),columns=["training_loss", "valid_loss"])
     df.to_csv("dtnn_3task_metric_hyper.csv")
