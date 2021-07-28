@@ -17,7 +17,7 @@ tf.compat.v1.keras.backend.set_session(session)
 
 
 # Set the seed
-dataseed = randrange(1000)
+dataseed = 8675309
 np.random.seed(dataseed)
 tf.random.set_seed(dataseed)
 
@@ -35,7 +35,8 @@ def start_training():
     task_count = len(train_dataset.y[0])
 
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-    model = fixed_param_model(task_count=task_count)
+    #model = fixed_param_model(task_count=task_count)
+    model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
     loss_list = train_loss_over_epoch(model, train_dataset=train_dataset, valid_dataset=valid_dataset, metric=metric, transformer=transformer)
 
     df = pd.DataFrame(list(zip(loss_list[0], loss_list[1])),columns=["training_loss", "valid_loss"])
@@ -72,33 +73,49 @@ def fixed_param_model(task_count):
 
 
 def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
-    # Fit trained model
-    # test
-    valid_losses = []
-    train_losses = []
-    all_losses = []
-    for i in range(250):
+    train_mean = []
+    train_eiso = []
+    train_riso = []
+    train_vert = []
+
+    valid_mean = []
+    valid_eiso = []
+    valid_riso = []
+    valid_vert = []
+    all_loss = []
+
+    for i in range(500):
         loss = model.fit(train_dataset, nb_epoch=1)
-        valid = model.evaluate(valid_dataset, metric, [
-                            transformer], per_task_metrics=True)
-        train = model.evaluate(train_dataset, metric, [
-                            transformer], per_task_metrics=True)
+        train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
+        valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
+        print("loss: %s" % str(loss))
         print(type(valid))
         print(valid)
-        print(valid[0]["mean_absolute_error"])
-        print(valid[1]["mean_absolute_error"])
-        print(valid[1]["mean_absolute_error"][0])
-        print("\n")
+        # print(valid[0]["mean_absolute_error"])
+        # print(valid[1]["mean_absolute_error"])
+        # print(valid[1]["mean_absolute_error"][0])
+        train_mean.append(train[0]["mean_absolute_error"])
+        train_eiso.append(train[1]["mean_absolute_error"][0])
+        train_riso.append(train[1]["mean_absolute_error"][1])
+        train_vert.append(train[1]["mean_absolute_error"][2])
 
-        #print("loss: %s" % str(loss))
-        # train_mean.append(train[0])
-        # train_task1.append(train)
-        train_losses.append(train)
-        valid_losses.append(valid)
-    all_losses.append(train_losses)
-    print("train loss length: " + str(len(train_losses)))
-    all_losses.append(valid_losses)
-    return all_losses
+        valid_mean.append(valid[0]["mean_absolute_error"])
+        valid_eiso.append(valid[1]["mean_absolute_error"][0])
+        valid_riso.append(valid[1]["mean_absolute_error"][1])
+        valid_vert.append(valid[1]["mean_absolute_error"][2])
+    # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
+    # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
+    all_loss.append(train_mean)
+    all_loss.append(train_eiso)
+    all_loss.append(train_riso)
+    all_loss.append(train_vert)
+
+    all_loss.append(valid_mean)
+    all_loss.append(valid_eiso)
+    all_loss.append(valid_riso)
+    all_loss.append(valid_vert)
+    print(len(all_loss))
+    return all_loss
     
     #df = pd.DataFrame(list(zip(train_mean, valid_losses)),
      #               columns=["train_losses", "valid_losses"])
