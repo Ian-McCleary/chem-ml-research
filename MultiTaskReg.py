@@ -30,7 +30,7 @@ def start_training():
     tf.random.set_seed(dataseed)
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                 featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+    data = loader.create_dataset("Datasets/dataset_50k_3task.csv")
     
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
@@ -51,7 +51,7 @@ def start_training():
     all_loss = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
     print("csv: ")
     # hyperparameter_optimization()
-    file_name = "Losses/mtr/mtr_3task_hyperparam_2048.csv"
+    file_name = "Losses/mtr/mtr_3task_hyperparam_50k.csv"
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])), columns=[
         "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso", "valid_riso", "valid_vert"])
 
@@ -81,8 +81,8 @@ def k_fold_validation(model):
         n_features = len(dataset.X[0])
 
         print(task_count)
-        #tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
-        #train_dataset, valid_dataset, test_dataset = datasets
+        # tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
+        # train_dataset, valid_dataset, test_dataset = datasets
         metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
 
         model.fit(train_dataset, nb_epoch=100)

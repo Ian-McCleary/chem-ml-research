@@ -24,7 +24,7 @@ tf.random.set_seed(dataseed)
 def start_training():
 
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
-    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+    data = loader.create_dataset("Datasets/dataset_50k_3task.csv")
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
     dataset = transformer.transform(data)
@@ -37,17 +37,17 @@ def start_training():
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
     #model = fixed_param_model(task_count=task_count)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    loss_list = train_loss_over_epoch(model,train_dataset, valid_dataset, metric, [transformer])
+    loss_list = train_loss_over_epoch(model, train_dataset, valid_dataset, metric, [transformer])
 
-    df = pd.DataFrame(list(zip(loss_list[0], loss_list[1])),columns=["training_loss", "valid_loss"])
-    df.to_csv("dtnn_3task_metric_hyper.csv")
+    df = pd.DataFrame(list(zip(loss_list[0], loss_list[1])), columns=["training_loss", "valid_loss"])
+    df.to_csv("dtnn_3task_hyper_50k.csv")
 
 def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     # parameter optimization
     task_count = len(train_dataset.y[0])
     params_dict = {
         'n_tasks': [task_count],
-        'n_embedding': [5, 10, 50, 100],
+        'n_embedding': [10, 50, 100],
         'dropouts': [0.2, 0.5],
         'learning_rate': [0.001, 0.0001, 0.00001]
     }
