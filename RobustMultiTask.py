@@ -42,8 +42,8 @@ def start_training():
     n_features = len(dataset.X[0])
 
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-    model = fixed_param_model(task_count, n_features)
-    all_loss=rmr_loss_over_epoch(model, train_dataset,valid_dataset,metric,[transformer])
+    model = rmr_fixed_param_model(task_count, n_features)
+    all_loss=rmr_loss_over_epoch(model, train_dataset,valid_dataset,metric,transformer)
 
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
@@ -100,7 +100,7 @@ def rmr_loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer
 
     # l_rate = l_rate * 0.1
 
-def fixed_param_model(n_tasks, n_features):
+def rmr_fixed_param_model(n_tasks, n_features):
     model = dc.models.RobustMultitaskRegressor(
         n_tasks,
         n_features,
