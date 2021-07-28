@@ -35,7 +35,7 @@ def cnn_start_training():
 
     input_x = np.zeros((len(data_cm.X), 2, max_a, max_a))
     for i in range(len(input_x)):
-        bit_to_mtrx = np.reshape(data_cfp.X[i], (max_a, max_a), order="C")
+        bit_to_mtrx = np.reshape(data_cfp.X[i], (max_a, max_a))
         single_cell = [data_cm.X[i], bit_to_mtrx]
         input_x[i] = single_cell
     print(input_x[0][1])
