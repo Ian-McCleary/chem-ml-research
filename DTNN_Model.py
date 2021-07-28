@@ -37,10 +37,12 @@ def start_training():
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
     #model = fixed_param_model(task_count=task_count)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    loss_list = train_loss_over_epoch(model, train_dataset, valid_dataset, metric, [transformer])
+    all_loss = train_loss_over_epoch(model, train_dataset, valid_dataset, metric, [transformer])
 
-    df = pd.DataFrame(list(zip(loss_list[0], loss_list[1])), columns=["training_loss", "valid_loss"])
-    df.to_csv("dtnn_3task_hyper_50k.csv")
+    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),columns=[
+                          "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
+                          "valid_riso", "valid_vert"])
+    df.to_csv("dtnn_50k_hyper.csv")
 
 def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     # parameter optimization
@@ -84,7 +86,7 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transform
     valid_vert = []
     all_loss = []
 
-    for i in range(500):
+    for i in range(1000):
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)

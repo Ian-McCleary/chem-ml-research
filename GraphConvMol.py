@@ -27,9 +27,9 @@ tf.random.set_seed(dataseed)
 def start_training():
     
     # update task count as list ["task1", "task2"..]
-    loader = dc.data.CSVLoader(["task1"], feature_field="smiles",
+    loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles",
                                id_field="ids", featurizer=dc.feat.ConvMolFeaturizer())
-    data = loader.create_dataset("Datasets/dataset_10000.csv")
+    data = loader.create_dataset("Datasets/dataset_50k_3task.csv")
     transformer = dc.trans.NormalizationTransformer(
         transform_y=True, dataset=data)
     dataset = transformer.transform(data)
@@ -46,8 +46,15 @@ def start_training():
     #model = param_optimization(
     #    train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
     model = fixed_param_model(task_count)
-    loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
-    # find_learn_rate(task_count,train_dataset)
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer)
+    file_name = "gc_50k_hyper.csv"
+    df = pd.DataFrame(list(
+        zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
+                      columns=[
+                          "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
+                          "valid_riso", "valid_vert"])
+
+    df.to_csv(file_name)
 
 
 def k_fold_cross_validation():
@@ -155,30 +162,49 @@ def find_learn_rate(task_count, train_dataset):
 
 
 def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
-    # Fit trained model
-    train_losses = []
-    valid_losses = []
-    for i in range(500):
+    train_mean = []
+    train_eiso = []
+    train_riso = []
+    train_vert = []
+
+    valid_mean = []
+    valid_eiso = []
+    valid_riso = []
+    valid_vert = []
+    all_loss = []
+
+    for i in range(1000):
         loss = model.fit(train_dataset, nb_epoch=1)
-        valid = model.evaluate(valid_dataset, metric, [transformer])
-        train = model.evaluate(train_dataset, metric, [transformer])
-        train_losses.append(train)
-        valid_losses.append(valid)
+        train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
+        valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
+        print("loss: %s" % str(loss))
+        print(type(valid))
+        print(valid)
+        # print(valid[0]["mean_absolute_error"])
+        # print(valid[1]["mean_absolute_error"])
+        # print(valid[1]["mean_absolute_error"][0])
+        train_mean.append(train[0]["mean_absolute_error"])
+        train_eiso.append(train[1]["mean_absolute_error"][0])
+        train_riso.append(train[1]["mean_absolute_error"][1])
+        train_vert.append(train[1]["mean_absolute_error"][2])
 
-    # file_name = "loss_" + str(l_rate) + ".csv"
-    df = pd.DataFrame(list(zip(train_losses, valid_losses)),
-                      columns=["train_losses", "valid_losses"])
-    df.to_csv("gcm_learning_schedule.csv")
+        valid_mean.append(valid[0]["mean_absolute_error"])
+        valid_eiso.append(valid[1]["mean_absolute_error"][0])
+        valid_riso.append(valid[1]["mean_absolute_error"][1])
+        valid_vert.append(valid[1]["mean_absolute_error"][2])
+    # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
+    # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
+    all_loss.append(train_mean)
+    all_loss.append(train_eiso)
+    all_loss.append(train_riso)
+    all_loss.append(train_vert)
 
-    print("Evaluating model")
-    train_scores = model.evaluate(train_dataset, [metric], [transformer])
-    valid_scores = model.evaluate(valid_dataset, [metric], [transformer])
-
-    print("Train scores")
-    print(train_scores)
-
-    print("Validation scores")
-    print(valid_scores)
+    all_loss.append(valid_mean)
+    all_loss.append(valid_eiso)
+    all_loss.append(valid_riso)
+    all_loss.append(valid_vert)
+    print(len(all_loss))
+    return all_loss
 
     # l_rate = l_rate * 0.1
 '''
