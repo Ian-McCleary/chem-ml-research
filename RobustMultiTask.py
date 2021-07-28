@@ -39,7 +39,7 @@ def rmr_start_training():
     train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
         dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
     task_count = len(dataset.y[0])
-    n_features = dataset.X.shape
+    n_features = dataset.X[0].shape
     print("n_features:")
     print(n_features)
 
