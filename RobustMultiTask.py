@@ -115,6 +115,7 @@ def fixed_param_model(n_tasks, n_features):
         bypass_dropouts=0.25
 
     )
+    return model
 
 def main():
     # args = parse_args()
