@@ -24,7 +24,7 @@ def cnn_start_training():
 
     max_a = 70
     fp_len = 2048
-
+    # Attempt to use 2 featurizers
     loader_cfp = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CircularFingerprint(size=fp_len, radius=2))
     data_cfp = loader_cfp.create_dataset("Datasets/dataset_3task_1000.csv")
@@ -32,11 +32,14 @@ def cnn_start_training():
     loader_cm = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CoulombMatrix(max_atoms=max_a))
     data_cm = loader_cm.create_dataset("Datasets/dataset_3task_1000.csv")
-    # Attempt to use 2 featurizers
-    input_x = np.zeros((1000, 2, max_a, fp_len))
+
+    input_x = np.zeros((len(data_cm.X), 2, max_a, max_a))
     for i in range(len(input_x)):
-        single_cell = [data_cm.X[i], data_cm.X[i]]
+        bit_to_mtrx = np.reshape(data_cfp.X[i], (max_a, max_a), order="C")
+        single_cell = [data_cm.X[i], bit_to_mtrx]
         input_x[i] = single_cell
+    print(input_x[0][1])
+    print("\n")
     data_cm.X = input_x
     print(data_cm.X[0])
     transformer = dc.trans.NormalizationTransformer(
