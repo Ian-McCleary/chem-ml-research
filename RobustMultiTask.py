@@ -40,6 +40,8 @@ def rmr_start_training():
         dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
     task_count = len(dataset.y[0])
     n_features = len(dataset.X_shape)
+    print("n_features:")
+    print(n_features)
 
     metric = dc.metrics.Metric(dc.metrics.r2_score)
     model = rmr_fixed_param_model(task_count, n_features)
