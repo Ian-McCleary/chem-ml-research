@@ -1,5 +1,3 @@
-from DTNN_Model import train_loss_over_epoch
-from GraphConvMol import start_training
 from random import randrange
 import argparse
 import pandas as pd
@@ -112,7 +110,7 @@ def rmr_fixed_param_model(n_tasks, n_features):
         weight_decay_penalty_type = "l2",
         dropouts=0.25,
         bypass_layer_sizes=[20, 20, 20],
-        bypass_weight_init_stddevs=0.2,
+        bypass_weight_init_stddevs=0.02,
         bypass_bias_init_consts=0.5,
         bypass_dropouts=0.25
 
