@@ -43,7 +43,7 @@ def start_training():
 
     metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
     model = fixed_param_model(task_count, n_features)
-    all_loss=train_loss_over_epoch(model, train_dataset,valid_dataset,metric,[transformer])
+    all_loss=rmr_loss_over_epoch(model, train_dataset,valid_dataset,metric,[transformer])
 
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
@@ -53,7 +53,7 @@ def start_training():
     df.to_csv("rmr_fixed_param.csv")
 
 
-def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
+def rmr_loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
     train_mean = []
     train_eiso = []
     train_riso = []
