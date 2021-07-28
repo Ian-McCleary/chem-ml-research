@@ -23,9 +23,9 @@ def rmr_start_training():
     dataseed = 8675309
     np.random.seed(dataseed)
     tf.random.set_seed(dataseed)
-
+    fp_len = 2048
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
-                                featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+                                featurizer=dc.feat.CircularFingerprint(size=fp_len, radius=2))
     data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
     
     transformer = dc.trans.NormalizationTransformer(
@@ -37,7 +37,7 @@ def rmr_start_training():
     train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
         dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
     task_count = len(dataset.y[0])
-    n_features = dataset.X[0].shape
+    n_features = fp_len
     print("n_features:")
     print(n_features)
 
