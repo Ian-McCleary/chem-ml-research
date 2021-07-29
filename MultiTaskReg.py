@@ -217,15 +217,6 @@ def train_loss(model, train_dataset, valid_dataset, test_dataset, metric, transf
     all_loss.append(valid_riso)
     all_loss.append(valid_vert)
 
-    all_loss.append(train_mean)
-    all_loss.append(train_eiso)
-    all_loss.append(train_riso)
-    all_loss.append(train_vert)
-
-    all_loss.append(valid_mean)
-    all_loss.append(valid_eiso)
-    all_loss.append(valid_riso)
-    all_loss.append(valid_vert)
 
     test_scores = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
     print("mean mse:")

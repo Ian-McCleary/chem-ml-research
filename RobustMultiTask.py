@@ -37,15 +37,13 @@ def rmr_start_training():
         dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
     task_count = len(dataset.y[0])
     n_features = fp_len
-    print("n_features:")
-    print(n_features)
 
     metric = dc.metrics.Metric(dc.metrics.rms_score)
     metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
     # model = rmr_fixed_param_model(task_count, n_features)
     model = rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
     all_loss = rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
-    k_fold_validation(model)
+    rmr_k_fold_validation(model)
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
                       columns=[
@@ -71,9 +69,6 @@ def rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metri
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, [transformer], per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, [transformer], per_task_metrics=True)
-        print("loss: %s" % str(loss))
-        print(type(valid))
-        print(valid)
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
@@ -116,8 +111,6 @@ def rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metri
     print(test_scores[1]["r2_score"][1])
     print("vert r2:")
     print(test_scores[1]["r2_score"][2])
-
-    print(len(all_loss))
     return all_loss
 
     # l_rate = l_rate * 0.1
@@ -164,7 +157,7 @@ def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, m
     return best_model
 
 
-def k_fold_validation(model):
+def rmr_k_fold_validation(model):
     eiso_scores = []
     riso_scores = []
     vert_scores = []
@@ -188,8 +181,6 @@ def k_fold_validation(model):
             dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
         task_count = len(dataset.y[0])
         n_features = len(dataset.X[0])
-
-        print(task_count)
         # tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
         # train_dataset, valid_dataset, test_dataset = datasets
         metric = dc.metrics.Metric(dc.metrics.rms_score)
