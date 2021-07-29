@@ -48,11 +48,12 @@ def cnn_start_training():
         input_x[i] = single_cell
     print(input_x[0][1])
     print("\n")
-    data_cm.X = input_x
-    print(data_cm.X[0])
+
+    dual_feature_ds = dc.data.NumpyDataset(X=input_x, y=data_cm.y, ids=data_cm.ids, n_tasks=3)
+
     transformer = dc.trans.NormalizationTransformer(
-        dataset=data_cm, transform_y=True)
-    dataset = transformer.transform(data_cm)
+        dataset=dual_feature_ds, transform_y=True)
+    dataset = transformer.transform(dual_feature_ds)
 
     # Splits dataset into train/validation/test
     splitter = dc.splits.RandomSplitter()
