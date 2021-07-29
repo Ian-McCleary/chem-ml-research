@@ -41,8 +41,8 @@ def rmr_start_training():
     print("n_features:")
     print(n_features)
 
-    metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
-    metrics = [dc.metrics.Metric(dc.metrics.mean_squared_error), dc.metrics.Metric(dc.metrics.r2_score)]
+    metric = dc.metrics.Metric(dc.metrics.rms_score)
+    metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
     # model = rmr_fixed_param_model(task_count, n_features)
     model = rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
     all_loss = rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
@@ -52,7 +52,7 @@ def rmr_start_training():
                       columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
-    df.to_csv("rmr_hyper_param.csv")
+    df.to_csv("rmr_10k_hyper.csv")
 
 
 def rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, transformer):
@@ -78,15 +78,15 @@ def rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metri
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-        train_mean.append(train[0]["mean_squared_error"])
-        train_eiso.append(train[1]["mean_squared_error"][0])
-        train_riso.append(train[1]["mean_squared_error"][1])
-        train_vert.append(train[1]["mean_squared_error"][2])
+        train_mean.append(train[0]["rms_score"])
+        train_eiso.append(train[1]["rms_score"][0])
+        train_riso.append(train[1]["rms_score"][1])
+        train_vert.append(train[1]["rms_score"][2])
 
-        valid_mean.append(valid[0]["mean_squared_error"])
-        valid_eiso.append(valid[1]["mean_squared_error"][0])
-        valid_riso.append(valid[1]["mean_squared_error"][1])
-        valid_vert.append(valid[1]["mean_squared_error"][2])
+        valid_mean.append(valid[0]["rms_score"])
+        valid_eiso.append(valid[1]["rms_score"][0])
+        valid_riso.append(valid[1]["rms_score"][1])
+        valid_vert.append(valid[1]["rms_score"][2])
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])mean
     # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
     all_loss.append(train_mean)
@@ -101,13 +101,13 @@ def rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metri
 
     test_scores = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
     print("mean mse:")
-    print(test_scores[0]["mean_squared_error"])
+    print(test_scores[0]["rms_score"])
     print("eiso mse:")
-    print(test_scores[1]["mean_squared_error"][0])
+    print(test_scores[1]["rms_score"][0])
     print("riso mse:")
-    print(test_scores[1]["mean_squared_error"][1])
+    print(test_scores[1]["rms_score"][1])
     print("vert mse:")
-    print(test_scores[1]["mean_squared_error"][2])
+    print(test_scores[1]["rms_score"][2])
     print("\n")
     print("mean r2:")
     print(test_scores[0]["r2_score"])

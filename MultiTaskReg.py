@@ -42,15 +42,14 @@ def start_training():
     task_count = len(dataset.y[0])
     n_features = len(dataset.X[0])
 
-    metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-    print("model \n")
+    metric = dc.metrics.Metric(dc.metrics.rms_score)
+    metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
+
     #model = fixed_param_model(task_count=task_count, n_features=n_features)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    print("loss train \n")
-    all_loss = train_loss(model, train_dataset, valid_dataset, test_dataset, metric, [transformer])
-    print("csv: ")
+    all_loss = train_loss(model, train_dataset, valid_dataset, test_dataset, metrics, [transformer])
     # hyperparameter_optimization()
-    file_name = "Losses/mtr/mtr_3task_hyperparam_50k.csv"
+    file_name = "Losses/mtr/mtr_10k_hyper.csv"
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])), columns=[
         "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso", "valid_riso", "valid_vert"])
 
@@ -75,7 +74,7 @@ def k_fold_validation(model):
         # Splits dataset into train/validation/test
         splitter = dc.splits.RandomSplitter()
         train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
-            dataset=dataset, seed=dataseed)
+            dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
         task_count = len(dataset.y[0])
         n_features = len(dataset.X[0])
 
@@ -162,15 +161,15 @@ def train_loss(model, train_dataset, valid_dataset, test_dataset, metric, transf
         #print(valid[0]["mean_absolute_error"])
         #print(valid[1]["mean_absolute_error"])
         #print(valid[1]["mean_absolute_error"][0])
-        train_mean.append(train[0]["mean_absolute_error"])
-        train_eiso.append(train[1]["mean_absolute_error"][0])
-        train_riso.append(train[1]["mean_absolute_error"][1])
-        train_vert.append(train[1]["mean_absolute_error"][2])
+        train_mean.append(train[0]["rms_score"])
+        train_eiso.append(train[1]["rms_score"][0])
+        train_riso.append(train[1]["rms_score"][1])
+        train_vert.append(train[1]["rms_score"][2])
 
-        valid_mean.append(valid[0]["mean_absolute_error"])
-        valid_eiso.append(valid[1]["mean_absolute_error"][0])
-        valid_riso.append(valid[1]["mean_absolute_error"][1])
-        valid_vert.append(valid[1]["mean_absolute_error"][2])
+        valid_mean.append(valid[0]["rms_score"])
+        valid_eiso.append(valid[1]["rms_score"][0])
+        valid_riso.append(valid[1]["rms_score"][1])
+        valid_vert.append(valid[1]["rms_score"][2])
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
     # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
     all_loss.append(train_mean)
@@ -195,13 +194,13 @@ def train_loss(model, train_dataset, valid_dataset, test_dataset, metric, transf
 
     test_scores = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
     print("mean mse:")
-    print(test_scores[0]["mean_squared_error"])
+    print(test_scores[0]["rms_score"])
     print("eiso mse:")
-    print(test_scores[1]["mean_squared_error"][0])
+    print(test_scores[1]["rms_score"][0])
     print("riso mse:")
-    print(test_scores[1]["mean_squared_error"][1])
+    print(test_scores[1]["rms_score"][1])
     print("vert mse:")
-    print(test_scores[1]["mean_squared_error"][2])
+    print(test_scores[1]["rms_score"][2])
     print("\n")
     print("mean r2:")
     print(test_scores[0]["r2_score"])
