@@ -30,14 +30,13 @@ def start_training():
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles",
                                id_field="ids", featurizer=dc.feat.ConvMolFeaturizer())
     data = loader.create_dataset("Datasets/dataset_50k_3task.csv")
-    transformer = dc.trans.NormalizationTransformer(
-        transform_y=True, frac_train=0.70, frac_valid=0.15, frac_test=0.15, dataset=data)
+    transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
     dataset = transformer.transform(data)
 
     # Splits dataset into train/validation/test
     splitter = dc.splits.RandomSplitter()
     train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
-        dataset=dataset, seed=dataseed)
+        dataset=dataset,frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
     task_count = len(train_dataset.y[0])
 
     # metric = dc.metrics.Metric(dc.metrics.pearson_r2_score, np.mean)
