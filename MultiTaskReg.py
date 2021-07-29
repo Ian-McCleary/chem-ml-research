@@ -152,7 +152,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     valid_vert = []
     all_loss = []
 
-    for i in range(1000):
+    for i in range(250):
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
