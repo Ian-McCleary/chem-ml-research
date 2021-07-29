@@ -64,7 +64,7 @@ def k_fold_validation(model):
         dataseed = randrange(1000)
         np.random.seed(dataseed)
         tf.random.set_seed(dataseed)
-        loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids",
+        loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                    featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
         data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
 
@@ -152,7 +152,7 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     valid_vert = []
     all_loss = []
 
-    for i in range(250):
+    for i in range(500):
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
