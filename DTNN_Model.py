@@ -31,14 +31,15 @@ def start_training():
 
     # Splits dataset into train/validation/test
     splitter = dc.splits.RandomSplitter()
-    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, seed=dataseed)
+    train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
     task_count = len(train_dataset.y[0])
 
-    metric = dc.metrics.Metric(dc.metrics.r2_score)
+    metric = dc.metrics.Metric(dc.metrics.rms_score)
+    metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
     #model = fixed_param_model(task_count=task_count)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    all_loss = train_loss_over_epoch(model, train_dataset, valid_dataset, metric, [transformer])
-
+    all_loss = train_loss_over_epoch(model, train_dataset, valid_dataset, metrics, [transformer])
+    k_fold_validation(model)
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
@@ -49,16 +50,15 @@ def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metri
     task_count = len(train_dataset.y[0])
     params_dict = {
         'n_tasks': [task_count],
-        'n_embedding': [10, 50, 100],
-        'dropouts': [0.2, 0.5],
+        'n_embedding': [10, 50, 100, 75],
+        'dropouts': [0.2, 0.5, 0.75],
         'learning_rate': [0.001, 0.0001, 0.00001]
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)
     best_model, best_hyperparams, all_results = optimizer.hyperparam_search(params_dict, train_dataset, valid_dataset,
                                                                             metric, [transformer])
-    print(all_results)
-    print("\n")
+
     print(best_hyperparams)
     return best_model
 
@@ -86,7 +86,7 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transform
     valid_vert = []
     all_loss = []
 
-    for i in range(500):
+    for i in range(250):
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
@@ -96,15 +96,15 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transform
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-        train_mean.append(train[0]["r2_score"])
-        train_eiso.append(train[1]["r2_score"][0])
-        train_riso.append(train[1]["r2_score"][1])
-        train_vert.append(train[1]["r2_score"][2])
+        train_mean.append(train[0]["rms_score"])
+        train_eiso.append(train[1]["rms_score"][0])
+        train_riso.append(train[1]["rms_score"][1])
+        train_vert.append(train[1]["rms_score"][2])
 
-        valid_mean.append(valid[0]["r2_score"])
-        valid_eiso.append(valid[1]["r2_score"][0])
-        valid_riso.append(valid[1]["r2_score"][1])
-        valid_vert.append(valid[1]["r2_score"][2])
+        valid_mean.append(valid[0]["rms_score"])
+        valid_eiso.append(valid[1]["rms_score"][0])
+        valid_riso.append(valid[1]["rms_score"][1])
+        valid_vert.append(valid[1]["rms_score"][2])
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])
     # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
     all_loss.append(train_mean)
@@ -118,10 +118,80 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transform
     all_loss.append(valid_vert)
     print(len(all_loss))
     return all_loss
-    
-    #df = pd.DataFrame(list(zip(train_mean, valid_losses)),
-     #               columns=["train_losses", "valid_losses"])
-    #df.to_csv("DTNN_3task_seperate_metric.csv")
+
+def k_fold_validation(model):
+    eiso_scores = []
+    riso_scores = []
+    vert_scores = []
+
+    loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
+                               featurizer=dc.feat.CoulombMatrix(max_atoms=70))
+    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+
+    transformer = dc.trans.NormalizationTransformer(
+        dataset=data, transform_y=True)
+    dataset = transformer.transform(data)
+
+    for i in range(50):
+        # Set the seed
+        dataseed = randrange(1000)
+        np.random.seed(dataseed)
+        tf.random.set_seed(dataseed)
+        # Splits dataset into train/validation/test
+        splitter = dc.splits.RandomSplitter()
+        train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
+            dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
+        task_count = len(dataset.y[0])
+        n_features = len(dataset.X[0])
+        # tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
+        # train_dataset, valid_dataset, test_dataset = datasets
+        metric = dc.metrics.Metric(dc.metrics.rms_score)
+
+        model.fit(train_dataset, nb_epoch=50)
+        test_score = model.evaluate(test_dataset, metric, per_task_metrics=True)
+        eiso_scores.append(test_score[1]["rms_score"][0])
+        riso_scores.append(test_score[1]["rms_score"][1])
+        vert_scores.append(test_score[1]["rms_score"][2])
+
+    eiso_min, riso_min, vert_min = 1000, 1000, 1000
+    eiso_max, riso_max, vert_max = -1000, -1000, -1000
+    eiso_total, riso_total, vert_total = 0, 0, 0
+
+    for x in range(len(eiso_scores)):
+        eiso_total += eiso_scores[x]
+        riso_total += riso_scores[x]
+        vert_total += vert_scores[x]
+
+        if eiso_scores[x] > eiso_max:
+            eiso_max = eiso_scores[x]
+        elif eiso_scores[x] < eiso_min:
+            eiso_min = eiso_scores[x]
+
+        if riso_scores[x] > riso_max:
+            riso_max = riso_scores[x]
+        elif riso_scores[x] < riso_min:
+            riso_min = riso_scores[x]
+
+        if vert_scores[x] > vert_max:
+            vert_max = vert_scores[x]
+        elif vert_scores[x] < vert_min:
+            vert_min = vert_scores[x]
+    eiso_total = eiso_total/50
+    riso_total = riso_total/50
+    vert_total = vert_total/50
+    print("eiso:")
+    print(eiso_total)
+    print(eiso_max)
+    print(eiso_min)
+    print("riso:")
+    print(riso_total)
+    print(riso_max)
+    print(riso_min)
+    print("vert:")
+    print(vert_total)
+    print(vert_max)
+    print(vert_min)
+
 
 def main():
     # args = parse_args()

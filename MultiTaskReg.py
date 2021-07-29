@@ -49,7 +49,7 @@ def start_training():
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
     all_loss = train_loss(model, train_dataset, valid_dataset, test_dataset, metrics, [transformer])
     # hyperparameter_optimization()
-    file_name = "Losses/mtr/mtr_10k_hyper.csv"
+    file_name = "mtr_10k_hyper.csv"
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])), columns=[
         "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso", "valid_riso", "valid_vert"])
 
@@ -58,76 +58,77 @@ def start_training():
 
 
 def k_fold_validation(model):
+    eiso_scores = []
+    riso_scores = []
+    vert_scores = []
+
+    loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
+                               featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+
+    transformer = dc.trans.NormalizationTransformer(
+        dataset=data, transform_y=True)
+    dataset = transformer.transform(data)
+
     for i in range(50):
         # Set the seed
         dataseed = randrange(1000)
         np.random.seed(dataseed)
         tf.random.set_seed(dataseed)
-        loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
-                                   featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-        data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
-
-        transformer = dc.trans.NormalizationTransformer(
-            dataset=data, transform_y=True)
-        dataset = transformer.transform(data)
-
         # Splits dataset into train/validation/test
         splitter = dc.splits.RandomSplitter()
         train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
             dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
         task_count = len(dataset.y[0])
         n_features = len(dataset.X[0])
-
-        print(task_count)
         # tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
         # train_dataset, valid_dataset, test_dataset = datasets
         metric = dc.metrics.Metric(dc.metrics.rms_score)
 
-        model.fit(train_dataset, nb_epoch=100)
-        # How well the model fits the training subset of our data
-        train_scores = model.evaluate(train_dataset, metric)def k_fold_validation(model):
-    for i in range(50):
-        # Set the seed
-        dataseed = randrange(1000)
-        np.random.seed(dataseed)
-        tf.random.set_seed(dataseed)
-        loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
-                                   featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-        data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+        model.fit(train_dataset, nb_epoch=50)
+        test_score = model.evaluate(test_dataset, metric, per_task_metrics=True)
+        eiso_scores.append(test_score[1]["rms_score"][0])
+        riso_scores.append(test_score[1]["rms_score"][1])
+        vert_scores.append(test_score[1]["rms_score"][2])
 
-        transformer = dc.trans.NormalizationTransformer(
-            dataset=data, transform_y=True)
-        dataset = transformer.transform(data)
+    eiso_min, riso_min, vert_min = 1000, 1000, 1000
+    eiso_max, riso_max, vert_max = -1000, -1000, -1000
+    eiso_total, riso_total, vert_total = 0, 0, 0
 
-        # Splits dataset into train/validation/test
-        splitter = dc.splits.RandomSplitter()
-        train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
-            dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
-        task_count = len(dataset.y[0])
-        n_features = len(dataset.X[0])
+    for x in range(len(eiso_scores)):
+        eiso_total += eiso_scores[x]
+        riso_total += riso_scores[x]
+        vert_total += vert_scores[x]
 
-        print(task_count)
-        # tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
-        # train_dataset, valid_dataset, test_dataset = datasets
-        metric = dc.metrics.Metric(dc.metrics.rms_score)
+        if eiso_scores[x] > eiso_max:
+            eiso_max = eiso_scores[x]
+        elif eiso_scores[x] < eiso_min:
+            eiso_min = eiso_scores[x]
 
-        model.fit(train_dataset, nb_epoch=100)
-        # How well the model fits the training subset of our data
-        train_scores = model.evaluate(train_dataset, metric)
-        # Validation of the model over several training iterations.
-        valid_score = model.evaluate(valid_dataset, metric)
-        # How well the model generalizes the rest of the data
-        test_score = model.evaluate(test_dataset, metric)
-        train_arr.append(train_scores)
-        valid_arr.append(valid_score)
-        test_arr.append(test_score)
-        # Validation of the model over several training iterations.
-        valid_score = model.evaluate(valid_dataset, metric)
-        # How well the model generalizes the rest of the data
-        test_score = model.evaluate(test_dataset, metric)
-        train_arr.append(train_scores)
-        valid_arr.append(valid_score)
-        test_arr.append(test_score)
+        if riso_scores[x] > riso_max:
+            riso_max = riso_scores[x]
+        elif riso_scores[x] < riso_min:
+            riso_min = riso_scores[x]
+
+        if vert_scores[x] > vert_max:
+            vert_max = vert_scores[x]
+        elif vert_scores[x] < vert_min:
+            vert_min = vert_scores[x]
+    eiso_total = eiso_total/50
+    riso_total = riso_total/50
+    vert_total = vert_total/50
+    print("eiso:")
+    print(eiso_total)
+    print(eiso_max)
+    print(eiso_min)
+    print("riso:")
+    print(riso_total)
+    print(riso_max)
+    print(riso_min)
+    print("vert:")
+    print(vert_total)
+    print(vert_max)
+    print(vert_min)
 
 
 def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
@@ -186,16 +187,11 @@ def train_loss(model, train_dataset, valid_dataset, test_dataset, metric, transf
     valid_vert = []
     all_loss = []
 
-    for i in range(500):
+    for i in range(250):
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
-        print("loss: %s" % str(loss))
-        print(type(valid))
-        print(valid)
-        #print(valid[0]["mean_absolute_error"])
-        #print(valid[1]["mean_absolute_error"])
-        #print(valid[1]["mean_absolute_error"][0])
+
         train_mean.append(train[0]["rms_score"])
         train_eiso.append(train[1]["rms_score"][0])
         train_riso.append(train[1]["rms_score"][1])
@@ -236,8 +232,6 @@ def train_loss(model, train_dataset, valid_dataset, test_dataset, metric, transf
     print(test_scores[1]["r2_score"][1])
     print("vert r2:")
     print(test_scores[1]["r2_score"][2])
-
-    print(len(all_loss))
     return all_loss
 
 
@@ -253,60 +247,6 @@ def fixed_param_model(task_count, n_features):
     )
     return model
 
-'''
-loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids",
-                            featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-data = loader.create_dataset("Datasets/dataset_10000.csv")
- 
-transformer = dc.trans.NormalizationTransformer(
-    dataset=data, transform_y=True)
-dataset = transformer.transform(data)
-
-# Splits dataset into train/validation/test
-splitter = dc.splits.RandomSplitter()
-train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
-    dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
-task_count = len(dataset.y[0])
-n_features = len(dataset.X[0])
-
-metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-
-# model = hyperparameter_optimization()
-# k_fold_validation(model)
-model = None
-model = dc.models.MultitaskRegressor(
-    n_tasks=task_count,
-    n_features=n_features,
-    layer_sizes=[256, 512, 1024],
-    weight_decay_penalty_type="l2",
-    dropouts=0.1,
-    learning_rate=0.0001,
-    mode="regression"
-)
-both_list = train_loss(model, train_dataset,
-                        valid_dataset, metric, [transformer])
-evaluations.append(both_list[0])
-evaluations.append(both_list[1])
-
-dataseed = randrange(1000)
-np.random.seed(dataseed)
-tf.random.set_seed(dataseed)
-
-loader = dc.data.CSVLoader(["task1"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-data = loader.create_dataset("Datasets/dataset_10000.csv")
-
-transformer = dc.trans.NormalizationTransformer(dataset=data, transform_y=True)
-dataset = transformer.transform(data)
-
-splitter = dc.splits.RandomSplitter()
-train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(dataset=dataset,frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
-task_count = len(dataset.y[0])
-n_features = len(dataset.X[0])
-
-metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
-
-find_learn_rate(task_count=task_count, train_dataset=train_dataset)
-'''
 
 def main():
     # args = parse_args()
