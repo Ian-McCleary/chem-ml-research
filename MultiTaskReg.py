@@ -81,11 +81,46 @@ def k_fold_validation(model):
         print(task_count)
         # tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
         # train_dataset, valid_dataset, test_dataset = datasets
-        metric = dc.metrics.Metric(dc.metrics.mean_absolute_error)
+        metric = dc.metrics.Metric(dc.metrics.rms_score)
+
+        model.fit(train_dataset, nb_epoch=100)
+        # How well the model fits the training subset of our data
+        train_scores = model.evaluate(train_dataset, metric)def k_fold_validation(model):
+    for i in range(50):
+        # Set the seed
+        dataseed = randrange(1000)
+        np.random.seed(dataseed)
+        tf.random.set_seed(dataseed)
+        loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
+                                   featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
+        data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+
+        transformer = dc.trans.NormalizationTransformer(
+            dataset=data, transform_y=True)
+        dataset = transformer.transform(data)
+
+        # Splits dataset into train/validation/test
+        splitter = dc.splits.RandomSplitter()
+        train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
+            dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
+        task_count = len(dataset.y[0])
+        n_features = len(dataset.X[0])
+
+        print(task_count)
+        # tasks, datasets, transformers = dc.molnet.load_hiv(featurizer='ECFP', split='scaffold')
+        # train_dataset, valid_dataset, test_dataset = datasets
+        metric = dc.metrics.Metric(dc.metrics.rms_score)
 
         model.fit(train_dataset, nb_epoch=100)
         # How well the model fits the training subset of our data
         train_scores = model.evaluate(train_dataset, metric)
+        # Validation of the model over several training iterations.
+        valid_score = model.evaluate(valid_dataset, metric)
+        # How well the model generalizes the rest of the data
+        test_score = model.evaluate(test_dataset, metric)
+        train_arr.append(train_scores)
+        valid_arr.append(valid_score)
+        test_arr.append(test_score)
         # Validation of the model over several training iterations.
         valid_score = model.evaluate(valid_dataset, metric)
         # How well the model generalizes the rest of the data
