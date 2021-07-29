@@ -25,6 +25,7 @@ def cnn_start_training():
     max_a = 70
     fp_len = 2048
     # Attempt to use 2 featurizers
+    # This process takes a while, consider doing to full dataset.
     loader_cfp = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CircularFingerprint(size=fp_len, radius=2))
     data_cfp = loader_cfp.create_dataset("Datasets/dataset_3task_100.csv")
@@ -126,8 +127,8 @@ def cnn_fixed_param_model(n_tasks, n_features):
     model = dc.models.CNN(
         n_tasks,
         n_features,
-        dims=2,
-        layer_filters=[100],
+        dims=3,
+        layer_filters=[2, 70, 70],
         kernel_size=[1, 3, 3],
         weight_init_stddevs=0.02,
         bias_init_consts=1,
