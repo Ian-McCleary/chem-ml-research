@@ -15,6 +15,7 @@ config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['O
 session = tf.compat.v1.Session(config=config)
 tf.compat.v1.keras.backend.set_session(session)
 
+#TODO Get the list of weights to address fit of the models.
 
 def rmr_start_training():
 

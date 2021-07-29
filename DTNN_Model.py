@@ -43,7 +43,7 @@ def start_training():
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
-    df.to_csv("dtnn_50k_hyper.csv")
+    df.to_csv("dtnn_10k_hyper.csv")
 
 def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     # parameter optimization
