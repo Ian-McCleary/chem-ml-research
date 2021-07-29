@@ -38,7 +38,7 @@ def start_training():
     # Splits dataset into train/validation/test
     splitter = dc.splits.RandomSplitter()
     train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
-        dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
+        dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
     task_count = len(dataset.y[0])
     n_features = len(dataset.X[0])
 
@@ -47,7 +47,7 @@ def start_training():
     #model = fixed_param_model(task_count=task_count, n_features=n_features)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
     print("loss train \n")
-    all_loss = train_loss(model, train_dataset, valid_dataset, metric, [transformer])
+    all_loss = train_loss(model, train_dataset, valid_dataset, test_dataset, metric, [transformer])
     print("csv: ")
     # hyperparameter_optimization()
     file_name = "Losses/mtr/mtr_3task_hyperparam_50k.csv"
@@ -140,7 +140,7 @@ def find_learn_rate(task_count, train_dataset):
 
 # train loss over epochs
 # If per task metric is true, datatype = tuple(dict, dict{[array]})
-def train_loss(model, train_dataset, valid_dataset, metric, transformer):
+def train_loss(model, train_dataset, valid_dataset, test_dataset, metric, transformer):
     train_mean = []
     train_eiso = []
     train_riso = []
@@ -182,6 +182,36 @@ def train_loss(model, train_dataset, valid_dataset, metric, transformer):
     all_loss.append(valid_eiso)
     all_loss.append(valid_riso)
     all_loss.append(valid_vert)
+
+    all_loss.append(train_mean)
+    all_loss.append(train_eiso)
+    all_loss.append(train_riso)
+    all_loss.append(train_vert)
+
+    all_loss.append(valid_mean)
+    all_loss.append(valid_eiso)
+    all_loss.append(valid_riso)
+    all_loss.append(valid_vert)
+
+    test_scores = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
+    print("mean mse:")
+    print(test_scores[0]["mean_squared_error"])
+    print("eiso mse:")
+    print(test_scores[1]["mean_squared_error"][0])
+    print("riso mse:")
+    print(test_scores[1]["mean_squared_error"][1])
+    print("vert mse:")
+    print(test_scores[1]["mean_squared_error"][2])
+    print("\n")
+    print("mean r2:")
+    print(test_scores[0]["r2_score"])
+    print("eiso r2:")
+    print(test_scores[1]["r2_score"][0])
+    print("riso r2:")
+    print(test_scores[1]["r2_score"][1])
+    print("vert r2:")
+    print(test_scores[1]["r2_score"][2])
+
     print(len(all_loss))
     return all_loss
 

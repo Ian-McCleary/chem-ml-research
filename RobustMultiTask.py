@@ -56,7 +56,7 @@ def rmr_start_training():
 
 
 def rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, transformer):
-    metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
+    #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
     train_mean = []
     train_eiso = []
     train_riso = []
