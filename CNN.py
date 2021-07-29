@@ -27,11 +27,11 @@ def cnn_start_training():
     # Attempt to use 2 featurizers
     loader_cfp = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CircularFingerprint(size=fp_len, radius=2))
-    data_cfp = loader_cfp.create_dataset("Datasets/dataset_3task_1000.csv")
+    data_cfp = loader_cfp.create_dataset("Datasets/dataset_3task_100.csv")
 
     loader_cm = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CoulombMatrix(max_atoms=max_a))
-    data_cm = loader_cm.create_dataset("Datasets/dataset_3task_1000.csv")
+    data_cm = loader_cm.create_dataset("Datasets/dataset_3task_100.csv")
 
     input_x = np.zeros((len(data_cm.X), 2, max_a, max_a))
     for i in range(len(input_x)):
@@ -70,7 +70,7 @@ def cnn_start_training():
         columns=[
             "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
             "valid_riso", "valid_vert"])
-    df.to_csv("cnn_fixed_param.csv")
+    df.to_csv("cnn_fixed_param2.csv")
 
 
 def cnn_loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
@@ -126,7 +126,8 @@ def cnn_fixed_param_model(n_tasks, n_features):
         n_tasks,
         n_features,
         dims=3,
-        layer_filters=[32, 64, 128],
+        layer_filters=[1000],
+        kernel_size=[1, 3, 3],
         weight_init_stddevs=0.02,
         bias_init_consts=1,
         weight_decay_penalty=1.3,
