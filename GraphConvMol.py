@@ -1,3 +1,4 @@
+from DTNN_Model import hyperparameter_optimization
 from random import randrange
 import argparse
 import pandas as pd
@@ -47,6 +48,7 @@ def start_training():
         train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
     #model = fixed_param_model(task_count)
     all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
+    hyperparameter_optimization(model, data)
     file_name = "gc_10k_hyper.csv"
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
@@ -57,14 +59,11 @@ def start_training():
     df.to_csv(file_name)
 
 
-def k_fold_validation(model):
+def k_fold_validation(model, data):
     eiso_scores = []
     riso_scores = []
     vert_scores = []
 
-    loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
-                               featurizer=dc.feat.ConvMolFeaturizer())
-    data = loader.create_dataset("Datasets/dataset_10k_3task.csv")
 
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
@@ -134,11 +133,11 @@ def k_fold_validation(model):
 def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer):
     params_dict = {
         'n_tasks': [task_count],
-        'number_atom_features': [50, 75, 100, 150],
+        'number_atom_features': [50, 75, 100],
         'graph_conv_layers': [[32, 32], [64, 64], [128, 128]],
         'dense_layer_size': [16, 32, 64, 128],
-        'dropouts': [0.2, 0.5, 0.1, 0.7],
-        'learning_rate': [0.001, 0.0001, 0.00001],
+        'dropouts': [0.2, 0.5, 0.7],
+        'learning_rate': [0.0001, 0.00001],
         'mode': ["regression"],
     }
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)
