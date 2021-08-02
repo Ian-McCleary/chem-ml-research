@@ -86,7 +86,7 @@ def k_fold_validation(model):
         metric = dc.metrics.Metric(dc.metrics.rms_score)
 
         model.fit(train_dataset, nb_epoch=50)
-        test_score = model.evaluate(test_dataset, metric, per_task_metrics=True)
+        test_score = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
         eiso_scores.append(test_score[1]["rms_score"][0])
         riso_scores.append(test_score[1]["rms_score"][1])
         vert_scores.append(test_score[1]["rms_score"][2])
@@ -189,8 +189,8 @@ def train_loss(model, train_dataset, valid_dataset, test_dataset, metric, transf
 
     for i in range(250):
         loss = model.fit(train_dataset, nb_epoch=1)
-        train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
-        valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
+        train = model.evaluate(train_dataset, metric, [transformer], per_task_metrics=True)
+        valid = model.evaluate(valid_dataset, metric, [transformer], per_task_metrics=True)
 
         train_mean.append(train[0]["rms_score"])
         train_eiso.append(train[1]["rms_score"][0])
