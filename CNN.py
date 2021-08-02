@@ -127,8 +127,8 @@ def cnn_fixed_param_model(n_tasks, n_features):
     model = dc.models.CNN(
         n_tasks,
         n_features,
-        dims=3,
-        layer_filters=[1, 70, 70],
+        dims=2,
+        layer_filters=[20, 20],
         kernel_size=[1, 3, 3],
         weight_init_stddevs=0.02,
         bias_init_consts=1,
