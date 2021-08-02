@@ -128,7 +128,7 @@ def cnn_fixed_param_model(n_tasks, n_features):
         n_tasks,
         n_features,
         dims=3,
-        layer_filters=[2, 70, 70],
+        layer_filters=[1, 70, 70],
         kernel_size=[1, 3, 3],
         weight_init_stddevs=0.02,
         bias_init_consts=1,
