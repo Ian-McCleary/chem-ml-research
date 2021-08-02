@@ -24,7 +24,7 @@ tf.random.set_seed(dataseed)
 def start_training():
 
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
-    data = loader.create_dataset("Datasets/dataset_50k_3task.csv")
+    data = loader.create_dataset("Datasets/dataset_10k_3task.csv")
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
     dataset = transformer.transform(data)
@@ -38,7 +38,7 @@ def start_training():
     metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
     #model = fixed_param_model(task_count=task_count)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    all_loss = train_loss_over_epoch(model, train_dataset, valid_dataset, metrics, [transformer])
+    all_loss = train_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, [transformer])
     k_fold_validation(model)
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
@@ -74,7 +74,7 @@ def fixed_param_model(task_count):
     return model
 
 
-def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
+def train_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, transformer):
     train_mean = []
     train_eiso = []
     train_riso = []
@@ -116,7 +116,26 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, metric, transform
     all_loss.append(valid_eiso)
     all_loss.append(valid_riso)
     all_loss.append(valid_vert)
-    print(len(all_loss))
+
+    test_scores = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
+    print("mean rms:")
+    print(test_scores[0]["rms_score"])
+    print("eiso rms:")
+    print(test_scores[1]["rms_score"][0])
+    print("riso rms:")
+    print(test_scores[1]["rms_score"][1])
+    print("vert rms:")
+    print(test_scores[1]["rms_score"][2])
+    print("\n")
+    print("mean r2:")
+    print(test_scores[0]["r2_score"])
+    print("eiso r2:")
+    print(test_scores[1]["r2_score"][0])
+    print("riso r2:")
+    print(test_scores[1]["r2_score"][1])
+    print("vert r2:")
+    print(test_scores[1]["r2_score"][2])
+
     return all_loss
 
 def k_fold_validation(model):
@@ -126,7 +145,7 @@ def k_fold_validation(model):
 
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CoulombMatrix(max_atoms=70))
-    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+    data = loader.create_dataset("Datasets/dataset_10k_3task.csv")
 
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)

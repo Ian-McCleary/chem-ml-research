@@ -46,7 +46,7 @@ def start_training():
     model = param_optimization(
         train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
     #model = fixed_param_model(task_count)
-    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, metrics, transformer)
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
     file_name = "gc_10k_hyper.csv"
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
@@ -189,7 +189,7 @@ def find_learn_rate(task_count, train_dataset):
 # Calculate loss over multiple training rounds
 
 
-def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
+def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, transformer):
     train_mean = []
     train_eiso = []
     train_riso = []
@@ -231,6 +231,25 @@ def loss_over_epoch(model, train_dataset, valid_dataset, metric, transformer):
     all_loss.append(valid_eiso)
     all_loss.append(valid_riso)
     all_loss.append(valid_vert)
+
+    test_scores = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
+    print("mean rms:")
+    print(test_scores[0]["rms_score"])
+    print("eiso rms:")
+    print(test_scores[1]["rms_score"][0])
+    print("riso rms:")
+    print(test_scores[1]["rms_score"][1])
+    print("vert rms:")
+    print(test_scores[1]["rms_score"][2])
+    print("\n")
+    print("mean r2:")
+    print(test_scores[0]["r2_score"])
+    print("eiso r2:")
+    print(test_scores[1]["r2_score"][0])
+    print("riso r2:")
+    print(test_scores[1]["r2_score"][1])
+    print("vert r2:")
+    print(test_scores[1]["r2_score"][2])
     return all_loss
 
 

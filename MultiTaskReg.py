@@ -215,13 +215,13 @@ def train_loss(model, train_dataset, valid_dataset, test_dataset, metric, transf
 
 
     test_scores = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
-    print("mean mse:")
+    print("mean rms:")
     print(test_scores[0]["rms_score"])
-    print("eiso mse:")
+    print("eiso rms:")
     print(test_scores[1]["rms_score"][0])
-    print("riso mse:")
+    print("riso rms:")
     print(test_scores[1]["rms_score"][1])
-    print("vert mse:")
+    print("vert rms:")
     print(test_scores[1]["rms_score"][2])
     print("\n")
     print("mean r2:")
