@@ -47,7 +47,7 @@ def start_training():
 
     #model = fixed_param_model(task_count=task_count, n_features=n_features)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    all_loss = train_loss(model, train_dataset, valid_dataset, test_dataset, metrics, [transformer])
+    all_loss = train_loss(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
     # hyperparameter_optimization()
     file_name = "mtr_10k_hyper.csv"
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])), columns=[
