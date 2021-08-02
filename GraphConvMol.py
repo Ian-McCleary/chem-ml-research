@@ -132,10 +132,10 @@ def k_fold_validation(model, data):
 def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer):
     params_dict = {
         'n_tasks': [task_count],
-        'number_atom_features': [50, 75, 100],
-        'graph_conv_layers': [[32, 32], [64, 64], [128, 128]],
-        'dense_layer_size': [16, 32, 64, 128],
-        'dropouts': [0.2, 0.5, 0.7],
+        'number_atom_features': [75],
+        'graph_conv_layers': [[64, 64]],
+        'dense_layer_size': [128, 256],
+        'dropouts': [0.5],
         'learning_rate': [0.0001, 0.00001],
         'mode': ["regression"],
     }
