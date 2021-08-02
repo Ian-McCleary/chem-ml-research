@@ -167,7 +167,7 @@ def k_fold_validation(model):
         metric = dc.metrics.Metric(dc.metrics.rms_score)
 
         model.fit(train_dataset, nb_epoch=50)
-        test_score = model.evaluate(test_dataset, metric, per_task_metrics=True)
+        test_score = model.evaluate(test_dataset, metric,[transformer], per_task_metrics=True)
         eiso_scores.append(test_score[1]["rms_score"][0])
         riso_scores.append(test_score[1]["rms_score"][1])
         vert_scores.append(test_score[1]["rms_score"][2])
