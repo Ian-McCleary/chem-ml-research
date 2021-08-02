@@ -29,7 +29,7 @@ def start_training():
     # update task count as list ["task1", "task2"..]
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles",
                                id_field="ids", featurizer=dc.feat.ConvMolFeaturizer())
-    data = loader.create_dataset("Datasets/dataset_10k_3task.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_10k.csv")
     transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
     dataset = transformer.transform(data)
 

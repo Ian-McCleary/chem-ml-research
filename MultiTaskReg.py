@@ -29,7 +29,7 @@ def start_training():
     tf.random.set_seed(dataseed)
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                 featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-    data = loader.create_dataset("Datasets/dataset_10k_3task.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_10k.csv")
     
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
