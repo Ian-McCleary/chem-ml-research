@@ -39,7 +39,7 @@ def start_training():
     #model = fixed_param_model(task_count=task_count)
     model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
     all_loss = train_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, [transformer])
-    k_fold_validation(model)
+    k_fold_validation(model, data)
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
@@ -90,9 +90,6 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, met
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
-        print("loss: %s" % str(loss))
-        print(type(valid))
-        print(valid)
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
@@ -117,7 +114,7 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, met
     all_loss.append(valid_riso)
     all_loss.append(valid_vert)
 
-    test_scores = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
+    test_scores = model.evaluate(test_dataset, metric, transformer, per_task_metrics=True)
     print("mean rms:")
     print(test_scores[0]["rms_score"])
     print("eiso rms:")
@@ -138,14 +135,10 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, met
 
     return all_loss
 
-def k_fold_validation(model):
+def k_fold_validation(model, data):
     eiso_scores = []
     riso_scores = []
     vert_scores = []
-
-    loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
-                               featurizer=dc.feat.CoulombMatrix(max_atoms=70))
-    data = loader.create_dataset("Datasets/dataset_10k_3task.csv")
 
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
