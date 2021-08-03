@@ -86,7 +86,7 @@ def train_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, met
     valid_vert = []
     all_loss = []
 
-    for i in range(250):
+    for i in range(500):
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, transformer, per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, transformer, per_task_metrics=True)
