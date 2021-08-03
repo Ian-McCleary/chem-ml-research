@@ -34,6 +34,7 @@ def cnn_start_training():
                                featurizer=dc.feat.CoulombMatrix(max_atoms=max_a))
     data_cm = loader_cm.create_dataset("Datasets/dataset_3task_100.csv")
 
+    print(data_cfp.X[0])
     input_x = np.zeros((len(data_cm.X), 2, max_a, max_a))
     for i in range(len(input_x)):
         bit_to_mtrx = np.zeros((max_a, max_a))
