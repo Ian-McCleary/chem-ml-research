@@ -47,11 +47,10 @@ def cnn_start_training():
                 bit_to_mtrx[y][x] = mtrx_val
         single_cell = [data_cm.X[i], bit_to_mtrx]
         input_x[i] = single_cell
-    print(input_x[0][1])
+    print(input_x[0])
     print("\n")
 
     dual_feature_ds = dc.data.NumpyDataset(X=input_x, y=data_cm.y, ids=data_cm.ids, n_tasks=3)
-
     transformer = dc.trans.NormalizationTransformer(
         dataset=dual_feature_ds, transform_y=True)
     dataset = transformer.transform(dual_feature_ds)
