@@ -26,7 +26,7 @@ def rmr_start_training():
     fp_len = 2048
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                 featurizer=dc.feat.CircularFingerprint(size=fp_len, radius=2))
-    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_10k_filtered.csv")
     
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
@@ -50,7 +50,7 @@ def rmr_start_training():
                       columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
-    df.to_csv("rmr_10k_hyper.csv")
+    df.to_csv("rmr_10k_hyper_filtered.csv")
 
 
 def rmr_loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, transformer):
@@ -165,7 +165,7 @@ def rmr_k_fold_validation(model):
 
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_10k_filtered.csv")
 
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)

@@ -29,7 +29,7 @@ def start_training():
     # update task count as list ["task1", "task2"..]
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles",
                                id_field="ids", featurizer=dc.feat.ConvMolFeaturizer())
-    data = loader.create_dataset("Datasets/dataset_3task_1000.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_10k_filtered.csv")
     transformer = dc.trans.NormalizationTransformer(transform_y=True, dataset=data)
     dataset = transformer.transform(data)
 
@@ -48,7 +48,7 @@ def start_training():
     #model = fixed_param_model(task_count)
     all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
     k_fold_validation(model, data)
-    file_name = "gc_10k_hyper.csv"
+    file_name = "gc_10k_hyper_filtered.csv"
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
                       columns=[

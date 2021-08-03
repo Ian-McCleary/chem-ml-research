@@ -62,6 +62,11 @@ def start_ds_creation(args):
                     eisomerization = get_meta_energy_dif(neb_path)
                     if eisomerization == None:
                         failed_arr.append(molecule)
+                        continue
+                    elif eisomerization < 0:
+                        if output_arr[output_count,mol_count] == au_to_ev(barrier_height):
+                            output_arr[output_count,mol_count] = 0
+                        continue
                     else:
                         output_arr[output_count, mol_count] = au_to_ev(eisomerization)
                     output_count += 1
@@ -112,7 +117,7 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr):
     elif output_count == 3:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=[
                           "ids", "smiles", "task1", "task2", "task3"])
-    df.to_csv('dataset_3task_10k.csv')
+    df.to_csv('dataset_3task_10k_filtered.csv')
     failed_df = pd.DataFrame(list(zip(failed_arr)),
                              columns=["Failed Molecules"])
     failed_df.to_csv("failed_molecules")
