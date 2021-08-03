@@ -41,7 +41,7 @@ def cnn_start_training():
             for x in range(max_a):
                 bit_pos = (max_a*y)+x
                 if bit_pos < fp_len-1:
-                    mtrx_val = data_cm.X[i][y][x]
+                    mtrx_val = data_cfp.X[i][bit_pos]
                 else:
                     mtrx_val = 0
                 bit_to_mtrx[y][x] = mtrx_val
