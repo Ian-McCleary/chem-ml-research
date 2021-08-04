@@ -30,7 +30,7 @@ def rmr_start_training():
     fp_len = 2048
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                 featurizer=dc.feat.CircularFingerprint(size=fp_len, radius=2))
-    data = loader.create_dataset("Datasets/dataset_3task_10k_filtered.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_50k_filtered.csv")
     
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
@@ -54,7 +54,7 @@ def rmr_start_training():
                       columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
-    df.to_csv("rmr_10k_hyper_filtered.csv")
+    df.to_csv("rmr_50k_hyper_filtered.csv")
 
 
 def rmr_fixed_param_model(n_tasks, n_features):
@@ -84,10 +84,11 @@ def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, m
         "n_features": [n_features],
         "layer_sizes": [[64, 128, 256], [500, 500, 500], [1000, 1000, 1000]],
         "weight_init_stddevs": [0.02],
-        "bias_init_consts": [0.5],
+        "bias_init_consts": [0.5, 1],
+        "weight_decay_penalty": [0.0001, 0.0004],
         "weight_decay_penalty_type": ["l2"],
         "dropouts": [0.25, 0.5, 0.75],
-        'bypass_layer_sizes': [[10, 10, 10], [20, 20, 20]],
+        'bypass_layer_sizes': [[20, 20, 20], [100, 100, 100]],
         "bypass_weight_init_consts": [0.5],
         "bypass_dropouts": [0.25, 0.5, 0.75]
     }
