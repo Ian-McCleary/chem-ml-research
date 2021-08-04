@@ -38,28 +38,11 @@ def cnn_start_training():
     loader_cm = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                featurizer=dc.feat.CoulombMatrix(max_atoms=max_a))
     data_cm = loader_cm.create_dataset("Datasets/dataset_3task_100.csv")
-    
-    print(data_cfp.X[0])
-    input_x = np.zeros((len(data_cm.X), 2, max_a, max_a))
-    for i in range(len(input_x)):
-        bit_to_mtrx = np.zeros((max_a, max_a))
-        for y in range(max_a):
-            for x in range(max_a):
-                bit_pos = (max_a*y)+x
-                if bit_pos < fp_len-1:
-                    mtrx_val = data_cfp.X[i][bit_pos]
-                else:
-                    mtrx_val = 0
-                bit_to_mtrx[y][x] = mtrx_val
-        single_cell = [data_cm.X[i], bit_to_mtrx]
-        input_x[i] = single_cell
-    print(input_x[0])
-    print("\n")
 
-    dual_feature_ds = dc.data.NumpyDataset(X=input_x, y=data_cm.y, ids=data_cm.ids, n_tasks=3)
+    # dual_feature_ds = dc.data.NumpyDataset(X=input_x, y=data_cm.y, ids=data_cm.ids, n_tasks=3)
     transformer = dc.trans.NormalizationTransformer(
-        dataset=dual_feature_ds, transform_y=True)
-    dataset = transformer.transform(dual_feature_ds)
+        dataset=data_cm, transform_y=True)
+    dataset = transformer.transform(data_cm)
 
     # Splits dataset into train/validation/test
     splitter = dc.splits.RandomSplitter()
