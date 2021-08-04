@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 # Example input: python ds_creator.py 100 -eiso -riso -vert
-# Parameters after molecule count specify which labels/outputs to use. Assumes 1 task regression model.
+# Parameters after molecule count specify which tasks/outputs to use. Assumes at least 1 task regression model.
 
 # currently named Azo_Data_1 on cluster
 start_dir = "/cluster/research-groups/kowalczyk/stf_screen_cluster/Azo_Data_1"
@@ -117,7 +117,7 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr):
     elif output_count == 3:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=[
                           "ids", "smiles", "task1", "task2", "task3"])
-    df.to_csv('dataset_3task_10k_filtered.csv')
+    df.to_csv('dataset_3task_50k_filtered.csv')
     failed_df = pd.DataFrame(list(zip(failed_arr)),
                              columns=["Failed Molecules"])
     failed_df.to_csv("failed_molecules")

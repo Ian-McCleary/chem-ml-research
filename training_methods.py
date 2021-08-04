@@ -1,11 +1,12 @@
+import os
 import time
 from random import randrange
-import pandas as pd
-import numpy as np
+
 import deepchem as dc
-from rdkit import Chem
-import os
+import numpy as np
+import pandas as pd
 import tensorflow as tf
+from rdkit import Chem
 
 config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']),
                                   inter_op_parallelism_threads=int(
@@ -77,58 +78,12 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, t
     print(test_scores[1]["r2_score"][2])
     return all_loss
 
-    # l_rate = l_rate * 0.1
-
-def fixed_param_model(n_tasks, n_features):
-    model = dc.models.RobustMultitaskRegressor(
-        n_tasks,
-        n_features,
-        layer_sizes=[500, 500, 500],
-        weight_init_stddevs=0.02,
-        bias_init_consts=0.5,
-        weight_decay_penalty_type = "l2",
-        dropouts=0.25,
-        bypass_layer_sizes=[20, 20, 20],
-        bypass_weight_init_stddevs=0.02,
-        bypass_bias_init_consts=0.5,
-        bypass_dropouts=0.25
-
-    )
-    return model
 
 
-def hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
-    task_count = len(train_dataset.y[0])
-    n_features = len(train_dataset.X[0])
-
-    params_dict = {
-        "n_tasks": [task_count],
-        "n_features": [n_features],
-        "layer_sizes": [[64, 128, 256], [500, 500, 500], [1000, 1000, 1000]],
-        "weight_init_stddevs": [0.02],
-        "bias_init_consts": [0.5],
-        "weight_decay_penalty_type": ["l2"],
-        "dropouts": [0.25, 0.5, 0.75],
-        'bypass_layer_sizes': [[10, 10, 10], [20, 20, 20]],
-        "bypass_weight_init_consts": [0.5],
-        "bypass_dropouts": [0.25, 0.5, 0.75]
-    }
-
-    optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
-    best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
-        params_dict, train_dataset, valid_dataset, metric, [transformer])
-    print(best_hyperparams)
-    return best_model
-
-
-def k_fold_validation(model):
+def k_fold_validation(model, data):
     eiso_scores = []
     riso_scores = []
     vert_scores = []
-
-    loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
-                               featurizer=dc.feat.CircularFingerprint(size=2048, radius=2))
-    data = loader.create_dataset("Datasets/dataset_3task_10k_filtered.csv")
 
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)

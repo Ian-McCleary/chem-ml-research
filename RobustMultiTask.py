@@ -1,9 +1,9 @@
 import argparse
 import os
 from random import randrange
+
 from training_methods import loss_over_epoch
 from training_methods import k_fold_validation
-from training_methods import hyperparameter_optimization
 
 import deepchem as dc
 import numpy as np
@@ -46,15 +46,57 @@ def rmr_start_training():
     metric = dc.metrics.Metric(dc.metrics.rms_score)
     metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
     # model = rmr_fixed_param_model(task_count, n_features)
-    model = hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
+    model = rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
     all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
-    k_fold_validation(model)
+    k_fold_validation(model, data)
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
                       columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
     df.to_csv("rmr_10k_hyper_filtered.csv")
+
+
+def rmr_fixed_param_model(n_tasks, n_features):
+    model = dc.models.RobustMultitaskRegressor(
+        n_tasks,
+        n_features,
+        layer_sizes=[500, 500, 500],
+        weight_init_stddevs=0.02,
+        bias_init_consts=0.5,
+        weight_decay_penalty_type = "l2",
+        dropouts=0.25,
+        bypass_layer_sizes=[20, 20, 20],
+        bypass_weight_init_stddevs=0.02,
+        bypass_bias_init_consts=0.5,
+        bypass_dropouts=0.25
+
+    )
+    return model
+
+
+def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
+    task_count = len(train_dataset.y[0])
+    n_features = len(train_dataset.X[0])
+
+    params_dict = {
+        "n_tasks": [task_count],
+        "n_features": [n_features],
+        "layer_sizes": [[64, 128, 256], [500, 500, 500], [1000, 1000, 1000]],
+        "weight_init_stddevs": [0.02],
+        "bias_init_consts": [0.5],
+        "weight_decay_penalty_type": ["l2"],
+        "dropouts": [0.25, 0.5, 0.75],
+        'bypass_layer_sizes': [[10, 10, 10], [20, 20, 20]],
+        "bypass_weight_init_consts": [0.5],
+        "bypass_dropouts": [0.25, 0.5, 0.75]
+    }
+
+    optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
+    best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
+        params_dict, train_dataset, valid_dataset, metric, [transformer])
+    print(best_hyperparams)
+    return best_model
 
 
 def main():
