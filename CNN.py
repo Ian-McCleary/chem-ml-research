@@ -49,7 +49,7 @@ def cnn_start_training():
     train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
         dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
     task_count = len(dataset.y[0])
-    n_features = train_dataset.X[0].shape
+    n_features = 4900
 
     metric = dc.metrics.Metric(dc.metrics.r2_score)
     model = cnn_fixed_param_model(task_count, n_features)
@@ -69,7 +69,7 @@ def cnn_fixed_param_model(n_tasks, n_features):
         n_features,
         dims=2,
         layer_filters=[20, 20],
-        kernel_size=[1, 3, 3],
+        kernel_size=[3, 3],
         weight_init_stddevs=0.02,
         bias_init_consts=1,
         weight_decay_penalty=1.3,
