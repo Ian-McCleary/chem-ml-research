@@ -82,15 +82,15 @@ def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, m
     params_dict = {
         "n_tasks": [task_count],
         "n_features": [n_features],
-        "layer_sizes": [[64, 128, 256], [500, 500, 500], [1000, 1000, 1000]],
+        "layer_sizes": [[500, 500, 500], [750, 750]],
         "weight_init_stddevs": [0.02],
-        "bias_init_consts": [0.5, 1],
-        "weight_decay_penalty": [0.0001, 0.0004],
+        "bias_init_consts": [0.5],
+        "weight_decay_penalty": [0.0001, 0.00001],
         "weight_decay_penalty_type": ["l2"],
         "dropouts": [0.25, 0.5, 0.75],
-        'bypass_layer_sizes': [[20, 20, 20], [100, 100, 100]],
+        'bypass_layer_sizes': [[5, 5, 5], [10, 10, 10], [20, 20, 20]],
         "bypass_weight_init_consts": [0.5],
-        "bypass_dropouts": [0.25, 0.5, 0.75]
+        "bypass_dropouts": [0.75]
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
