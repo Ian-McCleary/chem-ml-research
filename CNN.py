@@ -66,7 +66,7 @@ def cnn_start_training():
     train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
         dataset=dataset, frac_train=0.85, frac_valid=0.15, frac_test=0.00, seed=dataseed)
     task_count = len(dataset.y[0])
-    n_features = None
+    n_features = train_dataset.X[0].shape
 
     metric = dc.metrics.Metric(dc.metrics.r2_score)
     model = cnn_fixed_param_model(task_count, n_features)

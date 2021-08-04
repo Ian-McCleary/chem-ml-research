@@ -28,7 +28,7 @@ tf.random.set_seed(dataseed)
 def start_training():
 
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids", featurizer=dc.feat.CoulombMatrix(max_atoms=70))
-    data = loader.create_dataset("Datasets/dataset_3task_10k_filtered.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_50k_filtered.csv")
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
     dataset = transformer.transform(data)
@@ -42,7 +42,7 @@ def start_training():
     metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
     #model = dtnn_fixed_param_model(task_count=task_count)
     model = dtnn_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, [transformer])
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer, 150)
     k_fold_validation(model, data)
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",

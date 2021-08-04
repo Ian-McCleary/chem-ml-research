@@ -17,7 +17,7 @@ session = tf.compat.v1.Session(config=config)
 tf.compat.v1.keras.backend.set_session(session)
 
 
-def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, transformer):
+def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, transformer, epochs):
     #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
     train_mean = []
     train_eiso = []
@@ -105,7 +105,7 @@ def k_fold_validation(model, data):
         metric = dc.metrics.Metric(dc.metrics.rms_score)
 
         model.fit(train_dataset, nb_epoch=50)
-        test_score = model.evaluate(test_dataset, metric,[transformer], per_task_metrics=True)
+        test_score = model.evaluate(test_dataset, metric, [transformer], per_task_metrics=True)
         eiso_scores.append(test_score[1]["rms_score"][0])
         riso_scores.append(test_score[1]["rms_score"][1])
         vert_scores.append(test_score[1]["rms_score"][2])

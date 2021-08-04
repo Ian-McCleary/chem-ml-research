@@ -47,7 +47,7 @@ def rmr_start_training():
     metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
     # model = rmr_fixed_param_model(task_count, n_features)
     model = rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer, 50)
     k_fold_validation(model, data)
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
