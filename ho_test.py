@@ -39,7 +39,7 @@ for smile in smiles:
                         bonded_h_val = distance
                     elif distance < 4 and bonded_h == True:
                         secondary_h = True
-                        print("Failed")
+                        print("Failed \n")
                         for oxygen in m.GetAtoms():
                             if oxygen.GetSymbol() == "O":
                                 oxy2_index = oxygen.GetIdx()
@@ -47,10 +47,11 @@ for smile in smiles:
                                 oxy_distance = math.sqrt(
                                     (oxy_pos[0] - oxy2_pos[0]) ** 2 + (oxy_pos[1] - oxy2_pos[1]) ** 2 +
                                     (oxy_pos[2] - oxy2_pos[2]) ** 2)
+                                print(oxy_distance)
                                 if oxy_distance < bonded_h_val or oxy_distance < distance:
-                                    print("JK SUCCESS!")
+                                    print("JK SUCCESS! \n")
                                 else:
-                                    print("DOUBLE FAILED")
+                                    print("DOUBLE FAILED \n")
                                     break
 
 
