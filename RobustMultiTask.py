@@ -30,7 +30,7 @@ def rmr_start_training():
     fp_len = 2048
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                 featurizer=dc.feat.CircularFingerprint(size=fp_len, radius=2))
-    data = loader.create_dataset("Datasets/dataset_3task_50k_filtered.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_10k_filtered.csv")
     
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
