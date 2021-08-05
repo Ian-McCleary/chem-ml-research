@@ -11,6 +11,9 @@ smiles = ["Cc1cc(C(=O)O)cc(\\N=N/c2cc(F)cc(C(=O)O)c2)c1C"]
 for smile in smiles:
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
+    status = AllChem.EmbedMolecule(m)
+    conformer = m.GetConformer()
+    pos = conformer.GetPositions()
     oxy_count = 0
     for atom in m.GetAtoms():
         if atom.GetSymbol() == "O":
@@ -25,9 +28,6 @@ for smile in smiles:
             for hydrogen in m.GetAtoms():
                 if hydrogen.GetSymbol() == "H":
                     hydro_index = hydrogen.GetIdx()
-                    status = AllChem.EmbedMolecule(m)
-                    conformer = m.GetConformer()
-                    pos = conformer.GetPositions()
                     oxy_pos = pos[oxy_index]
                     hydro_pos = pos[hydro_index]
                     distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
