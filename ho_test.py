@@ -7,8 +7,11 @@ smiles = ["N#Cc1cc(F)c(F)c(\\N=N/c2c(C(=O)O)cccc2-c2ccccc2)c1", "COc1cccc(\\N=N/
           "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
 for smile in smiles:
     m = Chem.MolFromSmiles(smile)
+    m = Chem.AddHs(m)
     for atom in m.GetAtoms():
         if atom.GetSymbol() == "O":
             print(atom.GetSymbol(), atom.GetTotalNumHs(includeNeighbors=True))
             if atom.GetTotalNumHs(includeNeighbors=True) > 1:
                 print(smile, atom.GetSymbol(), atom.GetExplicitValence(), atom.GetTotalNumHs(includeNeighbors=True))
+
+
