@@ -7,7 +7,7 @@ import math
 #          "COc1c(C(=O)O)ccc(\\N=N/c2ccc(-c3ccccc3)cc2C(=O)O)c1C(=O)O", "COc1cc(\\N=N/c2c(C)cccc2OC)c(C(=O)O)c(-c2ccccc2)c1", "COc1cc(\\N=N/c2ccc(C(=O)O)c(C#N)c2C(=O)O)ccc1C(=O)O",
 #          "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
 #TODO Check if O-O bonds exist that are smaller than 2 smallest O-H distances
-smiles = ["COc1c(C(=O)O)ccc(\\N=N/c2ccc(-c3ccccc3)cc2C(=O)O)c1C(=O)O"]
+smiles = ["COc1c(\\N=N/c2c(C)cccc2C(=O)O)ccc(F)c1C#N"]
 for smile in smiles:
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
