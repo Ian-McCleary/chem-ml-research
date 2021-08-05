@@ -14,6 +14,7 @@ for smile in smiles:
     for atom in m.GetAtoms():
         if atom.GetSymbol() == "O":
             oxy_count+=1
+            print("\n")
             print("Oxygen Number: " + str(oxy_count))
             num_bonded_hydrogens = 0
             oxy_index = atom.GetIdx()
