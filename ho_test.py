@@ -10,10 +10,11 @@ for smile in smiles:
     m = Chem.AddHs(m)
     for atom in m.GetAtoms():
         if atom.GetSymbol() == "O":
-            print(atom.GetSymbol(), atom.GetTotalNumHs(includeNeighbors=True))
-            if atom.GetTotalNumHs(includeNeighbors=True) > 1:
-                print(smile, atom.GetSymbol(), atom.GetTotalNumHs(includeNeighbors=True))
-        if atom.GetSymbol() == "H":
-            print("H")
+            for hydrogen in m.GetAtoms():
+                if hydrogen.getSymbol == "H":
+                    conformer = m.GetConformer()
+                    oxy_pos = m.GetAtomPosition(conformer, atom.getIdx())
+                    print(oxy_pos)
+
 
 
