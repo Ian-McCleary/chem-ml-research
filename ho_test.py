@@ -1,5 +1,6 @@
 import numpy as np
 from rdkit import Chem
+from rdkit import AllChem
 import deepchem as dc
 
 smiles = ["N#Cc1cc(F)c(F)c(\\N=N/c2c(C(=O)O)cccc2-c2ccccc2)c1", "COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O","COc1cccc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C(=O)O)c1-c1ccccc1",
@@ -13,9 +14,9 @@ for smile in smiles:
         if atom.GetSymbol() == "O":
             for hydrogen in m.GetAtoms():
                 if hydrogen.GetSymbol() == "H":
-                    generator = dc.utils.ConformerGenerator(max_conformers=1)
-                    mol = generator.generate_conformers(m)
-                    oxy_pos = m.GetAtomPosition(mol, atom.getIdx())
+                    status = AllChem.EmbedMolecule(m)
+                    conformer = m.GetConformer()
+                    oxy_pos = m.GetAtomPosition(conformer, atom.getIdx())
                     print(oxy_pos)
 
 
