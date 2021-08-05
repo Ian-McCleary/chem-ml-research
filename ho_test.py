@@ -12,6 +12,8 @@ for smile in smiles:
         if atom.GetSymbol() == "O":
             print(atom.GetSymbol(), atom.GetTotalNumHs(includeNeighbors=True))
             if atom.GetTotalNumHs(includeNeighbors=True) > 1:
-                print(smile, atom.GetSymbol(), atom.GetExplicitValence(), atom.GetTotalNumHs(includeNeighbors=True))
+                print(smile, atom.GetSymbol(), atom.GetTotalNumHs(includeNeighbors=True))
+        if atom.GetSymbol() == "H":
+            print("H")
 
 
