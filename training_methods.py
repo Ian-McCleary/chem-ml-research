@@ -29,10 +29,9 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, t
     valid_riso = []
     valid_vert = []
     all_loss = []
-    callback = dc.models.ValidationCallback(valid_dataset, 100, metric)
-    for i in range(1000):
+    for i in range(250):
         loss = model.fit(train_dataset, nb_epoch=1)
-        train = model.evaluate(train_dataset, metric, [transformer], per_task_metrics=True, callbacks=callback)
+        train = model.evaluate(train_dataset, metric, [transformer], per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, [transformer], per_task_metrics=True)
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
@@ -148,3 +147,6 @@ def k_fold_validation(model, data):
     print(vert_total)
     print(vert_max)
     print(vert_min)
+
+
+
