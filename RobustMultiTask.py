@@ -30,7 +30,7 @@ def rmr_start_training():
     fp_len = 2048
     loader = dc.data.CSVLoader(["task1", "task2", "task3"], feature_field="smiles", id_field="ids",
                                 featurizer=dc.feat.CircularFingerprint(size=fp_len, radius=2))
-    data = loader.create_dataset("Datasets/dataset_3task_10k_filtered.csv")
+    data = loader.create_dataset("Datasets/dataset_3task_50k_filtered.csv")
     
     transformer = dc.trans.NormalizationTransformer(
         dataset=data, transform_y=True)
@@ -54,7 +54,7 @@ def rmr_start_training():
                       columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
-    df.to_csv("rmr_10k_stopping_filtered.csv")
+    df.to_csv("rmr_50k_hyper_filtered.csv")
 
 
 def rmr_fixed_param_model(n_tasks, n_features):
@@ -78,7 +78,7 @@ def rmr_fixed_param_model(n_tasks, n_features):
 def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
-    l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.00009, 0.9, 15)
+    #l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.00009, 0.9, 15)
     params_dict = {
         "n_tasks": [task_count],
         "n_features": [n_features],
@@ -90,8 +90,7 @@ def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, m
         "dropouts": [0.25, 0.5, 0.75],
         'bypass_layer_sizes': [[5, 5, 5], [10, 10, 10]],
         "bypass_weight_init_consts": [0.5],
-        "bypass_dropouts": [0.75, 0.5],
-        "learning_rate": [l_rate_scheduler]
+        "bypass_dropouts": [0.75, 0.5]
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)

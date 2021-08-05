@@ -50,7 +50,7 @@ def start_training():
     #model = fixed_param_model(task_count)
     all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer, 100)
     k_fold_validation(model, data)
-    file_name = "gc_10k_hyper_filtered.csv"
+    file_name = "gc_50k_hyper_filtered.csv"
     df = pd.DataFrame(list(
         zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),
                       columns=[
