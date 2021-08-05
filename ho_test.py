@@ -9,5 +9,6 @@ for smile in smiles:
     m = Chem.MolFromSmiles(smile)
     for atom in m.GetAtoms():
         if atom.GetSymbol() == "O":
+            print(atom.GetSymbol(), atom.GetTotalNumHs())
             if atom.GetTotalNumHs() > 1:
                 print(smile, atom.GetSymbol(), atom.GetExplicitValence(), atom.GetTotalNumHs())
