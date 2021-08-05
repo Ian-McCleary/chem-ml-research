@@ -8,4 +8,4 @@ atoms = m.GetAtoms()
 for i in range(len(atoms)):
     if atoms[i] == "O":
         print("O")
-    print(atoms[i])
+    print(atoms[i].getSymbol())
