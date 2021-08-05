@@ -92,7 +92,7 @@ def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, m
         'bypass_layer_sizes': [[5, 5, 5], [10, 10, 10]],
         "bypass_weight_init_consts": [0.5],
         "bypass_dropouts": [0.75, 0.5],
-        "learning_rate": [adam]
+        "learning_rate": [l_rate_scheduler]
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
