@@ -10,8 +10,8 @@ smiles = ["O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
 for smile in smiles:
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
+    oxy_count = 0
     for atom in m.GetAtoms():
-        oxy_count = 0
         if atom.GetSymbol() == "O":
             oxy_count+=1
             print("Oxygen Number: " + str(oxy_count))
