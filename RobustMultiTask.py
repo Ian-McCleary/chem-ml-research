@@ -78,7 +78,7 @@ def rmr_fixed_param_model(n_tasks, n_features):
 def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
-    l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.00001, 0.9, 15)
+    l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.00009, 0.9, 15)
     params_dict = {
         "n_tasks": [task_count],
         "n_features": [n_features],
