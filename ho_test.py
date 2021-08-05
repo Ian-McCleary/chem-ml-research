@@ -10,5 +10,5 @@ for smile in smiles:
     for atom in m.GetAtoms():
         if atom.GetSymbol() == "O":
             #print(atom.GetSymbol(), atom.GetTotalNumHs())
-            if atom.GetTotalNumHs(includeNeightbors=True) > 1:
+            if atom.GetTotalNumHs(includeNeighbors=True) > 1:
                 print(smile, atom.GetSymbol(), atom.GetExplicitValence(), atom.GetTotalNumHs(includeNeighbors=True))
