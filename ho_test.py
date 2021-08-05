@@ -16,7 +16,7 @@ for smile in smiles:
                     conformer = m.GetConformer()
                     #oxy_pos = conformer.GetAtomPosition(conformer, atom.GetIdx())
                     #print(oxy_pos)
-                    pos = Chem.rdchem.GetPositions(conformer)
+                    pos = conformer.GetPositions()
                     print(pos)
 
 
