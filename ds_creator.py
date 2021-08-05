@@ -70,7 +70,7 @@ def start_ds_creation(args):
                         continue
                     elif eisomerization < 0:
                         failed_arr.append(molecule)
-                        failed_reason.append("Negative isomerization" + neb_path)
+                        failed_reason.append("Negative isomerization" + smiles_arr[mol_count])
                         if output_arr[output_count,mol_count] == au_to_ev(barrier_height):
                             output_arr[output_count,mol_count] = 0
                         continue
@@ -130,7 +130,7 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr, fa
     df.to_csv('dataset_3task_20k_filtered.csv')
     failed_df = pd.DataFrame(list(zip(failed_arr, failed_reason)),
                              columns=["Failed Molecules", "Failed Reason"])
-    failed_df.to_csv("failed_molecules")
+    failed_df.to_csv("failed_molecules.csv")
     print("DONE!")
 
 
