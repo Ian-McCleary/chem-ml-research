@@ -19,6 +19,7 @@ def start_ds_creation(args):
     smiles_arr = ["hi" for i in range(args.count)]
     output_count = 0
     failed_arr = []
+    failed_reason = []
     if args.eisomerization:
         output_count += 1
     if args.reverse_isomerization:
@@ -43,16 +44,19 @@ def start_ds_creation(args):
                 smiles_arr[mol_count] = get_smiles(mol_path, molecule)
                 id_arr[mol_count] = molecule
                 output_count = 0
+                barrier_height = None
                 neb_path = get_neb_path(mol_path)
                 # Check that paths are valid. Further NoneType checks below after filepath checked.
                 if not os.path.isdir(neb_path):
                     failed_arr.append(molecule)
+                    failed_reason.append("No neb dir  " + neb_path)
                     continue
                 # Reverse Isomerization
                 if args.reverse_isomerization:
                     barrier_height = get_barrier_height(neb_path)
-                    if barrier_height == None:
+                    if barrier_height is None:
                         failed_arr.append(molecule)
+                        failed_reason.append("Barrier_height not found"+neb_path)
                         continue
                     else:
                         output_arr[output_count, mol_count] = au_to_ev(barrier_height)
@@ -60,10 +64,13 @@ def start_ds_creation(args):
                 # Isomerization
                 if args.eisomerization:
                     eisomerization = get_meta_energy_dif(neb_path)
-                    if eisomerization == None:
+                    if eisomerization is None:
                         failed_arr.append(molecule)
+                        failed_reason.append("Could not get isomerization  "+ neb_path)
                         continue
                     elif eisomerization < 0:
+                        failed_arr.append(molecule)
+                        failed_reason.append("Negative isomerization" + neb_path)
                         if output_arr[output_count,mol_count] == au_to_ev(barrier_height):
                             output_arr[output_count,mol_count] = 0
                         continue
@@ -76,14 +83,17 @@ def start_ds_creation(args):
                     rel_ex_folder = get_gs_ex_path(mol_path, "ex")
                     if not os.path.isdir(rel_gs_folder):
                         failed_arr.append(molecule)
+                        failed_reason.append("gs folder not found " + rel_gs_folder)
                         continue
                     elif not os.path.isdir(rel_ex_folder):
                         failed_arr.append(molecule)
+                        failed_reason.append("ex folder not found "+rel_ex_folder)
                         continue
                     gs = get_total_electronic(rel_gs_folder)
                     ex = get_total_electronic(rel_ex_folder)
-                    if gs == None or ex == None:
+                    if gs is None or ex is None:
                         failed_arr.append(molecule)
+                        failed_reason.append("gs or ex is None")
                         continue
                     else:
                         total_electronic_difference = ex - gs
@@ -102,12 +112,12 @@ def start_ds_creation(args):
             break
 
     create_save_dataset(id_arr, smiles_arr, output_arr,
-                        output_count, failed_arr)
+                        output_count, failed_arr, failed_reason)
 
 
 # Create and save the dataset. Weight vector to be added here
 # Featurizing should be done in ML model, deepchem CSVLoader class
-def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr):
+def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr, failed_reason):
     if output_count == 1:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0])), columns=[
                           "ids", "smiles", "task1"])
@@ -117,9 +127,9 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr):
     elif output_count == 3:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=[
                           "ids", "smiles", "task1", "task2", "task3"])
-    df.to_csv('dataset_3task_50k_filtered.csv')
-    failed_df = pd.DataFrame(list(zip(failed_arr)),
-                             columns=["Failed Molecules"])
+    df.to_csv('dataset_3task_20k_filtered.csv')
+    failed_df = pd.DataFrame(list(zip(failed_arr, failed_reason)),
+                             columns=["Failed Molecules", "Failed Reason"])
     failed_df.to_csv("failed_molecules")
     print("DONE!")
 
