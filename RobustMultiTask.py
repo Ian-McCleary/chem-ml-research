@@ -54,7 +54,7 @@ def rmr_start_training():
                       columns=[
                           "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
                           "valid_riso", "valid_vert"])
-    df.to_csv("rmr_10k_hyper_filtered.csv")
+    df.to_csv("rmr_10k_stopping_filtered.csv")
 
 
 def rmr_fixed_param_model(n_tasks, n_features):
