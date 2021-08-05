@@ -79,7 +79,7 @@ def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, m
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
     l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 10)
-    adam = dc.models.optimizers.Adam(l_rate_scheduler, 0.001, 0.9, 0.99, 0.00001)
+    adam = dc.models.optimizers.Adam(l_rate_scheduler, 0.9, 0.99, 0.00001)
     params_dict = {
         "n_tasks": [task_count],
         "n_features": [n_features],
