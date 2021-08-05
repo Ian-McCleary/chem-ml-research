@@ -11,7 +11,7 @@ for smile in smiles:
     for atom in m.GetAtoms():
         if atom.GetSymbol() == "O":
             for hydrogen in m.GetAtoms():
-                if hydrogen.getSymbol == "H":
+                if hydrogen.GetSymbol() == "H":
                     conformer = m.GetConformer()
                     oxy_pos = m.GetAtomPosition(conformer, atom.getIdx())
                     print(oxy_pos)
