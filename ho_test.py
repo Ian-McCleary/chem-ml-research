@@ -37,7 +37,7 @@ for smile in smiles:
                     if distance < 2 and bonded_h == False:
                         bonded_h = True
                         bonded_h_val = distance
-                    elif distance < 4 and bonded_h == True:
+                    elif distance < 3.5 and bonded_h == True:
                         secondary_h = True
                         print("Failed \n")
                         for oxygen in m.GetAtoms():
