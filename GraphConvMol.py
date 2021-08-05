@@ -61,13 +61,14 @@ def start_training():
 
 
 def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, metric, transformer):
+    l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 15)
     params_dict = {
         'n_tasks': [task_count],
-        'number_atom_features': [75],
-        'graph_conv_layers': [[64, 64]],
+        'number_atom_features': [65, 75, 85],
+        'graph_conv_layers': [[64, 64], [128, 128]],
         'dense_layer_size': [128, 256],
-        'dropouts': [0.5],
-        'learning_rate': [0.0001, 0.00001],
+        'dropouts': [0.5, 0.25, 0.75],
+        'learning_rate': [0.0001, 0.00001, l_rate_scheduler],
         'mode': ["regression"],
     }
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.GraphConvModel)

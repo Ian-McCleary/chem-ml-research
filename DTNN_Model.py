@@ -52,11 +52,12 @@ def start_training():
 def dtnn_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     # parameter optimization
     task_count = len(train_dataset.y[0])
+    l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 15)
     params_dict = {
         'n_tasks': [task_count],
         'n_embedding': [10, 50, 100, 75],
         'dropouts': [0.2, 0.5, 0.75],
-        'learning_rate': [0.001, 0.0001, 0.00001]
+        'learning_rate': [0.001, 0.0001, 0.00001, l_rate_scheduler]
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.DTNNModel)

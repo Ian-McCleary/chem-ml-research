@@ -63,13 +63,13 @@ def start_training():
 def mtr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
-
+    l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 15)
     params_dict = {
         'n_tasks': [task_count],
         'n_features': [n_features],
         'layer_sizes': [[256, 512, 1024], [128, 256, 512], [64, 128, 256]],
         'dropouts': [0.1, 0.2, 0.5, 0.4, 0.6],
-        'learning_rate': [0.001, 0.0001, 0.00001]
+        'learning_rate': [0.001, 0.0001, 0.00001, l_rate_scheduler]
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)

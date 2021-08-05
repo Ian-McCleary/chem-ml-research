@@ -78,7 +78,7 @@ def rmr_fixed_param_model(n_tasks, n_features):
 def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
-    #l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.00009, 0.9, 15)
+    l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 15)
     params_dict = {
         "n_tasks": [task_count],
         "n_features": [n_features],
@@ -90,7 +90,8 @@ def rmr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, m
         "dropouts": [0.25, 0.5, 0.75],
         'bypass_layer_sizes': [[5, 5, 5], [10, 10, 10]],
         "bypass_weight_init_consts": [0.5],
-        "bypass_dropouts": [0.75, 0.5]
+        "bypass_dropouts": [0.75, 0.5],
+        "learning_rate": [l_rate_scheduler, 0.00001]
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
