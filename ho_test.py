@@ -14,8 +14,10 @@ for smile in smiles:
                 if hydrogen.GetSymbol() == "H":
                     status = AllChem.EmbedMolecule(m)
                     conformer = m.GetConformer()
-                    oxy_pos = conformer.GetAtomPosition(conformer, atom.GetIdx())
-                    print(oxy_pos)
+                    #oxy_pos = conformer.GetAtomPosition(conformer, atom.GetIdx())
+                    #print(oxy_pos)
+                    pos = m.GetPositions(conformer)
+                    print(pos)
 
 
 
