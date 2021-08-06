@@ -10,6 +10,7 @@ smiles = ["N#Cc1cc(F)c(F)c(\\N=N/c2c(C(=O)O)cccc2-c2ccccc2)c1", "COc1cccc(\\N=N/
 # Is it possible to check if atom index is the same in position array?
 #smiles = ["Cc1cc(C(=O)O)cc(\\N=N/c2cc(F)cc(C(=O)O)c2)c1C"]
 for smile in smiles:
+    print(smile)
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
     status = AllChem.EmbedMolecule(m)
