@@ -54,9 +54,9 @@ for smile in smiles:
                                 #print(oxy_distance)
                                 if oxy_distance < bonded_h_val or oxy_distance < distance:
                                     #print("JK SUCCESS! \n")
-                                else:
+                                #else:
                                     #print("DOUBLE FAILED \n")
-                                    break
+                                #    break
 
 
 
