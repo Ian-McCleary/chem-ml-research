@@ -23,7 +23,7 @@ for smile in smiles:
     first_n, second_n, sequential_n = False, False, False
     for atom in m.GetAtoms():
         #check which half oxygen is on
-        print(atom.GetSymbol())
+        #print(atom.GetSymbol())
         if not atom.GetSymbol() == "N" and sequential_n is True:
             sequential_n = False
         if not atom.GetSymbol() == "N":
@@ -41,8 +41,8 @@ for smile in smiles:
             bonded_h_val = 0
             secondary_h = False
             oxy_count+=1
-            #print("\n")
-            #print("Oxygen Number: " + str(oxy_count))
+            print("\n")
+            print("Oxygen Number: " + str(oxy_count))
             num_bonded_hydrogens = 0
             oxy_index = atom.GetIdx()
             h_half = False
