@@ -49,20 +49,21 @@ for smile in smiles:
             first_n_2, second_n_2, sequential_n_2 = False, False, False
             for hydrogen in m.GetAtoms():
                 #check which half hydrogen is on
-                if not atom.GetSymbol() == "N" and sequential_n_2 is True:
+                if not hydrogen.GetSymbol() == "N" and sequential_n_2 is True:
                     sequential_n_2 = False
-                if not atom.GetSymbol() == "N":
+                if not hydrogen.GetSymbol() == "N":
                     first_n_2 = False
-                if atom.GetSymbol() == "N" and first_n_2 is False:
+                if hydrogen.GetSymbol() == "N" and first_n_2 is False:
                     first_n_2 = True
                     sequential_n_2 = True
-                elif atom.GetSymbol() == "N" and first_n_2 is True and sequential_n_2 is True:
+                elif hydrogen.GetSymbol() == "N" and first_n_2 is True and sequential_n_2 is True:
                     second_n_2 = True
                     h_half = True
                 if hydrogen.GetSymbol() == "H":
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
                         continue
                     print("o_half: ",o_half,"  h_half: ",h_half)
+
                     hydro_index = hydrogen.GetIdx()
                     oxy_pos = pos[oxy_index]
                     hydro_pos = pos[hydro_index]
