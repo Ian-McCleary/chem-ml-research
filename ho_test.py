@@ -2,13 +2,13 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem
 import math
-#smiles = ["N#Cc1cc(F)c(F)c(\\N=N/c2c(C(=O)O)cccc2-c2ccccc2)c1", "COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O","COc1cccc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C(=O)O)c1-c1ccccc1",
-#          "N#Cc1cc(C(=O)O)cc(\\N=N/c2cccc(-c3ccccc3)c2C(=O)O)c1C#N", "COc1cc(\\N=N/c2cccc(F)c2)cc(C#N)c1C#N", "COc1cc(C#N)cc(\\N=N/c2cc(-c3ccccc3)cc(C#N)c2C)c1",
-#          "COc1c(C(=O)O)ccc(\\N=N/c2ccc(-c3ccccc3)cc2C(=O)O)c1C(=O)O", "COc1cc(\\N=N/c2c(C)cccc2OC)c(C(=O)O)c(-c2ccccc2)c1", "COc1cc(\\N=N/c2ccc(C(=O)O)c(C#N)c2C(=O)O)ccc1C(=O)O",
-#          "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
+smiles = ["N#Cc1cc(F)c(F)c(\\N=N/c2c(C(=O)O)cccc2-c2ccccc2)c1", "COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O","COc1cccc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C(=O)O)c1-c1ccccc1",
+          "N#Cc1cc(C(=O)O)cc(\\N=N/c2cccc(-c3ccccc3)c2C(=O)O)c1C#N", "COc1cc(\\N=N/c2cccc(F)c2)cc(C#N)c1C#N", "COc1cc(C#N)cc(\\N=N/c2cc(-c3ccccc3)cc(C#N)c2C)c1",
+          "COc1c(C(=O)O)ccc(\\N=N/c2ccc(-c3ccccc3)cc2C(=O)O)c1C(=O)O", "COc1cc(\\N=N/c2c(C)cccc2OC)c(C(=O)O)c(-c2ccccc2)c1", "COc1cc(\\N=N/c2ccc(C(=O)O)c(C#N)c2C(=O)O)ccc1C(=O)O",
+          "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
 #TODO Check if O-O bonds exist that are smaller than 2 smallest O-H distances
 # Is it possible to check if atom index is the same in position array?
-smiles = ["Cc1cc(C(=O)O)cc(\\N=N/c2cc(F)cc(C(=O)O)c2)c1C"]
+#smiles = ["Cc1cc(C(=O)O)cc(\\N=N/c2cc(F)cc(C(=O)O)c2)c1C"]
 for smile in smiles:
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
@@ -35,10 +35,10 @@ for smile in smiles:
                                          (oxy_pos[2]-hydro_pos[2])**2)
 
                     print(distance)
-                    if distance < 2 and bonded_h == False:
+                    if distance < 1.9 and bonded_h == False:
                         bonded_h = True
                         bonded_h_val = distance
-                    elif distance < 3.5 and bonded_h == True:
+                    elif distance < 2.4 and bonded_h == True:
                         secondary_h = True
                         print("Failed \n")
                         for oxygen in m.GetAtoms():
