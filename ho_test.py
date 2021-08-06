@@ -8,6 +8,7 @@ smiles = ["N#Cc1cc(F)c(F)c(\\N=N/c2c(C(=O)O)cccc2-c2ccccc2)c1", "COc1cccc(\\N=N/
           "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
 #TODO Check if O-O bonds exist that are smaller than 2 smallest O-H distances
 # Is it possible to check if atom index is the same in position array?
+# We may need to check that that O-H bonding is not happening on opposite sides of the N=N bond.
 #smiles = ["Cc1cc(C(=O)O)cc(\\N=N/c2cc(F)cc(C(=O)O)c2)c1C"]
 for smile in smiles:
     print(smile)
@@ -18,13 +19,14 @@ for smile in smiles:
     pos = conformer.GetPositions()
     oxy_count = 0
     for atom in m.GetAtoms():
+        print(atom.GetSymbol())
         if atom.GetSymbol() == "O":
             bonded_h = False
             bonded_h_val = 0
             secondary_h = False
             oxy_count+=1
-            print("\n")
-            print("Oxygen Number: " + str(oxy_count))
+            #print("\n")
+            #print("Oxygen Number: " + str(oxy_count))
             num_bonded_hydrogens = 0
             oxy_index = atom.GetIdx()
             for hydrogen in m.GetAtoms():
@@ -35,13 +37,13 @@ for smile in smiles:
                     distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
                                          (oxy_pos[2]-hydro_pos[2])**2)
 
-                    print(distance)
+                    #print(distance)
                     if distance < 1.9 and bonded_h == False:
                         bonded_h = True
                         bonded_h_val = distance
                     elif distance < 2.4 and bonded_h == True:
                         secondary_h = True
-                        print("Failed \n")
+                        #print("Failed \n")
                         for oxygen in m.GetAtoms():
                             if oxygen.GetSymbol() == "O":
                                 oxy2_index = oxygen.GetIdx()
@@ -49,11 +51,11 @@ for smile in smiles:
                                 oxy_distance = math.sqrt(
                                     (oxy_pos[0] - oxy2_pos[0]) ** 2 + (oxy_pos[1] - oxy2_pos[1]) ** 2 +
                                     (oxy_pos[2] - oxy2_pos[2]) ** 2)
-                                print(oxy_distance)
+                                #print(oxy_distance)
                                 if oxy_distance < bonded_h_val or oxy_distance < distance:
-                                    print("JK SUCCESS! \n")
+                                    #print("JK SUCCESS! \n")
                                 else:
-                                    print("DOUBLE FAILED \n")
+                                    #print("DOUBLE FAILED \n")
                                     break
 
 
