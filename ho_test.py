@@ -2,14 +2,14 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem
 import math
-smiles = ["N#Cc1cc(F)c(F)c(\\N=N/c2c(C(=O)O)cccc2-c2ccccc2)c1", "COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O","COc1cccc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C(=O)O)c1-c1ccccc1",
-          "N#Cc1cc(C(=O)O)cc(\\N=N/c2cccc(-c3ccccc3)c2C(=O)O)c1C#N", "COc1cc(\\N=N/c2cccc(F)c2)cc(C#N)c1C#N", "COc1cc(C#N)cc(\\N=N/c2cc(-c3ccccc3)cc(C#N)c2C)c1",
-          "COc1c(C(=O)O)ccc(\\N=N/c2ccc(-c3ccccc3)cc2C(=O)O)c1C(=O)O", "COc1cc(\\N=N/c2c(C)cccc2OC)c(C(=O)O)c(-c2ccccc2)c1", "COc1cc(\\N=N/c2ccc(C(=O)O)c(C#N)c2C(=O)O)ccc1C(=O)O",
-          "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
+#smiles = ["N#Cc1cc(F)c(F)c(\\N=N/c2c(C(=O)O)cccc2-c2ccccc2)c1", "COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O","COc1cccc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C(=O)O)c1-c1ccccc1",
+#          "N#Cc1cc(C(=O)O)cc(\\N=N/c2cccc(-c3ccccc3)c2C(=O)O)c1C#N", "COc1cc(\\N=N/c2cccc(F)c2)cc(C#N)c1C#N", "COc1cc(C#N)cc(\\N=N/c2cc(-c3ccccc3)cc(C#N)c2C)c1",
+#          "COc1c(C(=O)O)ccc(\\N=N/c2ccc(-c3ccccc3)cc2C(=O)O)c1C(=O)O", "COc1cc(\\N=N/c2c(C)cccc2OC)c(C(=O)O)c(-c2ccccc2)c1", "COc1cc(\\N=N/c2ccc(C(=O)O)c(C#N)c2C(=O)O)ccc1C(=O)O",
+#          "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
 #TODO Check if O-O bonds exist that are smaller than 2 smallest O-H distances
 # Is it possible to check if atom index is the same in position array?
 # We may need to check that that O-H bonding is not happening on opposite sides of the N=N bond.
-#smiles = ["Cc1cc(C(=O)O)cc(\\N=N/c2cc(F)cc(C(=O)O)c2)c1C"]
+smiles = ["COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O"]
 for smile in smiles:
     print(smile)
     m = Chem.MolFromSmiles(smile)
@@ -18,8 +18,24 @@ for smile in smiles:
     conformer = m.GetConformer()
     pos = conformer.GetPositions()
     oxy_count = 0
+    # false = first half, true = second half
+    o_half = False
+    first_n, second_n, sequential_n = False, False, False
     for atom in m.GetAtoms():
+        #check which half oxygen is on
         print(atom.GetSymbol())
+        if not atom.GetSymbol() == "N" and sequential_n is True:
+            sequential_n = False
+        if not atom.GetSymbol() == "N":
+            first_n = False
+        if atom.GetSymbol() == "N" and first_n is False:
+            first_n = True
+            sequential_n = True
+        elif atom.GetSymbol() == "N" and first_n is True and sequential_n is True:
+            second_n = True
+            o_half = True
+        
+
         if atom.GetSymbol() == "O":
             bonded_h = False
             bonded_h_val = 0
@@ -29,15 +45,30 @@ for smile in smiles:
             #print("Oxygen Number: " + str(oxy_count))
             num_bonded_hydrogens = 0
             oxy_index = atom.GetIdx()
+            h_half = False
+            first_n_2, second_n_2, sequential_n_2 = False, False, False
             for hydrogen in m.GetAtoms():
+                #check which half hydrogen is on
+                if not atom.GetSymbol() == "N" and sequential_n_2 is True:
+                    sequential_n_2 = False
+                if not atom.GetSymbol() == "N":
+                    first_n_2 = False
+                if atom.GetSymbol() == "N" and first_n_2 is False:
+                    first_n_2 = True
+                    sequential_n_2 = True
+                elif atom.GetSymbol() == "N" and first_n_2 is True and sequential_n_2 is True:
+                    second_n_2 = True
+                    h_half = True
                 if hydrogen.GetSymbol() == "H":
+                    if (o_half is True and h_half is True) or (o_half is False and h_half is False):
+                        continue
+                    print("o_half: ",o_half,"  h_half: ",h_half)
                     hydro_index = hydrogen.GetIdx()
                     oxy_pos = pos[oxy_index]
                     hydro_pos = pos[hydro_index]
                     distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
                                          (oxy_pos[2]-hydro_pos[2])**2)
-
-                    #print(distance)
+                    print(distance)
                     if distance < 1.9 and bonded_h == False:
                         bonded_h = True
                         bonded_h_val = distance
@@ -49,8 +80,8 @@ for smile in smiles:
                                 oxy2_index = oxygen.GetIdx()
                                 oxy2_pos = pos[oxy2_index]
                                 oxy_distance = math.sqrt(
-                                    (oxy_pos[0] - oxy2_pos[0]) ** 2 + (oxy_pos[1] - oxy2_pos[1]) ** 2 +
-                                    (oxy_pos[2] - oxy2_pos[2]) ** 2)
+                                    (oxy_pos[0] - oxy2_pos[0])**2 + (oxy_pos[1] - oxy2_pos[1])**2 +
+                                    (oxy_pos[2] - oxy2_pos[2])**2)
                                 #print(oxy_distance)
                                 if oxy_distance < bonded_h_val or oxy_distance < distance:
                                     print("JK SUCCESS! \n")
