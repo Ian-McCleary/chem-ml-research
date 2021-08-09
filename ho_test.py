@@ -24,6 +24,7 @@ def find_half(bond_list, atom_list, previous, next):
             else:
                 print("recursive call \n")
                 return find_half(bond_list, atom_list, next, connecting_atom)
+        print("this shouldnt print")
 
 
 
@@ -64,7 +65,7 @@ for smile in smiles:
                 b_1 = atom_list[j]
                 if b_1.GetSymbol() == "H":
                     #recursively check the side of each hydrogen atom
-                    answer = find_half(bond_list, atom_list, -1, j)
+                    answer = find_half(bond_list, atom_list, j, j)
                     print("answer: ", answer)
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
                         potential_cov = True
