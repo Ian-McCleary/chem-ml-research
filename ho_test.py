@@ -35,6 +35,7 @@ for smile in smiles:
             print("Oxygen Number: " + str(oxy_count))
             num_bonded_hydrogens = 0
             h_half = False
+            bonded_h = False
 
             for j in range(len(atom_list)):
                 #check which half hydrogen is on
@@ -46,7 +47,10 @@ for smile in smiles:
                 
                 if b_1.GetSymbol() == "H":
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
-                        continue
+                        potential_cov = True
+                    else:
+                        potential_cov = False
+
                     print("o_half: ",o_half,"  h_half: ",h_half)
 
                     oxy_pos = pos[i]
@@ -54,11 +58,11 @@ for smile in smiles:
                     distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
                                          (oxy_pos[2]-hydro_pos[2])**2)
                     print(distance)
-                    if distance < 1.9 and bonded_h == False:
+                    if distance < 1.9 and potential_cov == True:
                         bonded_h = True
                         bonded_h_val = distance
-                    elif distance < 2.4 and bonded_h == True:
-                        secondary_h = True
+                    elif distance < 2.4 and potential_cov == False:
+                        hydrogen_bond = True
                         #print("Failed \n")
                         for oxygen in m.GetAtoms():
                             if oxygen.GetSymbol() == "O":
