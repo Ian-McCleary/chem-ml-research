@@ -14,14 +14,16 @@ for smile in smiles:
     print(smile)
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
-    print(Chem.rdmolfiles.MolToSmiles(mol=m, allHsExplicit=True))
-    status = AllChem.EmbedMolecule(m)
-    conformer = m.GetConformer()
+    add_h_smile = Chem.rdmolfiles.MolToSmiles(mol=m, allHsExplicit=True)
+    print(add_h_smile)
+    m1 = Chem.MolFromSmiles(add_h_smile)
+    status = AllChem.EmbedMolecule(m1)
+    conformer = m1.GetConformer()
     pos = conformer.GetPositions()
     oxy_count = 0
     # false = first half, true = second half
     o_half = False
-    atom_list = m.GetAtoms()
+    atom_list = m1.GetAtoms()
     for i in range(len(atom_list)):
         #check which half oxygen is on
         print(atom_list[i].GetSymbol())
@@ -66,7 +68,7 @@ for smile in smiles:
                     elif distance < 4 and potential_cov == False:
                         failed = False
                         #check for nearby oxygen that could be closer
-                        for oxygen in m.GetAtoms():
+                        for oxygen in m1.GetAtoms():
                             if oxygen.GetSymbol() == "O" and not oxygen.GetIdx() == i:
                                 oxy2_index = oxygen.GetIdx()
                                 oxy2_pos = pos[oxy2_index]
