@@ -16,6 +16,7 @@ def find_half(bond_list, atom_list, index):
             connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], index)
             print("connecting: ",connecting_atom)
         except (RuntimeError):
+            pass
             continue
         if connecting_atom in range(len(atom_list)):
             if atom_list[connecting_atom] == "N":
