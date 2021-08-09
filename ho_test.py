@@ -21,6 +21,7 @@ for smile in smiles:
     # false = first half, true = second half
     o_half = False
     atom_list = m.GetAtoms()
+    print(atom_list)
     for i in range(len(atom_list)):
         #check which half oxygen is on
         a_1 = atom_list[i]
@@ -58,14 +59,14 @@ for smile in smiles:
                     distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
                                          (oxy_pos[2]-hydro_pos[2])**2)
                     print(distance)
-                    if distance < 1.9 and potential_cov == True:
+                    if distance < 1.5 and potential_cov == True:
                         bonded_h = True
                         bonded_h_val = distance
-                    elif distance < 2.4 and potential_cov == False:
+                    elif distance < 4 and potential_cov == False:
                         failed = False
                         #check for nearby oxygen that could be closer
                         for oxygen in m.GetAtoms():
-                            if oxygen.GetSymbol() == "O":
+                            if oxygen.GetSymbol() == "O" and not oxygen.GetIdx() == i:
                                 oxy2_index = oxygen.GetIdx()
                                 oxy2_pos = pos[oxy2_index]
                                 oxy_distance = math.sqrt(
