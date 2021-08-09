@@ -25,7 +25,7 @@ def find_half(bond_list, atom_list, previous, next):
             else:
                 print("recursive call \n")
                 return find_half(bond_list, atom_list, next, connecting_atom)
-        print("this shouldnt print")
+    print("this shouldnt print")
 
 
 
