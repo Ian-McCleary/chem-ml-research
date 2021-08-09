@@ -16,15 +16,15 @@ def find_half(bond_list, atom_list, previous, current):
         try:
             connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], current)
         except (RuntimeError):
-            print("post exception error")
             continue
+        print(atom_list[connecting_atom].GetSymbol())
         if not connecting_atom == previous:
             if atom_list[connecting_atom].GetSymbol() == "N":
                 print("connecting: ", connecting_atom)
                 return connecting_atom
             else:
-                print("recursive call \n")
                 return find_half(bond_list, atom_list, current, connecting_atom)
+
     print("this shouldnt print")
 
 lg = RDLogger.logger()
