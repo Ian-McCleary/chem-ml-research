@@ -22,6 +22,7 @@ def find_half(bond_list, atom_list, previous, next):
                 print("connecting: ", connecting_atom)
                 return connecting_atom
             else:
+                print("recursive call \n")
                 return find_half(bond_list, atom_list, next, connecting_atom)
 
 
