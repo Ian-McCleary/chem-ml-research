@@ -20,12 +20,12 @@ def find_half(bond_list, atom_list, previous, current):
         print(atom_list[connecting_atom].GetSymbol())
         if not connecting_atom == previous:
             if atom_list[connecting_atom].GetSymbol() == "N":
-                print("connecting: ", connecting_atom)
+                #print("connecting: ", connecting_atom)
                 return connecting_atom
             else:
                 return find_half(bond_list, atom_list, current, connecting_atom)
 
-    print("this shouldnt print")
+    #print("this shouldnt print")
 
 lg = RDLogger.logger()
 
@@ -68,7 +68,13 @@ for smile in smiles:
                 if b_1.GetSymbol() == "H":
                     #recursively check the side of each hydrogen atom
                     answer = find_half(bond_list, atom_list, j, j)
-                    print("answer: ", answer)
+                    #print("answer: ", answer)
+                    if atom_list[answer].getSymbol() == "N" and atom_list[answer+1].getSymbol() == "N":
+                        h_half = False
+                    elif atom_list[answer].getSymbol() == "N" and atom_list[answer-1].getSymbol() == "N":
+                        h_half = True
+                    else:
+                        h_half = False
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
                         potential_cov = True
                     else:
