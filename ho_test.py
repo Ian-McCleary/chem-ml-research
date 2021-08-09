@@ -14,7 +14,7 @@ for smile in smiles:
     print(smile)
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
-    print(m.GetSmarts(allHsExplicit=True))
+    print(m.MolToSmiles(allHsExplicit=True))
     status = AllChem.EmbedMolecule(m)
     conformer = m.GetConformer()
     pos = conformer.GetPositions()
