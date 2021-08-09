@@ -9,6 +9,17 @@ import math
 #TODO Check if O-O bonds exist that are smaller than 2 smallest O-H distances
 # Is it possible to check if atom index is the same in position array?
 # We may need to check that that O-H bonding is not happening on opposite sides of the N=N bond.
+
+def find_half(bond_list, atom_list, index):
+    for x in range(len(bond_list)):
+        connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], index)
+        print(connecting_atom)
+        if atom_list[connecting_atom] == "N":
+            return connecting_atom
+        else:
+            return find_half(bond_list, atom_list, index + 1)
+
+
 smiles = ["COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O"]
 for smile in smiles:
     print(smile)
@@ -24,6 +35,7 @@ for smile in smiles:
     # false = first half, true = second half
     o_half = False
     atom_list = m.GetAtoms()
+    bond_list = m.GetBonds()
     for i in range(len(atom_list)):
         #check which half oxygen is on
         print(atom_list[i].GetSymbol())
@@ -42,14 +54,11 @@ for smile in smiles:
             bonded_h = False
             bonded_h_val = 0
             for j in range(len(atom_list)):
-                #check which half hydrogen is on
                 b_1 = atom_list[j]
-                if j < len(atom_list)-1:
-                    b_2 = atom_list[j+1]
-                if b_1.GetSymbol() == "N" and b_2.GetSymbol() == "N":
-                    h_half = True
-                
                 if b_1.GetSymbol() == "H":
+                    #recursively check the side of each hydrogen atom
+                    answer = find_half(bond_list, atom_list, j)
+                    print("answer: ", answer)
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
                         potential_cov = True
                     else:
@@ -85,3 +94,5 @@ for smile in smiles:
                             print("Failed")
                         else:
                             print("Passed")
+
+
