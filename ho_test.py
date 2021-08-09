@@ -14,10 +14,11 @@ def find_half(bond_list, atom_list, index):
     for x in range(len(bond_list)):
         connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], index)
         print(connecting_atom)
-        if atom_list[connecting_atom] == "N":
-            return connecting_atom
-        else:
-            return find_half(bond_list, atom_list, index + 1)
+        if connecting_atom in range(len(atom_list)):
+            if atom_list[connecting_atom] == "N":
+                return connecting_atom
+            else:
+                return find_half(bond_list, atom_list, index + 1)
 
 
 smiles = ["COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O"]
