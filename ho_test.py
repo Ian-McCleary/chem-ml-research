@@ -21,9 +21,9 @@ for smile in smiles:
     # false = first half, true = second half
     o_half = False
     atom_list = m.GetAtoms()
-    print(atom_list)
     for i in range(len(atom_list)):
         #check which half oxygen is on
+        print(atom_list[i].GetSymbol())
         a_1 = atom_list[i]
         if i < len(atom_list)-1:
             a_2 = atom_list[i+1]
