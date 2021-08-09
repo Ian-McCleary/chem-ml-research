@@ -36,7 +36,7 @@ for smile in smiles:
             num_bonded_hydrogens = 0
             h_half = False
             bonded_h = False
-
+            bonded_h_val = 0
             for j in range(len(atom_list)):
                 #check which half hydrogen is on
                 b_1 = atom_list[j]
