@@ -63,7 +63,7 @@ for smile in smiles:
                         bonded_h_val = distance
                     elif distance < 2.4 and potential_cov == False:
                         hydrogen_bond = True
-                        #print("Failed \n")
+                        print("Failed \n")
                         for oxygen in m.GetAtoms():
                             if oxygen.GetSymbol() == "O":
                                 oxy2_index = oxygen.GetIdx()
@@ -74,6 +74,6 @@ for smile in smiles:
                                 #print(oxy_distance)
                                 if oxy_distance < bonded_h_val or oxy_distance < distance:
                                     print("JK SUCCESS! \n")
-                                #else:
-                                    #print("DOUBLE FAILED \n")
+                                else:
+                                    print("DOUBLE FAILED \n")
                                 #    break
