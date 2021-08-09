@@ -20,53 +20,37 @@ for smile in smiles:
     oxy_count = 0
     # false = first half, true = second half
     o_half = False
-    first_n, second_n, sequential_n = False, False, False
-    for atom in m.GetAtoms():
+    atom_list = m.GetAtoms()
+    for i in range(len(atom_list)):
         #check which half oxygen is on
-        #print(atom.GetSymbol())
-        if not atom.GetSymbol() == "N" and sequential_n is True:
-            sequential_n = False
-        if not atom.GetSymbol() == "N":
-            first_n = False
-        if atom.GetSymbol() == "N" and first_n is False:
-            first_n = True
-            sequential_n = True
-        elif atom.GetSymbol() == "N" and first_n is True and sequential_n is True:
-            second_n = True
+        a_1 = atom_list[i]
+        if i < len(atom_list)-1:
+            a_2 = atom_list[i+1]
+        if a_1.GetSymbol() == "N" and a_2.GetSymbol() == "N":
             o_half = True
-        
+        if a_1.GetSymbol() == "O":
 
-        if atom.GetSymbol() == "O":
-            bonded_h = False
-            bonded_h_val = 0
-            secondary_h = False
             oxy_count+=1
             print("\n")
             print("Oxygen Number: " + str(oxy_count))
             num_bonded_hydrogens = 0
-            oxy_index = atom.GetIdx()
             h_half = False
-            first_n_2, second_n_2, sequential_n_2 = False, False, False
-            for hydrogen in m.GetAtoms():
+
+            for j in range(len(atom_list)):
                 #check which half hydrogen is on
-                if not hydrogen.GetSymbol() == "N" and sequential_n_2 is True:
-                    sequential_n_2 = False
-                if not hydrogen.GetSymbol() == "N":
-                    first_n_2 = False
-                if hydrogen.GetSymbol() == "N" and first_n_2 is False:
-                    first_n_2 = True
-                    sequential_n_2 = True
-                elif hydrogen.GetSymbol() == "N" and first_n_2 is True and sequential_n_2 is True:
-                    second_n_2 = True
+                b_1 = atom_list[j]
+                if j < len(atom_list)-1:
+                    b_2 = atom_list[j+1]
+                if b_1.GetSymbol() == "N" and b_2.GetSymbol() == "N":
                     h_half = True
-                if hydrogen.GetSymbol() == "H":
+                
+                if b_1.GetSymbol() == "H":
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
                         continue
                     print("o_half: ",o_half,"  h_half: ",h_half)
 
-                    hydro_index = hydrogen.GetIdx()
-                    oxy_pos = pos[oxy_index]
-                    hydro_pos = pos[hydro_index]
+                    oxy_pos = pos[i]
+                    hydro_pos = pos[j]
                     distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
                                          (oxy_pos[2]-hydro_pos[2])**2)
                     print(distance)
