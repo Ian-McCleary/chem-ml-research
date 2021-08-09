@@ -18,7 +18,7 @@ def find_half(bond_list, atom_list, previous, next):
         except (RuntimeError):
             print("post exception error")
             continue
-        if not connecting_atom == previous:
+        if not connecting_atom == next:
             if atom_list[connecting_atom].GetSymbol() == "N":
                 print("connecting: ", connecting_atom)
                 return connecting_atom
