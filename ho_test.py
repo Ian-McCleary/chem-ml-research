@@ -12,9 +12,11 @@ import math
 
 def find_half(bond_list, atom_list, index):
     for x in range(len(bond_list)):
-        print("calling")
-        connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], index)
-        print("connecting: ",connecting_atom)
+        try:
+            connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], index)
+            print("connecting: ",connecting_atom)
+        except (RuntimeError):
+            continue
         if connecting_atom in range(len(atom_list)):
             if atom_list[connecting_atom] == "N":
                 return connecting_atom
