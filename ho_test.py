@@ -48,7 +48,7 @@ for smile in smiles:
     bond_list = m.GetBonds()
     for i in range(len(atom_list)):
         #check which half oxygen is on
-        print(atom_list[i].GetSymbol())
+        #print(atom_list[i].GetSymbol())
         a_1 = atom_list[i]
         if i < len(atom_list)-1:
             a_2 = atom_list[i+1]
