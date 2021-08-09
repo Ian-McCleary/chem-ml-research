@@ -11,20 +11,20 @@ import math
 # Is it possible to check if atom index is the same in position array?
 # We may need to check that that O-H bonding is not happening on opposite sides of the N=N bond.
 
-def find_half(bond_list, atom_list, previous, next):
+def find_half(bond_list, atom_list, previous, current):
     for x in range(len(bond_list)):
         try:
-            connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], next)
+            connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], current)
         except (RuntimeError):
             print("post exception error")
             continue
-        if not connecting_atom == next:
+        if not connecting_atom == previous:
             if atom_list[connecting_atom].GetSymbol() == "N":
                 print("connecting: ", connecting_atom)
                 return connecting_atom
             else:
                 print("recursive call \n")
-                return find_half(bond_list, atom_list, next, connecting_atom)
+                return find_half(bond_list, atom_list, current, connecting_atom)
     print("this shouldnt print")
 
 
