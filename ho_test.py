@@ -69,9 +69,9 @@ for smile in smiles:
                     #recursively check the side of each hydrogen atom
                     answer = find_half(bond_list, atom_list, j, j)
                     #print("answer: ", answer)
-                    if atom_list[answer].getSymbol() == "N" and atom_list[answer+1].getSymbol() == "N":
+                    if atom_list[answer].GetSymbol() == "N" and atom_list[answer+1].GetSymbol() == "N":
                         h_half = False
-                    elif atom_list[answer].getSymbol() == "N" and atom_list[answer-1].getSymbol() == "N":
+                    elif atom_list[answer].GetSymbol() == "N" and atom_list[answer-1].GetSymbol() == "N":
                         h_half = True
                     else:
                         h_half = False
