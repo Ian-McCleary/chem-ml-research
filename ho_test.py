@@ -24,7 +24,7 @@ def find_half(bond_list, atom_list, previous, current):
                 return connecting_atom
             else:
                 return find_half(bond_list, atom_list, current, connecting_atom)
-
+    return current
     #print("this shouldnt print")
 
 lg = RDLogger.logger()
@@ -75,6 +75,7 @@ for smile in smiles:
                         h_half = True
                     else:
                         h_half = False
+
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
                         potential_cov = True
                     else:
