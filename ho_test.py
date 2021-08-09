@@ -25,7 +25,6 @@ def find_half(bond_list, atom_list, previous, current):
             else:
                 return find_half(bond_list, atom_list, current, connecting_atom)
     return current
-    #print("this shouldnt print")
 
 lg = RDLogger.logger()
 
@@ -88,10 +87,10 @@ for smile in smiles:
                     distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
                                          (oxy_pos[2]-hydro_pos[2])**2)
                     print(distance)
-                    if distance < 1.5 and potential_cov == True:
+                    if distance < 1.5 and potential_cov is True:
                         bonded_h = True
                         bonded_h_val = distance
-                    elif distance < 4 and potential_cov == False:
+                    elif distance < 4 and potential_cov is False:
                         failed = False
                         #check for nearby oxygen that could be closer
                         for oxygen in m.GetAtoms():

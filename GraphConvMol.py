@@ -45,9 +45,9 @@ def start_training():
     metric = dc.metrics.Metric(dc.metrics.rms_score)
     metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
 
-    model = param_optimization(
-        train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
-    #model = fixed_param_model(task_count)
+    #model = param_optimization(
+    #    train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
+    model = fixed_param_model(task_count)
     all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer, 100)
     k_fold_validation(model, data)
     file_name = "gc_50k_hyper_filtered.csv"
@@ -80,7 +80,7 @@ def param_optimization(train_dataset, valid_dataset, test_dataset, task_count, m
 # Parameter optimized for 10k, 1 task
 def fixed_param_model(task_count):
     #l_rate = 0.00001
-    l_rate = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 100)
+    l_rate = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 15)
     model = dc.models.GraphConvModel(
         n_tasks=task_count,
         number_atom_features=75,
