@@ -22,6 +22,7 @@ def find_half(bond_list, atom_list, start):
 
         if atom_list[a_1].GetSymbol() == "N" and atom_list[a_2].GetSymbol() == "N":
             return False
+        i+=1
     return True
 
 def find_nearest_oxygen_or_carbon(current, previous, bond_list, atom_list):
