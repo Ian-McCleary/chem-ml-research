@@ -87,7 +87,6 @@ def fixed_param_model(task_count):
         dense_layer_size=16,
         graph_conv_layers=[32, 32],
         dropouts=0.5,
-        learning_rate=l_rate,
         mode="regression"
     )
     return model
