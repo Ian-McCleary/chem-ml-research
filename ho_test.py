@@ -13,7 +13,7 @@ from rdkit import RDLogger
 def find_half(bond_list, atom_list, start):
     visited_list = []
     path = find_nearest_oxygen_or_carbon(start, start, bond_list, atom_list)
-    i = start
+    i = path
     while i < len(atom_list):
         a_1 = i
         if i < len(atom_list)-1:
