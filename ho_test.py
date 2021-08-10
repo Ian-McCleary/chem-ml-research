@@ -31,6 +31,8 @@ def find_next_atom(current, previous, bond_list, atom_list, visited):
                 continue
             elif atom_list[n].GetSymbol() == "N":
                 return n
+        else:
+             return -1
     return -1
 
 
