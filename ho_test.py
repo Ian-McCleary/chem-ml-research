@@ -17,7 +17,6 @@ def find_half(bond_list, atom_list, previous, current):
             connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], current)
         except (RuntimeError):
             continue
-        #print(atom_list[connecting_atom].GetSymbol())
         if not connecting_atom == previous:
             if atom_list[connecting_atom].GetSymbol() == "N":
                 #print("connecting: ", connecting_atom)
@@ -73,6 +72,7 @@ for smile in smiles:
                     elif atom_list[answer].GetSymbol() == "N" and atom_list[answer-1].GetSymbol() == "N":
                         h_half = True
                     else:
+                        print("failed h_half specification")
                         h_half = False
 
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
