@@ -12,28 +12,26 @@ from rdkit import RDLogger
 
 def find_half(bond_list, atom_list, start):
     visited_list = []
-    path = find_next_atom(start, start, bond_list, atom_list, visited_list)
+    path = find_nearest_oxygen_or_carbon(start, start, bond_list, atom_list)
     print(path)
     return path
 
 
-def find_next_atom(current, previous, bond_list, atom_list, visited):
+def find_nearest_oxygen_or_carbon(current, previous, bond_list, atom_list):
     for i in range(len(bond_list)):
         try:
             connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[i], current)
         except (RuntimeError):
             continue
-        if connecting_atom not in visited:
-            visited.append(connecting_atom)
+        if not connecting_atom == previous:
             print(atom_list[connecting_atom].GetSymbol())
-            n = find_next_atom(connecting_atom, current, bond_list, atom_list, visited)
+            if atom_list[connecting_atom].GetSymbol() == "O" or atom_list[connecting_atom].GetSymbol() == "C":
+                return connecting_atom
+            n = find_nearest_oxygen_or_carbon(connecting_atom, current, bond_list, atom_list)
             if n == -1:
                 continue
-            elif atom_list[n].GetSymbol() == "N":
+            elif atom_list[n].GetSymbol() == "O" or atom_list[n].GetSymbol() == "C":
                 return n
-        else:
-             return -1
-    return -1
 
 
 '''
