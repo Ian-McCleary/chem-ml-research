@@ -105,8 +105,8 @@ for smile in smiles:
                                 oxy2_index = oxygen.GetIdx()
                                 oxy2_pos = pos[oxy2_index]
                                 oxy_distance = math.sqrt(
-                                    (oxy_pos[0] - oxy2_pos[0])**2 + (oxy_pos[1] - oxy2_pos[1])**2 +
-                                    (oxy_pos[2] - oxy2_pos[2])**2)
+                                    (hydro_pos[0] - oxy2_pos[0])**2 + (hydro_pos[1] - oxy2_pos[1])**2 +
+                                    (hydro_pos[2] - oxy2_pos[2])**2)
                                 #print(oxy_distance)
                                 if oxy_distance < bonded_h_val or oxy_distance < distance:
                                     failed = False
