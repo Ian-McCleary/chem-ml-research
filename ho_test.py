@@ -8,6 +8,8 @@ from rdkit import RDLogger
 #          "COc1c(C(=O)O)ccc(\\N=N/c2ccc(-c3ccccc3)cc2C(=O)O)c1C(=O)O", "COc1cc(\\N=N/c2c(C)cccc2OC)c(C(=O)O)c(-c2ccccc2)c1", "COc1cc(\\N=N/c2ccc(C(=O)O)c(C#N)c2C(=O)O)ccc1C(=O)O",
 #          "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
 #TODO Implement backtracking instead of recursion. Check each possible route to the nearest N
+
+'''
 def find_half(bond_list, atom_list, start):
     path = find_next_atom(start, start, bond_list, atom_list)
     print(path)
@@ -50,7 +52,7 @@ def find_half(bond_list, atom_list, previous, current):
                     return next_run
 
 
-'''
+
 
 
 lg = RDLogger.logger()
