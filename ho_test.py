@@ -8,7 +8,30 @@ from rdkit import RDLogger
 #          "COc1c(C(=O)O)ccc(\\N=N/c2ccc(-c3ccccc3)cc2C(=O)O)c1C(=O)O", "COc1cc(\\N=N/c2c(C)cccc2OC)c(C(=O)O)c(-c2ccccc2)c1", "COc1cc(\\N=N/c2ccc(C(=O)O)c(C#N)c2C(=O)O)ccc1C(=O)O",
 #          "O=C(O)c1ccc(-c2ccccc2)c(\\N=N/c2ccc(-c3ccccc3)c(C(=O)O)c2C(=O)O)c1"]
 #TODO Implement backtracking instead of recursion. Check each possible route to the nearest N
+def find_half(bond_list, atom_list, start):
+    path = find_next_atom(start, bond_list, atom_list)
+    print(path)
+    return path
 
+
+def find_next_atom(current, bond_list, atom_list):
+    for i in range(len(bond_list)):
+        try:
+            connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[i], current)
+        except (RuntimeError):
+            continue
+        if not connecting_atom == current:
+            n = find_next_atom(connecting_atom, bond_list, atom_list)
+            if n == -1:
+                continue
+            elif atom_list[n].GetSymbol() == "N":
+                return n
+        elif connecting_atom == current:
+            return -1
+    return -1
+
+
+'''
 def find_half(bond_list, atom_list, previous, current):
     for x in range(len(bond_list)):
         try:
@@ -24,6 +47,10 @@ def find_half(bond_list, atom_list, previous, current):
                 next_run = find_half(bond_list, atom_list, current, connecting_atom)
                 if atom_list[next_run].GetSymbol() == "N":
                     return next_run
+
+
+'''
+
 
 lg = RDLogger.logger()
 
@@ -65,7 +92,7 @@ for smile in smiles:
                 b_1 = atom_list[j]
                 if b_1.GetSymbol() == "H":
                     #recursively check the side of each hydrogen atom
-                    answer = find_half(bond_list, atom_list, j, j)
+                    answer = find_half(bond_list, atom_list, j)
                     #print("answer: ", answer)
                     if atom_list[answer].GetSymbol() == "N" and atom_list[answer+1].GetSymbol() == "N":
                         h_half = False
