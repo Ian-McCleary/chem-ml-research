@@ -3,8 +3,8 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 import math
 from rdkit import RDLogger
-smiles = ["COc1cccc(\N=N/c2c(C)ccc(C#N)c2C)c1C(=O)O", "COc1cccc(C(=O)O)c1\N=N/c1ccc(C(=O)O)c(C(=O)O)c1C", "Cc1ccc(C(=O)O)c(\N=N/c2cccc(F)c2C(=O)O)c1F",
-"COc1c(C)cccc1\N=N/c1c(-c2ccccc2)ccc(F)c1C#N", "COc1cccc(\N=N/c2cc(OC)c(C(=O)O)c(-c3ccccc3)c2)c1OC", "COc1cccc(\N=N/c2cc(C#N)cc(OC)c2C(=O)O)c1C(=O)O"]
+smiles = ["COc1cccc(\\N=N/c2c(C)ccc(C#N)c2C)c1C(=O)O", "COc1cccc(C(=O)O)c1\\N=N/c1ccc(C(=O)O)c(C(=O)O)c1C", "Cc1ccc(C(=O)O)c(\\N=N/c2cccc(F)c2C(=O)O)c1F",
+"COc1c(C)cccc1\\N=N/c1c(-c2ccccc2)ccc(F)c1C#N", "COc1cccc(\\N=N/c2cc(OC)c(C(=O)O)c(-c3ccccc3)c2)c1OC", "COc1cccc(\\N=N/c2cc(C#N)cc(OC)c2C(=O)O)c1C(=O)O"]
 #TODO Implement backtracking instead of recursion. Check each possible route to the nearest N
 
 
