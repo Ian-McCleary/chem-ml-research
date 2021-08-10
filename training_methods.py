@@ -29,7 +29,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, t
     valid_riso = []
     valid_vert = []
     all_loss = []
-    for i in range(250):
+    for i in range(epochs):
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, [transformer], per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, [transformer], per_task_metrics=True)
@@ -98,7 +98,7 @@ def k_fold_validation(model, data):
         train_dataset, valid_dataset, test_dataset = splitter.train_valid_test_split(
             dataset=dataset, frac_train=0.70, frac_valid=0.15, frac_test=0.15, seed=dataseed)
         task_count = len(dataset.y[0])
-        #n_features = len(dataset.X[0])
+        n_features = len(dataset.X[0])
         metric = dc.metrics.Metric(dc.metrics.rms_score)
 
         model.fit(train_dataset, nb_epoch=50)

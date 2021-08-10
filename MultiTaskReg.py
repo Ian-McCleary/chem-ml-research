@@ -51,7 +51,7 @@ def start_training():
 
     #model = mtr_fixed_param_model(task_count=task_count, n_features=n_features)
     model = mtr_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric)
-    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer)
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer, 250)
     k_fold_validation(model, data)
     # hyperparameter_optimization()
     file_name = "mtr_50k_hyper_filtered.csv"

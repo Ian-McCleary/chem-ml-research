@@ -48,7 +48,7 @@ def start_training():
     #model = param_optimization(
     #    train_dataset, valid_dataset, test_dataset, task_count, metric, transformer)
     model = fixed_param_model(task_count)
-    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer, 100)
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer, 250)
     k_fold_validation(model, data)
     file_name = "gc_50k_hyper_filtered.csv"
     df = pd.DataFrame(list(
