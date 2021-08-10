@@ -14,8 +14,15 @@ def find_half(bond_list, atom_list, start):
     visited_list = []
     path = find_nearest_oxygen_or_carbon(start, start, bond_list, atom_list)
     print(path)
-    return path
+    i = start
+    while i < len(atom_list):
+        a_1 = i
+        if i < len(atom_list)-1:
+            a_2 = i+1
 
+        if atom_list[a_1].GetSymbol() == "N" and atom_list[a_2].GetSymbol() == "N":
+            return False
+    return True
 
 def find_nearest_oxygen_or_carbon(current, previous, bond_list, atom_list):
     for i in range(len(bond_list)):
@@ -99,15 +106,8 @@ for smile in smiles:
                 b_1 = atom_list[j]
                 if b_1.GetSymbol() == "H":
                     #recursively check the side of each hydrogen atom
-                    answer = find_half(bond_list, atom_list, j)
+                    h_half = find_half(bond_list, atom_list, j)
                     #print("answer: ", answer)
-                    if atom_list[answer].GetSymbol() == "N" and atom_list[answer+1].GetSymbol() == "N":
-                        h_half = False
-                    elif atom_list[answer].GetSymbol() == "N" and atom_list[answer-1].GetSymbol() == "N":
-                        h_half = True
-                    else:
-                        print("failed h_half specification")
-                        h_half = False
 
                     if (o_half is True and h_half is True) or (o_half is False and h_half is False):
                         potential_cov = True
