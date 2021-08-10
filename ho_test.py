@@ -21,7 +21,7 @@ def find_next_atom(current, previous, bond_list, atom_list):
         except (RuntimeError):
             continue
         if not connecting_atom == previous:
-            print(connecting_atom)
+            print(atom_list[connecting_atom].GetSymbol())
             n = find_next_atom(connecting_atom, current, bond_list, atom_list)
             if n == -1:
                 continue
