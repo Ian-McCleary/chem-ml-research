@@ -13,7 +13,6 @@ from rdkit import RDLogger
 def find_half(bond_list, atom_list, start):
     visited_list = []
     path = find_nearest_oxygen_or_carbon(start, start, bond_list, atom_list)
-    print(path)
     i = start
     while i < len(atom_list):
         a_1 = i
@@ -32,7 +31,6 @@ def find_nearest_oxygen_or_carbon(current, previous, bond_list, atom_list):
         except (RuntimeError):
             continue
         if not connecting_atom == previous:
-            print(atom_list[connecting_atom].GetSymbol())
             if atom_list[connecting_atom].GetSymbol() == "O" or atom_list[connecting_atom].GetSymbol() == "C":
                 return connecting_atom
             n = find_nearest_oxygen_or_carbon(connecting_atom, current, bond_list, atom_list)
