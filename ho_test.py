@@ -50,6 +50,9 @@ def find_half(bond_list, atom_list, previous, current):
                 next_run = find_half(bond_list, atom_list, current, connecting_atom)
                 if atom_list[next_run].GetSymbol() == "N":
                     return next_run
+        elif connecting_atom == previous:
+            continue
+    return -1
 
 
 
