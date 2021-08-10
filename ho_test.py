@@ -40,30 +40,6 @@ def find_nearest_oxygen_or_carbon(current, previous, bond_list, atom_list):
                 return n
 
 
-'''
-def find_half(bond_list, atom_list, previous, current):
-    for x in range(len(bond_list)):
-        try:
-            connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], current)
-        except (RuntimeError):
-            continue
-        print(atom_list[connecting_atom].GetSymbol())
-        if not connecting_atom == previous:
-            if atom_list[connecting_atom].GetSymbol() == "N":
-                #print("connecting: ", connecting_atom)
-                return connecting_atom
-            else:
-                next_run = find_half(bond_list, atom_list, current, connecting_atom)
-                if atom_list[next_run].GetSymbol() == "N":
-                    return next_run
-        elif connecting_atom == previous:
-            continue
-    return -1
-    '''
-
-
-
-
 
 lg = RDLogger.logger()
 
