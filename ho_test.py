@@ -23,8 +23,9 @@ def find_half(bond_list, atom_list, previous, current):
                 #print("connecting: ", connecting_atom)
                 return connecting_atom
             else:
-                return find_half(bond_list, atom_list, current, connecting_atom)
-    return current
+                next_run = find_half(bond_list, atom_list, current, connecting_atom)
+                if atom_list[next_run].GetSymbol() == "N":
+                    return next_run
 
 lg = RDLogger.logger()
 
