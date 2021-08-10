@@ -95,7 +95,7 @@ for smile in smiles:
                 b_1 = atom_list[j]
                 if b_1.GetSymbol() == "H":
                     #recursively check the side of each hydrogen atom
-                    answer = find_half(bond_list, atom_list, j)
+                    answer = find_half(bond_list, atom_list, j, j)
                     #print("answer: ", answer)
                     if atom_list[answer].GetSymbol() == "N" and atom_list[answer+1].GetSymbol() == "N":
                         h_half = False
