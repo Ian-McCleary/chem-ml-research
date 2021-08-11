@@ -59,7 +59,7 @@ lg = RDLogger.logger()
 
 lg.setLevel(RDLogger.CRITICAL)
 #smiles = ["COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O"]
-for smile in smiles:
+for smile in passed_smiles:
     print(smile)
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
