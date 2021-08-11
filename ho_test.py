@@ -106,21 +106,25 @@ for smile in smiles:
                             #check for nearby oxygen that could be closer
                             for oxygen in m.GetAtoms():
                                 if oxygen.GetSymbol() == "O" and not oxygen.GetIdx() == i:
-                                    oxy2_index = oxygen.GetIdx()
-                                    oxy2_pos = pos[oxy2_index]
-                                    oxy_distance = math.sqrt(
-                                        (oxy2_pos[0] - oxy2_pos[0])**2 + (oxy2_pos[1] - oxy2_pos[1])**2 +
-                                        (oxy2_pos[2] - oxy2_pos[2])**2)
-                                    #print(oxy_distance)
-                                    if oxy_distance < hydrogen_distance:
-                                        failed = False
-                                        break
+                                    if not has_covalent_hydrogen_bond(oxygen.GetIdx(), atom_list, bond_list):
+                                        oxy2_index = oxygen.GetIdx()
+                                        oxy2_pos = pos[oxy2_index]
+                                        oxy_distance = math.sqrt(
+                                            (oxy2_pos[0] - oxy2_pos[0])**2 + (oxy2_pos[1] - oxy2_pos[1])**2 +
+                                            (oxy2_pos[2] - oxy2_pos[2])**2)
+                                        #print(oxy_distance)
+                                        if oxy_distance < hydrogen_distance:
+                                            failed = False
+                                            break
+                                        else:
+                                            failed = True
                                     else:
                                         failed = True
-                            if failed == True:
-                                print("Failed")
-                                break
-                            else:
-                                print("Passed")
+                                if failed == True:
+                                    print("Failed")
+                                    break
+                                else:
+                                    print("Passed")
+
 
 
