@@ -38,6 +38,17 @@ def find_nearest_oxygen_or_carbon(current, previous, bond_list, atom_list):
             elif atom_list[n].GetSymbol() == "O" or atom_list[n].GetSymbol() == "C":
                 return n
 
+def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
+    for i in range(len(bond_list)):
+        try:
+            connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[i], oxygen_index)
+        except (RuntimeError):
+            continue
+        if atom_list[connecting_atom].GetSymbol() == "H":
+            return True
+        else:
+            continue
+    return False
 
 
 lg = RDLogger.logger()
@@ -72,7 +83,7 @@ for smile in smiles:
             oxy_count+=1
             #print("\n")
             #print("Oxygen Number: " + str(oxy_count))
-            num_bonded_hydrogens = 0
+            has_covalent_bond = has_covalent_hydrogen_bond(i, atom_list, bond_list)
             h_half = False
             bonded_h = False
             bonded_h_val = 0
@@ -83,41 +94,33 @@ for smile in smiles:
                     h_half = find_half(bond_list, atom_list, j)
                     #print("answer: ", answer)
 
-                    if (o_half is True and h_half is True) or (o_half is False and h_half is False):
-                        potential_cov = True
-                    else:
-                        potential_cov = False
+                    if not (o_half is True and h_half is True) or not (o_half is False and h_half is False):
 
-                    #print("o_half: ",o_half,"  h_half: ",h_half)
-
-                    oxy_pos = pos[i]
-                    hydro_pos = pos[j]
-                    distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
-                                         (oxy_pos[2]-hydro_pos[2])**2)
-                    #print(distance)
-                    if distance < 1.5 and potential_cov is True:
-                        bonded_h = True
-                        bonded_h_val = distance
-                    elif distance < 4 and potential_cov is False:
-                        failed = False
-                        #check for nearby oxygen that could be closer
-                        for oxygen in m.GetAtoms():
-                            if oxygen.GetSymbol() == "O" and not oxygen.GetIdx() == i:
-                                oxy2_index = oxygen.GetIdx()
-                                oxy2_pos = pos[oxy2_index]
-                                oxy_distance = math.sqrt(
-                                    (oxy2_pos[0] - oxy2_pos[0])**2 + (oxy2_pos[1] - oxy2_pos[1])**2 +
-                                    (oxy2_pos[2] - oxy2_pos[2])**2)
-                                #print(oxy_distance)
-                                if oxy_distance < bonded_h_val or oxy_distance < distance:
-                                    failed = False
-                                    break
-                                else:
-                                    failed = True
-                        if failed == True:
-                            print("Failed")
-                            break
-                        else:
-                            print("Passed")
+                        oxy_pos = pos[i]
+                        hydro_pos = pos[j]
+                        hydrogen_distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
+                                            (oxy_pos[2]-hydro_pos[2])**2)
+                        #print(distance)
+                        if hydrogen_distance < 4 and has_covalent_bond is True:
+                            failed = False
+                            #check for nearby oxygen that could be closer
+                            for oxygen in m.GetAtoms():
+                                if oxygen.GetSymbol() == "O" and not oxygen.GetIdx() == i:
+                                    oxy2_index = oxygen.GetIdx()
+                                    oxy2_pos = pos[oxy2_index]
+                                    oxy_distance = math.sqrt(
+                                        (oxy2_pos[0] - oxy2_pos[0])**2 + (oxy2_pos[1] - oxy2_pos[1])**2 +
+                                        (oxy2_pos[2] - oxy2_pos[2])**2)
+                                    #print(oxy_distance)
+                                    if oxy_distance < hydrogen_distance:
+                                        failed = False
+                                        break
+                                    else:
+                                        failed = True
+                            if failed == True:
+                                print("Failed")
+                                break
+                            else:
+                                print("Passed")
 
 
