@@ -10,6 +10,7 @@ passed_smiles = ["COc1cc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C#N)ccc1C(=O)O", "Cc1ccc(\\
                  "N#Cc1ccccc1\\N=N/c1cc(C(=O)O)ccc1-c1ccccc1", "O=C(O)c1cc(F)c(\\N=N/c2cccc(F)c2)c(C(=O)O)c1", "COc1ccc(OC)c(\\N=N/c2c(F)ccc(-c3ccccc3)c2C#N)c1"]
 
 
+# false = first half, true = second half
 def find_half(bond_list, atom_list, start):
     visited_list = []
     path = find_nearest_oxygen_or_carbon(start, start, bond_list, atom_list)
@@ -40,6 +41,7 @@ def find_nearest_oxygen_or_carbon(current, previous, bond_list, atom_list):
             elif atom_list[n].GetSymbol() == "O" or atom_list[n].GetSymbol() == "C":
                 return n
 
+
 def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
     for i in range(len(bond_list)):
         try:
@@ -61,33 +63,22 @@ for smile in smiles:
     print(smile)
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
-    #add_h_smile = Chem.rdmolfiles.MolToSmiles(mol=m, allHsExplicit=True)
-    #print(add_h_smile)
-    #m1 = Chem.MolFromSmiles(add_h_smile)
     status = AllChem.EmbedMolecule(m)
     conformer = m.GetConformer()
     pos = conformer.GetPositions()
     oxy_count = 0
-    # false = first half, true = second half
-    o_half = False
+
     atom_list = m.GetAtoms()
     bond_list = m.GetBonds()
     for i in range(len(atom_list)):
         #check which half oxygen is on
-        #print(atom_list[i].GetSymbol())
-        a_1 = atom_list[i]
-        if i < len(atom_list)-1:
-            a_2 = atom_list[i+1]
-        if a_1.GetSymbol() == "N" and a_2.GetSymbol() == "N":
-            o_half = True
-        if a_1.GetSymbol() == "O":
-
+        if atom_list[i].GetSymbol() == "O":
+            o_half = find_half(bond_list, atom_list, i)
             oxy_count+=1
             #print("\n")
             #print("Oxygen Number: " + str(oxy_count))
             has_covalent_bond = has_covalent_hydrogen_bond(i, atom_list, bond_list)
             h_half = False
-            bonded_h = False
             bonded_h_val = 0
             for j in range(len(atom_list)):
                 b_1 = atom_list[j]
