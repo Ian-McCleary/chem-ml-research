@@ -72,6 +72,7 @@ for smile in passed_smiles:
     bond_list = m.GetBonds()
     for i in range(len(atom_list)):
         #check which half oxygen is on
+        print(atom_list[i].GetSymbol())
         if atom_list[i].GetSymbol() == "O":
             o_half = find_half(bond_list, atom_list, i)
             oxy_count+=1
