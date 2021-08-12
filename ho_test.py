@@ -149,11 +149,12 @@ for smile in smiles:
                                             (oxy_pos[2]-hydro_pos[2])**2)
                         #print(distance)
                         if hydrogen_distance < 4.3 and has_covalent_bond is True:
-                            nearby_o = nearest_oxygen_distance(atom_list, pos, oxy_pos)
-                            if nearby_o < hydrogen_distance and nearby_o < 2.3:
-                                failed = False
-                            else:
-                                failed = True
+                            failed = True
+                            #nearby_o = nearest_oxygen_distance(atom_list, pos, oxy_pos)
+                            #if nearby_o < hydrogen_distance and nearby_o < 2.3:
+                            #    failed = False
+                            #else:
+                            #    failed = True
                         if failed == True:
                             print("Failed: ", oxy_count,"  ", hydrogen_distance)
                             break
