@@ -11,9 +11,9 @@ passed_smiles = ["COc1cc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C#N)ccc1C(=O)O", "Cc1ccc(\\
 
 
 # false = first half, true = second half
-def find_half(bond_list, atom_list, start):
+def find_half(atom_list, bond_list, start, tracking_list):
     visited_list = []
-    path = find_nearest_oxygen_or_carbon(start, start, bond_list, atom_list)
+    path = find_nearest_oxygen_or_carbon(atom_list, bond_list, start, tracking_list)
     i = path
     while i < len(atom_list):
         a_1 = i
@@ -26,19 +26,18 @@ def find_half(bond_list, atom_list, start):
     return True
 
 
-def find_nearest_oxygen_or_carbon(current, previous, bond_list, atom_list):
+def find_nearest_oxygen_or_carbon(atom_list, bond_list, start, tracking_list):
+    tracking_list.append(start)
     for i in range(len(bond_list)):
         try:
-            connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[i], current)
+            connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[i], start)
         except (RuntimeError):
             continue
-        if not connecting_atom == previous:
+        if connecting_atom not in tracking_list:
             if atom_list[connecting_atom].GetSymbol() == "O" or atom_list[connecting_atom].GetSymbol() == "C":
                 return connecting_atom
-            n = find_nearest_oxygen_or_carbon(connecting_atom, current, bond_list, atom_list)
-            if n == -1:
-                continue
-            elif atom_list[n].GetSymbol() == "O" or atom_list[n].GetSymbol() == "C":
+            n = find_nearest_oxygen_or_carbon(atom_list, bond_list, connecting_atom, tracking_list)
+            if atom_list[n].GetSymbol() == "O" or atom_list[n].GetSymbol() == "C":
                 return n
 
 
@@ -123,9 +122,11 @@ for smile in smiles:
                 b_1 = atom_list[j]
                 if b_1.GetSymbol() == "H":
                     #recursively check the side of each hydrogen atom
-                    h_half = find_half(bond_list, atom_list, j)
-                    track_list = []
-                    near_o_c = find_nearest_oxygen_or_carbon(j, j, bond_list, atom_list)
+                    track_list, tracklist1 = [], []
+                    h_half = find_half(atom_list, bond_list, j, tracklist1)
+                    track_list1 = []
+                    near_o_c = find_nearest_oxygen_or_carbon(bond_list, atom_list, j, tracklist1)
+                    print(near_o_c)
                     h_test = find_half2(atom_list, bond_list, near_o_c, track_list)
                     print(h_test, h_half)
                     #print("answer: ", answer)
