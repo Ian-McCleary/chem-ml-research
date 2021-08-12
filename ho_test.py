@@ -64,7 +64,7 @@ def backtracking_find_half(atom_list, bond_list, start, tracking_list):
             bond_type = bond_list[x].GetBondTypeAsDouble()
         except (RuntimeError):
             continue
-        if atom_list[connecting_n].GetSymbol() == "N" and bond_type == "2.0":
+        if atom_list[connecting_n].GetSymbol() == "N":
             has_connecting_n = True
     if atom_list[start].GetSymbol() == "N" and has_connecting_n is True:
         return start
