@@ -96,7 +96,7 @@ for smile in passed_smiles:
                         if hydrogen_distance < 4 and has_covalent_bond is True:
                             failed = True
                         if failed == True:
-                            print("Failed: ", hydrogen_distance)
+                            print("Failed: ", oxy_count,"  ", hydrogen_distance)
                             break
 #                        else:
 #t                            print("Passed")
