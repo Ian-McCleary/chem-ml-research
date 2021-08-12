@@ -123,6 +123,7 @@ def start_filtering():
                         near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, track_list)
                         print("tracklist: ",track_list)
                         track_list = []
+                        print("tracklist: ", track_list)
                         h_half = find_half2(atom_list, bond_list, near_o_c, track_list)
                         # print("answer: ", answer)
                         # print(o_half, h_half)
