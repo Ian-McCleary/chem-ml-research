@@ -90,6 +90,18 @@ def find_half2(atom_list, bond_list, start, tracking_list):
         return True
 
 
+def nearest_oxygen_distance(atom_list, pos_array, oxy_pos):
+    min_distance = 1000
+    for x in range(len(atom_list)):
+        if atom_list[x].GetSymbol() == "O":
+            oxy2_pos = pos_array[x]
+            oxygen_distance = math.sqrt((oxy_pos[0] - oxy2_pos[0]) ** 2 + (oxy_pos[1] - oxy2_pos[1]) ** 2 +
+                                          (oxy_pos[2] - oxy2_pos[2]) ** 2)
+            if oxygen_distance < min_distance:
+                min_distance = oxygen_distance
+    return min_distance
+
+
 
 lg = RDLogger.logger()
 
@@ -137,7 +149,11 @@ for smile in passed_smiles:
                                             (oxy_pos[2]-hydro_pos[2])**2)
                         #print(distance)
                         if hydrogen_distance < 4.3 and has_covalent_bond is True:
-                            failed = True
+                            nearby_o = nearest_oxygen_distance(atom_list, pos, oxy_pos)
+                            if nearby_o < hydrogen_distance:
+                                failed = false
+                            else:
+                                failed = True
                         if failed == True:
                             print("Failed: ", oxy_count,"  ", hydrogen_distance)
                             break
