@@ -85,7 +85,7 @@ for smile in passed_smiles:
                     #recursively check the side of each hydrogen atom
                     h_half = find_half(bond_list, atom_list, j)
                     #print("answer: ", answer)
-
+                    print(o_half, h_half)
                     if not (o_half is True and h_half is True) or not (o_half is False and h_half is False):
                         failed = False
                         oxy_pos = pos[i]
