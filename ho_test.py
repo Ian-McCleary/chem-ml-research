@@ -126,7 +126,7 @@ for smile in smiles:
                     track_list, tracklist1 = [], []
                     h_half = find_half(atom_list, bond_list, j, tracklist1)
                     track_list1 = []
-                    near_o_c = find_nearest_oxygen_or_carbon(bond_list, atom_list, j, tracklist1)
+                    near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, tracklist1)
                     print(near_o_c)
                     h_test = find_half2(atom_list, bond_list, near_o_c, track_list)
                     print(h_test, h_half)
