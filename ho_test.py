@@ -113,7 +113,7 @@ for smile in smiles:
             o_half = find_half(bond_list, atom_list, i)
             tracking_list = []
             test_half = find_half2(atom_list, bond_list, i, tracking_list)
-            print(i, test_half, o_half)
+            #print(i, test_half, o_half)
             oxy_count+=1
             #print("\n")
             #print("Oxygen Number: " + str(oxy_count))
@@ -124,6 +124,9 @@ for smile in smiles:
                 if b_1.GetSymbol() == "H":
                     #recursively check the side of each hydrogen atom
                     h_half = find_half(bond_list, atom_list, j)
+                    track_list = []
+                    h_test = find_half2(atom_list, bond_list, j, track_list)
+                    print(h_test, h_half)
                     #print("answer: ", answer)
                     #print(o_half, h_half)
                     if (not o_half is True and h_half is True) or (not o_half is False and h_half is False):
