@@ -94,26 +94,12 @@ for smile in passed_smiles:
                                             (oxy_pos[2]-hydro_pos[2])**2)
                         #print(distance)
                         if hydrogen_distance < 4 and has_covalent_bond is True:
-                            failed = False
-                            #check for nearby oxygen that could be closer
-                            for oxygen in m.GetAtoms():
-                                if oxygen.GetSymbol() == "O" and not oxygen.GetIdx() == i:
-                                    oxy2_index = oxygen.GetIdx()
-                                    oxy2_pos = pos[oxy2_index]
-                                    oxy_distance = math.sqrt(
-                                        (hydro_pos[0] - oxy2_pos[0])**2 + (hydro_pos[1] - oxy2_pos[1])**2 +
-                                        (hydro_pos[2] - oxy2_pos[2])**2)
-                                    #print(oxy_distance)
-                                    if oxy_distance < hydrogen_distance:
-                                        failed = False
-                                        break
-                                    else:
-                                        failed = True
-                                if failed == True:
-                                    print("Failed")
-                                    break
-                                else:
-                                    print("Passed")
+                            failed = True
+                        if failed == True:
+                            print("Failed")
+                            break
+                        else:
+                            print("Passed")
 
 
 
