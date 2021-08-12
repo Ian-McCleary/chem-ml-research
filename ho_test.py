@@ -1,4 +1,5 @@
 import numpy as np
+import argparse
 from rdkit import Chem
 from rdkit.Chem import AllChem
 import math
@@ -66,7 +67,7 @@ def backtracking_find_half(atom_list, bond_list, start, tracking_list):
         return -1
 
 # false = first half, true = second half
-def find_half2(atom_list, bond_list, start, tracking_list):
+def find_half(atom_list, bond_list, start, tracking_list):
     n_pos = backtracking_find_half(atom_list, bond_list, start, tracking_list)
     if atom_list[n_pos].GetSymbol() == "N" and atom_list[n_pos+1].GetSymbol() == "N":
         return False
@@ -107,7 +108,7 @@ def start_filtering():
             # print(atom_list[i].GetSymbol())
             if atom_list[i].GetSymbol() == "O":
                 track = []
-                o_half = find_half2(atom_list, bond_list, i, track)
+                o_half = find_half(atom_list, bond_list, i, track)
                 tracking_list = []
                 oxy_count += 1
                 # print("\n")
@@ -121,10 +122,8 @@ def start_filtering():
                         # recursively check the side of each hydrogen atom
                         track_list = []
                         near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, track_list)
-                        print("tracklist: ",track_list)
                         track_list = []
-                        print("tracklist: ", track_list)
-                        h_half = find_half2(atom_list, bond_list, near_o_c, track_list)
+                        h_half = find_half(atom_list, bond_list, near_o_c, track_list)
                         # print("answer: ", answer)
                         # print(o_half, h_half)
                         if (not o_half is True and h_half is True) or (not o_half is False and h_half is False):
@@ -135,7 +134,7 @@ def start_filtering():
                                 (oxy_pos[0] - hydro_pos[0]) ** 2 + (oxy_pos[1] - hydro_pos[1]) ** 2 +
                                 (oxy_pos[2] - hydro_pos[2]) ** 2)
                             # print(distance)
-                            if hydrogen_distance < 4.3 and has_covalent_bond is True:
+                            if hydrogen_distance < 4.2 and has_covalent_bond is True:
                                 failed = True
                                 # nearby_o = nearest_oxygen_distance(atom_list, pos, oxy_pos)
                                 # if nearby_o < hydrogen_distance and nearby_o < 2.3:
@@ -145,12 +144,22 @@ def start_filtering():
                             if failed == True:
                                 print("Failed: ", oxy_count, "  ", hydrogen_distance)
                                 break
-    #                        else:
-    # t                            print("Passed")
 
+
+# Args parser, run 1 smile string at a time
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("smiles_string",
+                        help="The smile string you would like to use",
+                        type=str,
+                        default=""
+                        )
+    return parser.parse_args()
 
 def main():
-    # args = parse_args()
+    args = parse_args()
+    #if args[0] == "":
+    #    raise ValueError("First arg must be a single smile string")
     start_filtering()
 
 
