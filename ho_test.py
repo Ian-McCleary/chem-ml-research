@@ -58,7 +58,7 @@ def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
 def backtracking_find_half(atom_list, bond_list, start, tracking_list):
     tracking_list.append(start)
     has_connecting_n = False
-    print(atom_list[start].GetSymbol())
+    #print(atom_list[start].GetSymbol())
     for x in range(len(bond_list)):
         try:
             connecting_n = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], start)
