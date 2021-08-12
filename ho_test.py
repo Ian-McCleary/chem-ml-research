@@ -55,6 +55,28 @@ def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
     return False
 
 
+def backtracking_find_half(atom_list, bond_list, start):
+    has_connecting_n = False
+    for x in range(len(bond_list)):
+        try:
+            connecting_n = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], start)
+        except (RuntimeError):
+            continue
+        if atom_list[connecting_n].GetSymbol() == "N":
+            has_connecting_n = True
+    if atom_list[start].GetSymbol() == "N" and has_connecting_n is True:
+        return start
+    else:
+        for y in range(len(bond_list)):
+            try:
+                connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[y], start)
+            except (RuntimeError):
+                continue
+            return_val = backtracking_find_half(atom_list, bond_list, connecting_atom)
+            if not return_val == -1:
+                return return_val
+        return -1
+
 lg = RDLogger.logger()
 
 lg.setLevel(RDLogger.CRITICAL)
@@ -72,9 +94,11 @@ for smile in smiles:
     bond_list = m.GetBonds()
     for i in range(len(atom_list)):
         #check which half oxygen is on
-        print(atom_list[i].GetSymbol())
+        #print(atom_list[i].GetSymbol())
         if atom_list[i].GetSymbol() == "O":
             o_half = find_half(bond_list, atom_list, i)
+            test_half = backtracking_find_half(atom_list, bond_list, i)
+            print(test_half, o_half)
             oxy_count+=1
             #print("\n")
             #print("Oxygen Number: " + str(oxy_count))
