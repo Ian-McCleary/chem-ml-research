@@ -122,6 +122,7 @@ for smile in smiles:
             for j in range(len(atom_list)):
                 b_1 = atom_list[j]
                 if b_1.GetSymbol() == "H":
+
                     #recursively check the side of each hydrogen atom
                     track_list, tracklist1 = [], []
                     h_half = find_half(atom_list, bond_list, j, tracklist1)
