@@ -151,7 +151,7 @@ for smile in passed_smiles:
                         if hydrogen_distance < 4.3 and has_covalent_bond is True:
                             nearby_o = nearest_oxygen_distance(atom_list, pos, oxy_pos)
                             if nearby_o < hydrogen_distance:
-                                failed = false
+                                failed = False
                             else:
                                 failed = True
                         if failed == True:
