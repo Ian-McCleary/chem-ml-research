@@ -75,7 +75,7 @@ def backtracking_find_half(atom_list, bond_list, start, tracking_list):
             except (RuntimeError):
                 continue
             if connecting_atom not in tracking_list:
-                return_val = backtracking_find_half(atom_list, bond_list, connecting_atom)
+                return_val = backtracking_find_half(atom_list, bond_list, connecting_atom, tracking_list)
                 if not return_val == -1:
                     return return_val
                 else:
