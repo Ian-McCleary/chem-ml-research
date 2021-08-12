@@ -136,7 +136,7 @@ for smile in smiles:
                         hydrogen_distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
                                             (oxy_pos[2]-hydro_pos[2])**2)
                         #print(distance)
-                        if hydrogen_distance < 4 and has_covalent_bond is True:
+                        if hydrogen_distance < 4.3 and has_covalent_bond is True:
                             failed = True
                         if failed == True:
                             print("Failed: ", oxy_count,"  ", hydrogen_distance)
