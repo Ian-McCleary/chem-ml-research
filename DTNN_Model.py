@@ -45,8 +45,8 @@ def start_training():
     all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, transformer, 150)
     k_fold_validation(model, data)
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3], all_loss[4], all_loss[5], all_loss[6], all_loss[7])),columns=[
-                          "train_mean", "train_eiso", "train_riso", "train_vert", "valid_mean", "valid_eiso",
-                          "valid_riso", "valid_vert"])
+                          "train_mean", "train_riso", "train_eiso", "train_vert", "valid_mean", "valid_riso",
+                          "valid_eiso", "valid_vert"])
     df.to_csv("dtnn_50k_hyper_filtered.csv")
 
 def dtnn_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
