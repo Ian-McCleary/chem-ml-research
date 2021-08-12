@@ -125,7 +125,8 @@ for smile in smiles:
                     #recursively check the side of each hydrogen atom
                     h_half = find_half(bond_list, atom_list, j)
                     track_list = []
-                    h_test = find_half2(atom_list, bond_list, j, track_list)
+                    near_o_c = find_nearest_oxygen_or_carbon(j, j, bond_list, atom_list)
+                    h_test = find_half2(atom_list, bond_list, near_o_c, track_list)
                     print(h_test, h_half)
                     #print("answer: ", answer)
                     #print(o_half, h_half)
