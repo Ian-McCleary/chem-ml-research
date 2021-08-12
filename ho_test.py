@@ -87,7 +87,7 @@ for smile in passed_smiles:
                     #print("answer: ", answer)
 
                     if not (o_half is True and h_half is True) or not (o_half is False and h_half is False):
-
+                        fail = False
                         oxy_pos = pos[i]
                         hydro_pos = pos[j]
                         hydrogen_distance = math.sqrt((oxy_pos[0]-hydro_pos[0])**2 + (oxy_pos[1]-hydro_pos[1])**2 +
