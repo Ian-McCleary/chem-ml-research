@@ -112,8 +112,8 @@ for smile in smiles:
             track = []
             o_half = find_half(atom_list, bond_list, i, track)
             tracking_list = []
-            test_half = find_half2(atom_list, bond_list, i, tracking_list)
-            print(i, test_half, o_half)
+            #test_half = find_half2(atom_list, bond_list, i, tracking_list)
+            #print(i, test_half, o_half)
             oxy_count+=1
             #print("\n")
             #print("Oxygen Number: " + str(oxy_count))
@@ -128,9 +128,9 @@ for smile in smiles:
                     h_half = find_half(atom_list, bond_list, j, tracklist1)
                     track_list1 = []
                     near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, tracklist1)
-                    #print(near_o_c)
+                    print(near_o_c)
                     h_test = find_half2(atom_list, bond_list, near_o_c, track_list)
-                    #print(h_test, h_half)
+                    print(h_test, h_half)
                     #print("answer: ", answer)
                     #print(o_half, h_half)
                     if (not o_half is True and h_half is True) or (not o_half is False and h_half is False):
