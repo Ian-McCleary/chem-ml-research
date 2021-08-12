@@ -53,6 +53,7 @@ def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
             continue
     return False
 
+
 #Test all possible bond paths to the N=N bond.
 def backtracking_find_half(atom_list, bond_list, start, tracking_list):
     tracking_list.append(start)
@@ -110,10 +111,8 @@ for smile in smiles:
         #print(atom_list[i].GetSymbol())
         if atom_list[i].GetSymbol() == "O":
             track = []
-            o_half = find_half(atom_list, bond_list, i, track)
+            o_half = find_half2(atom_list, bond_list, i, track)
             tracking_list = []
-            #test_half = find_half2(atom_list, bond_list, i, tracking_list)
-            #print(i, test_half, o_half)
             oxy_count+=1
             #print("\n")
             #print("Oxygen Number: " + str(oxy_count))
@@ -124,13 +123,10 @@ for smile in smiles:
                 if b_1.GetSymbol() == "H":
 
                     #recursively check the side of each hydrogen atom
-                    track_list, tracklist1 = [], []
-                    h_half = find_half(atom_list, bond_list, j, tracklist1)
-                    track_list1 = []
-                    near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, tracklist1)
-                    print(near_o_c)
-                    h_test = find_half2(atom_list, bond_list, near_o_c, track_list)
-                    print(h_test, h_half)
+                    track_list = []
+                    near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, track_list)
+                    track_list = []
+                    h_half = find_half2(atom_list, bond_list, near_o_c, track_list)
                     #print("answer: ", answer)
                     #print(o_half, h_half)
                     if (not o_half is True and h_half is True) or (not o_half is False and h_half is False):
