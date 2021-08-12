@@ -103,7 +103,7 @@ for smile in smiles:
         if atom_list[i].GetSymbol() == "O":
             o_half = find_half(bond_list, atom_list, i)
             tracking_list = []
-            test_half = backtracking_find_half(atom_list, bond_list, i)
+            test_half = backtracking_find_half(atom_list, bond_list, i, tracking_list)
             print(test_half, o_half)
             oxy_count+=1
             #print("\n")
