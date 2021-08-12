@@ -73,9 +73,10 @@ def backtracking_find_half(atom_list, bond_list, start):
                 connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[y], start)
             except (RuntimeError):
                 continue
-            return_val = backtracking_find_half(atom_list, bond_list, connecting_atom)
-            if not return_val == -1:
-                return return_val
+            if not connecting_atom == start:
+                return_val = backtracking_find_half(atom_list, bond_list, connecting_atom)
+                if not return_val == -1:
+                    return return_val
         return -1
 
 lg = RDLogger.logger()
