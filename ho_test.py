@@ -58,7 +58,7 @@ def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
 def backtracking_find_half(atom_list, bond_list, start, tracking_list):
     tracking_list.append(start)
     has_connecting_n = False
-    #print(atom_list[start].GetSymbol())
+    print(atom_list[start].GetSymbol())
     for x in range(len(bond_list)):
         try:
             connecting_n = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], start)
@@ -125,8 +125,8 @@ for smile in smiles:
                     #recursively check the side of each hydrogen atom
                     h_half = find_half(bond_list, atom_list, j)
                     track_list = []
-                    near_o_c = find_nearest_oxygen_or_carbon(j, j, bond_list, atom_list)
-                    h_test = find_half2(atom_list, bond_list, near_o_c, track_list)
+                    #near_o_c = find_nearest_oxygen_or_carbon(j, j, bond_list, atom_list)
+                    h_test = find_half2(atom_list, bond_list, j, track_list)
                     print(h_test, h_half)
                     #print("answer: ", answer)
                     #print(o_half, h_half)
