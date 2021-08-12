@@ -54,7 +54,7 @@ def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
             continue
     return False
 
-
+#Test all possible bond paths to the N=N bond.
 def backtracking_find_half(atom_list, bond_list, start, tracking_list):
     tracking_list.append(start)
     has_connecting_n = False
@@ -62,9 +62,10 @@ def backtracking_find_half(atom_list, bond_list, start, tracking_list):
     for x in range(len(bond_list)):
         try:
             connecting_n = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], start)
+            bond_type = bond_list[x].GetBondTypeAsDouble()
         except (RuntimeError):
             continue
-        if atom_list[connecting_n].GetSymbol() == "N":
+        if atom_list[connecting_n].GetSymbol() == "N" and bond_type == "2.0":
             has_connecting_n = True
     if atom_list[start].GetSymbol() == "N" and has_connecting_n is True:
         return start
