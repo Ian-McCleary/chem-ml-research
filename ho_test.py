@@ -112,7 +112,7 @@ for smile in smiles:
             o_half = find_half(bond_list, atom_list, i)
             tracking_list = []
             test_half = find_half2(atom_list, bond_list, i, tracking_list)
-            print(test_half, o_half)
+            print(i, test_half, o_half)
             oxy_count+=1
             #print("\n")
             #print("Oxygen Number: " + str(oxy_count))
