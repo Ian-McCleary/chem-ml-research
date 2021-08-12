@@ -109,7 +109,8 @@ for smile in smiles:
         #check which half oxygen is on
         #print(atom_list[i].GetSymbol())
         if atom_list[i].GetSymbol() == "O":
-            o_half = find_half(bond_list, atom_list, i)
+            track = []
+            o_half = find_half(atom_list, bond_list, i, track)
             tracking_list = []
             #test_half = find_half2(atom_list, bond_list, i, tracking_list)
             #print(i, test_half, o_half)
