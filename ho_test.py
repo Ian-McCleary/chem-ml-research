@@ -78,7 +78,6 @@ for smile in passed_smiles:
             #print("\n")
             #print("Oxygen Number: " + str(oxy_count))
             has_covalent_bond = has_covalent_hydrogen_bond(i, atom_list, bond_list)
-            h_half = False
             bonded_h_val = 0
             for j in range(len(atom_list)):
                 b_1 = atom_list[j]
@@ -99,18 +98,15 @@ for smile in passed_smiles:
                             #check for nearby oxygen that could be closer
                             for oxygen in m.GetAtoms():
                                 if oxygen.GetSymbol() == "O" and not oxygen.GetIdx() == i:
-                                    if not has_covalent_hydrogen_bond(oxygen.GetIdx(), atom_list, bond_list):
-                                        oxy2_index = oxygen.GetIdx()
-                                        oxy2_pos = pos[oxy2_index]
-                                        oxy_distance = math.sqrt(
-                                            (hydro_pos[0] - oxy2_pos[0])**2 + (hydro_pos[1] - oxy2_pos[1])**2 +
-                                            (hydro_pos[2] - oxy2_pos[2])**2)
-                                        #print(oxy_distance)
-                                        if oxy_distance < hydrogen_distance:
-                                            failed = False
-                                            break
-                                        else:
-                                            failed = True
+                                    oxy2_index = oxygen.GetIdx()
+                                    oxy2_pos = pos[oxy2_index]
+                                    oxy_distance = math.sqrt(
+                                        (hydro_pos[0] - oxy2_pos[0])**2 + (hydro_pos[1] - oxy2_pos[1])**2 +
+                                        (hydro_pos[2] - oxy2_pos[2])**2)
+                                    #print(oxy_distance)
+                                    if oxy_distance < hydrogen_distance:
+                                        failed = False
+                                        break
                                     else:
                                         failed = True
                                 if failed == True:
