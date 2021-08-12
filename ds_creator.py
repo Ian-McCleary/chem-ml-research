@@ -70,7 +70,7 @@ def start_ds_creation(args):
                         continue
                     elif eisomerization < 0:
                         failed_arr.append(molecule)
-                        failed_reason.append("Negative isomerization  " + smiles_arr[mol_count] + "  "+ str(eisomerization))
+                        failed_reason.append("Negative isomerization  " + smiles_arr[mol_count] + "  "+ str(au_to_ev(eisomerization)))
                         if output_arr[output_count,mol_count] == au_to_ev(barrier_height):
                             output_arr[output_count,mol_count] = 0
                         continue
