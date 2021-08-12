@@ -83,9 +83,9 @@ def backtracking_find_half(atom_list, bond_list, start, tracking_list):
 
 def find_half2(atom_list, bond_list, start, tracking_list):
     n_pos = backtracking_find_half(atom_list, bond_list, start, tracking_list)
-    if atom_list[n_pos].GetSymbol() == "N" and atom_list[n_pos+1].GetSymbol == "N":
+    if atom_list[n_pos].GetSymbol() == "N" and atom_list[n_pos+1].GetSymbol() == "N":
         return False
-    elif atom_list[n_pos].GetSymbol() == "N" and atom_list[n_pos-1].GetSymbol == "N":
+    elif atom_list[n_pos].GetSymbol() == "N" and atom_list[n_pos-1].GetSymbol() == "N":
         return True
 
 
