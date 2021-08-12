@@ -98,8 +98,8 @@ for smile in passed_smiles:
                         if failed == True:
                             print("Failed")
                             break
-                        else:
-                            print("Passed")
+#                        else:
+#t                            print("Passed")
 
 
 
