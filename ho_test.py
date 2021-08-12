@@ -80,6 +80,16 @@ def backtracking_find_half(atom_list, bond_list, start, tracking_list):
                     return return_val
         return -1
 
+
+def find_half2(atom_list, bond_list, start, tracking_list):
+    n_pos = backtracking_find_half(atom_list, bond_list, start, tracking_list)
+    if atom_list[n_pos].GetSymbol() == "N" and atom_list[n_pos+1].GetSymbol == "N":
+        return False
+    elif atom_list[n_pos].GetSymbol() == "N" and atom_list[n_pos-1].GetSymbol == "N":
+        return True
+
+
+
 lg = RDLogger.logger()
 
 lg.setLevel(RDLogger.CRITICAL)
@@ -101,7 +111,7 @@ for smile in smiles:
         if atom_list[i].GetSymbol() == "O":
             o_half = find_half(bond_list, atom_list, i)
             tracking_list = []
-            test_half = backtracking_find_half(atom_list, bond_list, i, tracking_list)
+            test_half = find_half2(atom_list, bond_list, i, tracking_list)
             print(test_half, o_half)
             oxy_count+=1
             #print("\n")
