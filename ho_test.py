@@ -95,7 +95,7 @@ def has_hydrogen_bond(smile, cutoff):
 
     lg.setLevel(RDLogger.CRITICAL)
 
-    print(smile)
+    #print(smile)
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
     status = AllChem.EmbedMolecule(m)
@@ -145,7 +145,7 @@ def has_hydrogen_bond(smile, cutoff):
                             # else:
                             #    failed = True
                         if failed == True:
-                            print("Failed: ", oxy_count, "  ", hydrogen_distance)
+                            #print("Failed: ", oxy_count, "  ", hydrogen_distance)
                             break
             return False
 
