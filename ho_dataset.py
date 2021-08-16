@@ -45,6 +45,7 @@ def start_creation():
             if mol_count > 49:
                 break
             elif mol_count == 0:
+                mol_count+=1
                 continue
             print(potential_hydrogen_bonding(row[2]))
             if potential_hydrogen_bonding(row[3]):
@@ -60,6 +61,7 @@ def start_creation():
             if mol_count1 > 49:
                 break
             elif mol_count1 == 0:
+                mol_count1+=1
                 continue
             if potential_hydrogen_bonding(row[2]):
                 pos_list.append(row[2])
