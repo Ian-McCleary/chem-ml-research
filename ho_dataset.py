@@ -24,11 +24,8 @@ def potential_hydrogen_bonding(smile):
                     connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[j], i)
                 except (RuntimeError):
                     continue
-                print(atom_list[connecting_atom].GetSymbol())
                 if atom_list[connecting_atom].GetSymbol() == "H":
-                    print("TRUE")
                     return True
-    print("FALSE")
     return False
 
 
@@ -40,14 +37,11 @@ def start_creation():
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
         mol_count = 0
         for row in spamreader:
-            print(mol_count)
-            print(row[3])
             if mol_count > 50:
                 break
             elif mol_count == 0:
                 mol_count+=1
                 continue
-            print(potential_hydrogen_bonding(row[3]))
             if potential_hydrogen_bonding(row[3]):
                 neg_list.append(row[3])
                 mol_count +=1
