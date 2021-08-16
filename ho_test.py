@@ -4,6 +4,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 import math
 from rdkit import RDLogger
+import csv
 smiles = ["COc1cccc(\\N=N/c2c(C)ccc(C#N)c2C)c1C(=O)O", "COc1cccc(C(=O)O)c1\\N=N/c1ccc(C(=O)O)c(C(=O)O)c1C", "Cc1ccc(C(=O)O)c(\\N=N/c2cccc(F)c2C(=O)O)c1F",
 "COc1c(C)cccc1\\N=N/c1c(-c2ccccc2)ccc(F)c1C#N", "COc1cccc(\\N=N/c2cc(OC)c(C(=O)O)c(-c3ccccc3)c2)c1OC", "COc1cccc(\\N=N/c2cc(C#N)cc(OC)c2C(=O)O)c1C(=O)O"]
 
@@ -89,63 +90,80 @@ def nearest_oxygen_distance(atom_list, pos_array, oxy_pos):
     return min_distance
 
 # Driver method
-def start_filtering():
+def has_hydrogen_bond(smile, cutoff):
     lg = RDLogger.logger()
 
     lg.setLevel(RDLogger.CRITICAL)
-    # smiles = ["COc1cccc(\\N=N/c2ccc(-c3ccccc3)c(C)c2OC)c1C(=O)O"]
-    for smile in passed_smiles:
-        print(smile)
-        m = Chem.MolFromSmiles(smile)
-        m = Chem.AddHs(m)
-        status = AllChem.EmbedMolecule(m)
-        conformer = m.GetConformer()
-        pos = conformer.GetPositions()
-        oxy_count = 0
 
-        atom_list = m.GetAtoms()
-        bond_list = m.GetBonds()
-        for i in range(len(atom_list)):
-            # check which half oxygen is on
-            # print(atom_list[i].GetSymbol())
-            if atom_list[i].GetSymbol() == "O":
-                track = []
-                o_half = find_half(atom_list, bond_list, i, track)
-                tracking_list = []
-                oxy_count += 1
-                # print("\n")
-                # print("Oxygen Number: " + str(oxy_count))
-                has_covalent_bond = has_covalent_hydrogen_bond(i, atom_list, bond_list)
-                bonded_h_val = 0
-                for j in range(len(atom_list)):
-                    b_1 = atom_list[j]
-                    if b_1.GetSymbol() == "H":
+    print(smile)
+    m = Chem.MolFromSmiles(smile)
+    m = Chem.AddHs(m)
+    status = AllChem.EmbedMolecule(m)
+    conformer = m.GetConformer()
+    pos = conformer.GetPositions()
+    oxy_count = 0
 
-                        # recursively check the side of each hydrogen atom
-                        track_list = []
-                        near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, track_list)
-                        track_list = []
-                        h_half = find_half(atom_list, bond_list, near_o_c, track_list)
-                        # print("answer: ", answer)
-                        # print(o_half, h_half)
-                        if (not o_half is True and h_half is True) or (not o_half is False and h_half is False):
-                            failed = False
-                            oxy_pos = pos[i]
-                            hydro_pos = pos[j]
-                            hydrogen_distance = math.sqrt(
-                                (oxy_pos[0] - hydro_pos[0]) ** 2 + (oxy_pos[1] - hydro_pos[1]) ** 2 +
-                                (oxy_pos[2] - hydro_pos[2]) ** 2)
-                            # print(distance)
-                            if hydrogen_distance < 4.2 and has_covalent_bond is True:
-                                failed = True
-                                # nearby_o = nearest_oxygen_distance(atom_list, pos, oxy_pos)
-                                # if nearby_o < hydrogen_distance and nearby_o < 2.3:
-                                #    failed = False
-                                # else:
-                                #    failed = True
-                            if failed == True:
-                                print("Failed: ", oxy_count, "  ", hydrogen_distance)
-                                break
+    atom_list = m.GetAtoms()
+    bond_list = m.GetBonds()
+    for i in range(len(atom_list)):
+        # check which half oxygen is on
+        # print(atom_list[i].GetSymbol())
+        if atom_list[i].GetSymbol() == "O":
+            track = []
+            o_half = find_half(atom_list, bond_list, i, track)
+            tracking_list = []
+            oxy_count += 1
+            # print("\n")
+            # print("Oxygen Number: " + str(oxy_count))
+            has_covalent_bond = has_covalent_hydrogen_bond(i, atom_list, bond_list)
+            bonded_h_val = 0
+            for j in range(len(atom_list)):
+                b_1 = atom_list[j]
+                if b_1.GetSymbol() == "H":
+
+                    # recursively check the side of each hydrogen atom
+                    track_list = []
+                    near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, track_list)
+                    track_list = []
+                    h_half = find_half(atom_list, bond_list, near_o_c, track_list)
+                    # print("answer: ", answer)
+                    # print(o_half, h_half)
+                    if (not o_half is True and h_half is True) or (not o_half is False and h_half is False):
+                        failed = False
+                        oxy_pos = pos[i]
+                        hydro_pos = pos[j]
+                        hydrogen_distance = math.sqrt(
+                            (oxy_pos[0] - hydro_pos[0]) ** 2 + (oxy_pos[1] - hydro_pos[1]) ** 2 +
+                            (oxy_pos[2] - hydro_pos[2]) ** 2)
+                        # print(distance)
+                        if hydrogen_distance < cutoff and has_covalent_bond is True:
+                            failed = True
+                            return True
+                            # nearby_o = nearest_oxygen_distance(atom_list, pos, oxy_pos)
+                            # if nearby_o < hydrogen_distance and nearby_o < 2.3:
+                            #    failed = False
+                            # else:
+                            #    failed = True
+                        if failed == True:
+                            print("Failed: ", oxy_count, "  ", hydrogen_distance)
+                            break
+            return False
+
+
+def start_filtering():
+    cutoff = 3.8
+    while cutoff <= 4.2:
+        false_positive, true_negative = 0,0
+        with open("ho_bond_50.csv", newline='') as csvfile:
+            spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
+            for row in spamreader:
+                if has_hydrogen_bond(row[1], cutoff):
+                    false_positive+=1
+                if not has_hydrogen_bond(row[3], cutoff):
+                    true_negative+=1
+            print("Cutoff: ",cutoff, "False Positive: ", false_positive, "True_Negative: ", true_negative)
+            cutoff+=0.05
+
 
 
 # Args parser, run 1 smile string at a time
