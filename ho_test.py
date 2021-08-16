@@ -157,6 +157,7 @@ def start_filtering():
         with open("ho_bond_50.csv", newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
             for row in spamreader:
+                print(row[1])
                 if has_hydrogen_bond(row[1], cutoff):
                     false_positive+=1
                 if not has_hydrogen_bond(row[3], cutoff):
