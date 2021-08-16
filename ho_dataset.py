@@ -8,7 +8,7 @@ import pandas as pd
 import csv
 
 with open("failed_molecules.csv", newline='') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter= ' ', quotechar='|')
+    spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
     for row in spamreader:
-        print(row[1])
+        print(row[3])
 
