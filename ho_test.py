@@ -156,12 +156,16 @@ def start_filtering():
         false_positive, true_negative = 0,0
         with open("ho_bond_50.csv", newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
+            row_count = 0
             for row in spamreader:
-                print(row[1])
+                if row_count == 0:
+                    row_count+=1
+                    continue
                 if has_hydrogen_bond(row[1], cutoff):
                     false_positive+=1
                 if not has_hydrogen_bond(row[3], cutoff):
                     true_negative+=1
+                row_count+=1
             print("Cutoff: ",cutoff, "False Positive: ", false_positive, "True_Negative: ", true_negative)
             cutoff+=0.05
 
