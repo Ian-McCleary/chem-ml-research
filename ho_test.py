@@ -10,7 +10,8 @@ smiles = ["COc1cccc(\\N=N/c2c(C)ccc(C#N)c2C)c1C(=O)O", "COc1cccc(C(=O)O)c1\\N=N/
 passed_smiles = ["COc1cc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C#N)ccc1C(=O)O", "Cc1ccc(\\N=N/c2c(F)cc(C(=O)O)cc2C(=O)O)c(C(=O)O)c1", "COc1cc(C#N)ccc1\\N=N/c1cc(C)c(C)cc1-c1ccccc1",
                  "N#Cc1ccccc1\\N=N/c1cc(C(=O)O)ccc1-c1ccccc1", "O=C(O)c1cc(F)c(\\N=N/c2cccc(F)c2)c(C(=O)O)c1", "COc1ccc(OC)c(\\N=N/c2c(F)ccc(-c3ccccc3)c2C#N)c1"]
 
-
+# Find the nearest oxygen or carbon for a given hydrogen
+# This makes finding half much quicker for hydrogens
 def find_nearest_oxygen_or_carbon(atom_list, bond_list, start, tracking_list):
     tracking_list.append(start)
     for i in range(len(bond_list)):
@@ -25,7 +26,7 @@ def find_nearest_oxygen_or_carbon(atom_list, bond_list, start, tracking_list):
             if atom_list[n].GetSymbol() == "O" or atom_list[n].GetSymbol() == "C":
                 return n
 
-
+# Return true if an oxygen has a direct bond with a hydrogen
 def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
     for i in range(len(bond_list)):
         try:
@@ -39,7 +40,8 @@ def has_covalent_hydrogen_bond(oxygen_index, atom_list, bond_list):
     return False
 
 
-#Test all possible bond paths to the N=N bond.
+# Test all possible bond paths to the N=N bond.
+# Return false for "first" half, True for "second" half.
 def backtracking_find_half(atom_list, bond_list, start, tracking_list):
     tracking_list.append(start)
     has_connecting_n = False
@@ -74,7 +76,7 @@ def find_half(atom_list, bond_list, start, tracking_list):
     elif atom_list[n_pos].GetSymbol() == "N" and atom_list[n_pos-1].GetSymbol() == "N":
         return True
 
-
+# Get the distance of the nearest oxygen in case of carboxylate
 def nearest_oxygen_distance(atom_list, pos_array, oxy_pos):
     min_distance = 1000
     for x in range(len(atom_list)):
@@ -86,7 +88,7 @@ def nearest_oxygen_distance(atom_list, pos_array, oxy_pos):
                 min_distance = oxygen_distance
     return min_distance
 
-
+# Driver method
 def start_filtering():
     lg = RDLogger.logger()
 
