@@ -62,7 +62,7 @@ def start_creation():
                 pos_iso.append(row[4])
                 mol_count1 +=1
     
-    df = pd.DataFrame(list(zip(pos_list, neg_list)),columns=["Positive_Iso", "Negative_Iso"])
+    df = pd.DataFrame(list(zip(pos_list, pos_iso, neg_list, neg_iso)),columns=["Positive_Smile", "Positive_Iso","Negative_Smile", "Negative_Iso"])
 
     df.to_csv("ho_bond_50.csv")
 
