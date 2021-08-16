@@ -25,6 +25,7 @@ def potential_hydrogen_bonding(smile):
                 except (RuntimeError):
                     continue
                 if atom_list[connecting_atom].GetSymbol() == "H":
+                    print("TRUE")
                     return True
     return False
 
