@@ -89,6 +89,16 @@ def nearest_oxygen_distance(atom_list, pos_array, oxy_pos):
                 min_distance = oxygen_distance
     return min_distance
 
+def get_hydrogen_index(oxygen_idx, atom_list, bond_list):
+    for x in range(len(bond_list)):
+        try:
+            connecting_n = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[x], oxygen_idx)
+        except (RuntimeError):
+            continue
+        if atom_list[connecting_n].GetSymbol() == "H":
+            return connecting_n
+        
+
 # Driver method
 def has_hydrogen_bond(smile, cutoff):
     lg = RDLogger.logger()
@@ -116,43 +126,40 @@ def has_hydrogen_bond(smile, cutoff):
             # print("\n")
             # print("Oxygen Number: " + str(oxy_count))
             has_covalent_bond = has_covalent_hydrogen_bond(i, atom_list, bond_list)
-            bonded_h_val = 0
-            for j in range(len(atom_list)):
-                b_1 = atom_list[j]
-                if b_1.GetSymbol() == "H":
+            if has_covalent_bond == True:
+                hydrogen_idx = get_hydrogen_index(i, atom_list, bond_list)
+                hydrogen_pos=pos[hydrogen_idx]
+                for j in range(len(atom_list)):
+                    b_1 = atom_list[j]
+                    if b_1.GetSymbol() == "O":
 
-                    # recursively check the side of each hydrogen atom
-                    track_list = []
-                    near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, track_list)
-                    track_list = []
-                    h_half = find_half(atom_list, bond_list, near_o_c, track_list)
-                    # print("answer: ", answer)
-                    # print(o_half, h_half)
-                    if (not o_half is True and h_half is True) or (not o_half is False and h_half is False):
-                        failed = False
-                        oxy_pos = pos[i]
-                        hydro_pos = pos[j]
-                        hydrogen_distance = math.sqrt(
-                            (oxy_pos[0] - hydro_pos[0]) ** 2 + (oxy_pos[1] - hydro_pos[1]) ** 2 +
-                            (oxy_pos[2] - hydro_pos[2]) ** 2)
-                        # print(distance)
-                        if hydrogen_distance < cutoff and has_covalent_bond is True:
-                            failed = True
-                            return True
-                            # nearby_o = nearest_oxygen_distance(atom_list, pos, oxy_pos)
-                            # if nearby_o < hydrogen_distance and nearby_o < 2.3:
-                            #    failed = False
-                            # else:
-                            #    failed = True
-                        if failed == True:
-                            #print("Failed: ", oxy_count, "  ", hydrogen_distance)
-                            break
-            return False
+                        # recursively check the side of each hydrogen atom
+                        track_list = []
+                        #near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, track_list)
+                        track_list = []
+                        o_half2 = find_half(atom_list, bond_list, j, track_list)
+                        # print("answer: ", answer)
+                        # print(o_half, h_half)
+                        if (o_half is True and o_half2 is False) or (o_half is False and o_half2 is True):
+                            failed = False
+                            oxy_pos = pos[i]
+                            opposite_oxy_pos = pos[j]
+                            hydrogen_distance = math.sqrt(
+                                (hydrogen_pos[0] - opposite_oxy_pos[0]) ** 2 + (hydrogen_pos[1] - opposite_oxy_pos[1]) ** 2 +
+                                (hydrogen_pos[2] - opposite_oxy_pos[2]) ** 2)
+
+                            if hydrogen_distance < cutoff and has_covalent_bond is True:
+                                failed = True
+                                return True
+                            if failed == True:
+                                #print("Failed: ", oxy_count, "  ", hydrogen_distance)
+                                break
+                return False
 
 
 def start_filtering():
-    cutoff = 3.8
-    while cutoff <= 4.2:
+    cutoff = 3.9
+    while cutoff <= 4.1:
         false_positive, true_negative = 0,0
         with open("ho_bond_50.csv", newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
@@ -166,7 +173,7 @@ def start_filtering():
                 if not has_hydrogen_bond(row[3], cutoff):
                     true_negative+=1
                 row_count+=1
-            print("Cutoff: ",cutoff, "False Positive: ", false_positive, "True_Negative: ", true_negative)
+            print("Cutoff:",cutoff, " False Positive:", false_positive, " True_Negative:", true_negative)
             cutoff+=0.05
 
 
