@@ -155,12 +155,13 @@ def has_hydrogen_bond(smile, cutoff):
                                 #print("Failed: ", oxy_count, "  ", hydrogen_distance)
                                 break
                 return False
+    return False
 
 
 def start_filtering():
     cutoff = 3.9
     while cutoff <= 4.1:
-        false_positive, true_negative = 0,0
+        failed_positive, failed_negative = 0,0
         with open("ho_bond_50.csv", newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
             row_count = 0
@@ -169,11 +170,11 @@ def start_filtering():
                     row_count+=1
                     continue
                 if has_hydrogen_bond(row[1], cutoff):
-                    false_positive+=1
+                    failed_positive+=1
                 if not has_hydrogen_bond(row[3], cutoff):
-                    true_negative+=1
+                    failed_negative+=1
                 row_count+=1
-            print("Cutoff:",cutoff, " False Positive:", false_positive, " True_Negative:", true_negative)
+            print("Cutoff:",cutoff, " Failed Positive:", failed_positive, " Failed Negative:", failed_negative)
             cutoff+=0.05
 
 
