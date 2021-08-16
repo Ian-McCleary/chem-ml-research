@@ -53,16 +53,16 @@ def start_creation():
     # Positive isomerization energy
     with open("Datasets/dataset_3task_50k_filtered.csv", newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
-        mol_count = 0
+        mol_count1 = 0
         for row in spamreader:
-            print(row[2])
-            if mol_count > 49:
+            #print(row[2])
+            if mol_count1 > 49:
                 break
-            elif mol_count == 0:
+            elif mol_count1 == 0:
                 continue
             if potential_hydrogen_bonding(row[2]):
                 pos_list.append(row[2])
-                mol_count +=1
+                mol_count1 +=1
     
     df = pd.DataFrame(list(zip(pos_list, neg_list)),columns=["Positive_Iso", "Negative_Iso"])
 
