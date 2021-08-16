@@ -40,6 +40,7 @@ def start_creation():
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
         mol_count = 0
         for row in spamreader:
+            print(mol_count)
             print(row[3])
             if mol_count > 49:
                 break
