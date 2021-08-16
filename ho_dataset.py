@@ -10,5 +10,5 @@ import csv
 with open("failed_molecules.csv", newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter= ' ', quotechar='|')
     for row in spamreader:
-        print(row)
+        print(row[1])
 
