@@ -37,6 +37,7 @@ def start_creation():
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
         mol_count = 0
         for row in spamreader:
+            print(row[3])
             if mol_count > 49:
                 break
             if potential_hydrogen_bonding(row[3]):
@@ -48,6 +49,7 @@ def start_creation():
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
         mol_count = 0
         for row in spamreader:
+            print(row[2])
             if mol_count > 49:
                 break
             if potential_hydrogen_bonding(row[3]):
