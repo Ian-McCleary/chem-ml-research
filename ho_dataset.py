@@ -30,8 +30,7 @@ def potential_hydrogen_bonding(smile):
 
 
 def start_creation():
-    neg_list = []
-    pos_list = []
+    neg_list,pos_list,neg_iso,pos_iso = [],[],[],[]
     # Negative Isomerization Energy
     with open("failed_molecules.csv", newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
@@ -44,6 +43,7 @@ def start_creation():
                 continue
             if potential_hydrogen_bonding(row[3]):
                 neg_list.append(row[3])
+                neg_iso.append(row[4])
                 mol_count +=1
     
     # Positive isomerization energy
@@ -59,6 +59,7 @@ def start_creation():
                 continue
             if potential_hydrogen_bonding(row[2]):
                 pos_list.append(row[2])
+                pos_iso.append(row[4])
                 mol_count1 +=1
     
     df = pd.DataFrame(list(zip(pos_list, neg_list)),columns=["Positive_Iso", "Negative_Iso"])
