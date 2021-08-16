@@ -1,4 +1,4 @@
-,Failed Molecules,Failed Reason,smiles,eiso
+id,Failed Molecules,Failed Reason,smiles,eiso
 0,1189744,Negative isomerization,Cc1ccc(\N=N/c2cc(-c3ccccc3)ccc2-c2ccccc2)c(C(=O)O)c1C(=O)O,-1.95306561
 1,983368,Negative isomerization,COc1cc(C(=O)O)cc(\N=N/c2c(F)cccc2C(=O)O)c1OC,-1.258387705
 2,1171853,Negative isomerization,Cc1c(\N=N/c2c(C(=O)O)cccc2-c2ccccc2)cc(C(=O)O)cc1-c1ccccc1,-1.866751288
