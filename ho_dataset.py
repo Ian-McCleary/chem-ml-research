@@ -40,7 +40,7 @@ def start_creation():
             if mol_count > 49:
                 break
             if potential_hydrogen_bonding(row[3]):
-                neg_list.append(row[3])
+                neg_list.append(row[2])
                 mol_count +=1
     
     # Positive isomerization energy
