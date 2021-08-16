@@ -42,7 +42,7 @@ def start_creation():
         for row in spamreader:
             print(mol_count)
             print(row[3])
-            if mol_count > 49:
+            if mol_count > 50:
                 break
             elif mol_count == 0:
                 mol_count+=1
@@ -58,7 +58,7 @@ def start_creation():
         mol_count1 = 0
         for row in spamreader:
             #print(row[2])
-            if mol_count1 > 49:
+            if mol_count1 > 50:
                 break
             elif mol_count1 == 0:
                 mol_count1+=1
