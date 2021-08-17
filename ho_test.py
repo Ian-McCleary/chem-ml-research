@@ -110,7 +110,7 @@ def has_hydrogen_bond(smile, cutoff):
     #print(smile)
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
-    status = AllChem.EmbedMolecule(m)
+    status = AllChem.EmbedMolecule(m, randomSeed=123)
     conformer = m.GetConformer()
     pos = conformer.GetPositions()
     oxy_count = 0
