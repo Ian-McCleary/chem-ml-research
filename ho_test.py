@@ -133,9 +133,6 @@ def has_hydrogen_bond(smile, cutoff):
                     b_1 = atom_list[j]
                     if b_1.GetSymbol() == "O":
 
-                        # recursively check the side of each hydrogen atom
-                        track_list = []
-                        #near_o_c = find_nearest_oxygen_or_carbon(atom_list, bond_list, j, track_list)
                         track_list = []
                         o_half2 = find_half(atom_list, bond_list, j, track_list)
                         # print("answer: ", answer)
@@ -151,10 +148,6 @@ def has_hydrogen_bond(smile, cutoff):
                             if hydrogen_distance < cutoff and has_covalent_bond is True:
                                 failed = True
                                 return True
-                            if failed == True:
-                                #print("Failed: ", oxy_count, "  ", hydrogen_distance)
-                                break
-                return False
     return False
 
 

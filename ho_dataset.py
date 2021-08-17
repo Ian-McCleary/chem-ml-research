@@ -7,6 +7,9 @@ from rdkit import RDLogger
 import pandas as pd
 import csv
 
+from ho_test import has_covalent_hydrogen_bond
+from ho_test import find_half
+
 
 def potential_hydrogen_bonding(smile):
     m = Chem.MolFromSmiles(smile)
@@ -18,14 +21,15 @@ def potential_hydrogen_bonding(smile):
     bond_list = m.GetBonds()
     for i in range(len(atom_list)):
         if atom_list[i].GetSymbol() == "O":
-            # Check if oxygen has covalent hydrogen bond
-            for j in range(len(bond_list)):
-                try:
-                    connecting_atom = Chem.rdchem.Bond.GetOtherAtomIdx(bond_list[j], i)
-                except (RuntimeError):
-                    continue
-                if atom_list[connecting_atom].GetSymbol() == "H":
-                    return True
+            o1_tracking = []
+            o_half1 = find_half(atom_list, bond_list, i, o1_tracking)
+            if has_covalent_hydrogen_bond(i, atom_list, bond_list):
+                for j in range(len(atom_list)):
+                    if atom_list[j].GetSymbol() == "O":
+                        o2_tracking = []
+                        o_half2 = find_half(atom_list, bond_list, j, o2_tracking)
+                        if (o_half1 is True and o_half2 is False) or (o_half1 is False and o_half2 is True):
+                            return True
     return False
 
 
