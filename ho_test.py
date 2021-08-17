@@ -11,7 +11,7 @@ smiles = ["COc1cccc(\\N=N/c2c(C)ccc(C#N)c2C)c1C(=O)O", "COc1cccc(C(=O)O)c1\\N=N/
 passed_smiles = ["COc1cc(\\N=N/c2c(C)ccc(-c3ccccc3)c2C#N)ccc1C(=O)O", "Cc1ccc(\\N=N/c2c(F)cc(C(=O)O)cc2C(=O)O)c(C(=O)O)c1", "COc1cc(C#N)ccc1\\N=N/c1cc(C)c(C)cc1-c1ccccc1",
                  "N#Cc1ccccc1\\N=N/c1cc(C(=O)O)ccc1-c1ccccc1", "O=C(O)c1cc(F)c(\\N=N/c2cccc(F)c2)c(C(=O)O)c1", "COc1ccc(OC)c(\\N=N/c2c(F)ccc(-c3ccccc3)c2C#N)c1"]
 
-negative_smiles = ["COc1cc(C(=O)O)cc(\N=N/c2c(F)cccc2C(=O)O)c1OC", ]
+#negative_smiles = ["COc1cc(C(=O)O)cc(\\N=N/c2c(F)cccc2C(=O)O)c1OC"]
 
 # Find the nearest oxygen or carbon for a given hydrogen
 # This makes finding half much quicker for hydrogens
