@@ -5,6 +5,7 @@ from rdkit.Chem import AllChem
 import math
 from rdkit import RDLogger
 import csv
+import os
 smiles = ["COc1cccc(\\N=N/c2c(C)ccc(C#N)c2C)c1C(=O)O", "COc1cccc(C(=O)O)c1\\N=N/c1ccc(C(=O)O)c(C(=O)O)c1C", "Cc1ccc(C(=O)O)c(\\N=N/c2cccc(F)c2C(=O)O)c1F",
 "COc1c(C)cccc1\\N=N/c1c(-c2ccccc2)ccc(F)c1C#N", "COc1cccc(\\N=N/c2cc(OC)c(C(=O)O)c(-c3ccccc3)c2)c1OC", "COc1cccc(\\N=N/c2cc(C#N)cc(OC)c2C(=O)O)c1C(=O)O"]
 
@@ -110,7 +111,14 @@ def has_hydrogen_bond(smile, cutoff):
     #print(smile)
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
-    status = AllChem.EmbedMolecule(m, randomSeed=123)
+    #status = AllChem.EmbedMolecule(m, randomSeed=123)
+    status = Chem.rdForceFieldHelpers.MMFFOptimizeMoleculeConfs(m, numThreads=os.environ['OMP_NUM_THREADS'])
+    print(status)
+    min = 1000
+    for i in range(len(status)):
+        if status[i][0] == 0 and status[i][1] < min:
+            min = status[i][1]
+    print(min)
     conformer = m.GetConformer()
     pos = conformer.GetPositions()
     oxy_count = 0
@@ -125,8 +133,7 @@ def has_hydrogen_bond(smile, cutoff):
             o_half = find_half(atom_list, bond_list, i, track)
             tracking_list = []
             oxy_count += 1
-            # print("\n")
-            # print("Oxygen Number: " + str(oxy_count))
+            # Check if given oxygen has a covalent bond, then check for nearby oxygens 
             has_covalent_bond = has_covalent_hydrogen_bond(i, atom_list, bond_list)
             if has_covalent_bond == True:
                 hydrogen_idx = get_hydrogen_index(i, atom_list, bond_list)
@@ -134,21 +141,17 @@ def has_hydrogen_bond(smile, cutoff):
                 for j in range(len(atom_list)):
                     b_1 = atom_list[j]
                     if b_1.GetSymbol() == "O":
-
                         track_list = []
                         o_half2 = find_half(atom_list, bond_list, j, track_list)
-                        # print("answer: ", answer)
-                        # print(o_half, h_half)
+                        # If oxygens are on opposite sides of the molecule
                         if (o_half is True and o_half2 is False) or (o_half is False and o_half2 is True):
-                            failed = False
                             oxy_pos = pos[i]
                             opposite_oxy_pos = pos[j]
                             hydrogen_distance = math.sqrt(
                                 (hydrogen_pos[0] - opposite_oxy_pos[0]) ** 2 + (hydrogen_pos[1] - opposite_oxy_pos[1]) ** 2 +
                                 (hydrogen_pos[2] - opposite_oxy_pos[2]) ** 2)
 
-                            if hydrogen_distance < cutoff and has_covalent_bond is True:
-                                failed = True
+                            if hydrogen_distance < cutoff:
                                 return True
     return False
 
