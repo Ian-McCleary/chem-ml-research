@@ -20,7 +20,7 @@ for x in range(3):
                 smile = row[3]
                 m = Chem.MolFromSmiles(smile)
                 m = Chem.AddHs(m)
-                status = AllChem.EmbedMolecule(m)
+                status = AllChem.EmbedMolecule(m, randomSeed=1738)
                 conformer = m.GetConformer()
                 pos = conformer.GetPositions()
 
