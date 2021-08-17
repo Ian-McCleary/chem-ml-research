@@ -112,7 +112,7 @@ def has_hydrogen_bond(smile, cutoff):
     m = Chem.MolFromSmiles(smile)
     m = Chem.AddHs(m)
     
-    status = AllChem.EmbedMolecule(m, randomSeed=123)
+    status = AllChem.EmbedMolecule(m)
     conformer = m.GetConformer()
     # numThreads=os.environ['OMP_NUM_THREADS']
     status = Chem.rdForceFieldHelpers.MMFFOptimizeMoleculeConfs(m, numThreads=4)
