@@ -16,6 +16,7 @@ for x in range(3):
                 if mol_count == 0:
                     mol_count+=1
                     continue
+                print("Molecule:",mol_count)
                 smile = row[3]
                 m = Chem.MolFromSmiles(smile)
                 m = Chem.AddHs(m)
