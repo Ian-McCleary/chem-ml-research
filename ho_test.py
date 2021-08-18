@@ -158,7 +158,7 @@ def has_hydrogen_bond(smile, cutoff):
 
 
 def start_filtering():
-    cutoff = 3.8
+    cutoff = 3.9
     while cutoff <= 4.4:
         failed_positive, failed_negative = 0,0
         with open("ho_bond_50.csv", newline='') as csvfile:
@@ -168,6 +168,8 @@ def start_filtering():
                 if row_count == 0:
                     row_count+=1
                     continue
+                if row_count > 30:
+                    break
                 if has_hydrogen_bond(row[1], cutoff):
                     failed_positive+=1
                 if has_hydrogen_bond(row[3], cutoff):
