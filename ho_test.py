@@ -174,7 +174,7 @@ def start_filtering():
                     failed_negative+=1
                 row_count+=1
             print("Cutoff:",cutoff, " Bonded Positive:", failed_positive, " Bonded Negative:", failed_negative)
-            cutoff+=0.02
+            cutoff+=0.05
 
 
 
