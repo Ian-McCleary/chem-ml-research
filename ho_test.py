@@ -113,13 +113,13 @@ def has_hydrogen_bond(smile, cutoff):
     m = Chem.AddHs(m)
     #new_mol = Chem.Mol(m)
     
-    AllChem.EmbedMultipleConfs(m, numConfs=100)
+    AllChem.EmbedMultipleConfs(m, numConfs=50)
     
     energies = AllChem.MMFFOptimizeMoleculeConfs(m, maxIters=800)
     energies_list = [e[1] for e in energies]
-    print(energies_list)
+    #print(energies_list)
     min_e_index = energies_list.index(min(energies_list))
-    print(min_e_index)
+    #print(min_e_index)
     #new_mol.AddConformer(m.GetConformer(min_e_index))
     pos = m.GetConformer(min_e_index).GetPositions()
     oxy_count = 0
