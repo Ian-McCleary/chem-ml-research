@@ -118,7 +118,7 @@ def has_hydrogen_bond(smile, cutoff):
         conformer = m.GetConformers()
         # numThreads=os.environ['OMP_NUM_THREADS']
         status = Chem.rdForceFieldHelpers.MMFFOptimizeMoleculeConfs(m, numThreads=4, maxIters=600)
-        pos = conformer.GetPositions()
+        #pos = conformer.GetPositions()
         #print(pos)
         print(status)
         min = 1000
