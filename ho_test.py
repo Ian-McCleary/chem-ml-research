@@ -104,9 +104,9 @@ def get_hydrogen_index(oxygen_idx, atom_list, bond_list):
 
 # Driver method
 def has_hydrogen_bond(smile, cutoff):
-    lg = RDLogger.logger()
+    #lg = RDLogger.logger()
 
-    lg.setLevel(RDLogger.CRITICAL)
+    #lg.setLevel(RDLogger.CRITICAL)
 
     #print(smile)
     m = Chem.MolFromSmiles(smile)
