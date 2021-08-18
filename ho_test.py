@@ -115,9 +115,9 @@ def has_hydrogen_bond(smile, cutoff):
     status = AllChem.EmbedMolecule(m)
     print("\n molecule: ")
     for i in range(50):
-        conformer = m.GetConformers()
+        
         # numThreads=os.environ['OMP_NUM_THREADS']
-        status = Chem.rdForceFieldHelpers.MMFFOptimizeMoleculeConfs(m, numThreads=4, maxIters=600)
+        status = Chem.rdForceFieldHelpers.MMFFOptimizeMoleculeConfs(m, numThreads=4, maxIters=1200)
         #pos = conformer.GetPositions()
         #print(pos)
         print(status)
@@ -126,7 +126,7 @@ def has_hydrogen_bond(smile, cutoff):
             if status[i][0] == 0 and status[i][1] < min:
                 min = status[i][1]
     print(min)
-    
+    conformer = m.GetConformer()
     pos = conformer.GetPositions()
     oxy_count = 0
 
