@@ -54,7 +54,8 @@ def get_mol_from_xyz(mol_id):
                             stop = True
                     else:
                         break
-    file = open("file.xyz", "x")
+    file_name = "xyz\\" + str(mol_id) + ".xyz"
+    file = open(file_name, "x")
     for i in range(len(reversed_line_arr)):
         print(reversed_line_arr[len(reversed_line_arr)-i-1])
         file.write(reversed_line_arr[len(reversed_line_arr)-i-1])
