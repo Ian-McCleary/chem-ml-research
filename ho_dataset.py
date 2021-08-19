@@ -37,7 +37,6 @@ def potential_hydrogen_bonding(smile):
 def get_mol_from_xyz(mol_id):
     start_dir = "/cluster/research-groups/kowalczyk/stf_screen_cluster/Azo_Data_1"
     reversed_line_arr = []
-    mol_path = os.path.join()
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
         batch_path = os.path.join(start_dir, batch)
