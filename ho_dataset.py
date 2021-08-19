@@ -54,7 +54,7 @@ def get_mol_from_xyz(mol_id):
                     else:
                         break
     for i in range(len(reversed_line_arr)):
-        print(reversed_line_arr[len(reversed_line_arr)-i])
+        print(reversed_line_arr[len(reversed_line_arr)-i-1])
 
 
 
