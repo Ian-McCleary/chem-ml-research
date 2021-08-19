@@ -72,7 +72,7 @@ def start_creation():
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
         mol_count = 0
         for row in spamreader:
-            if mol_count > 10:
+            if mol_count > 50:
                 break
             elif mol_count == 0:
                 mol_count+=1
@@ -90,7 +90,7 @@ def start_creation():
         mol_count1 = 0
         for row in spamreader:
             #print(row[2])
-            if mol_count1 > 10:
+            if mol_count1 > 50:
                 break
             elif mol_count1 == 0:
                 mol_count1+=1
