@@ -36,13 +36,27 @@ def potential_hydrogen_bonding(smile):
 
 def get_mol_from_xyz(mol_id):
     start_dir = "/cluster/research-groups/kowalczyk/stf_screen_cluster/Azo_Data_1"
+    reversed_line_arr = []
     mol_path = os.path.join()
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
         batch_path = os.path.join(start_dir, batch)
         potential_mol_path = os.path.join(batch_path,mol_id)
         if os.path.isdir(potential_mol_path):
-            
+            xyz_path_str = "Meta/dftb/gs/opt.xyz"
+            xyz_path = os.path.join(potential_mol_path, xyz_path_str)
+            if os.path.isfile(xyz_path):
+                stop = False
+                for line in reversed(open(xyz_path).readlines()):
+                    reversed_line_arr.append(line)
+                    if stop is False:
+                        if "Geometry" in line:
+                            stop = True
+                    else:
+                        break
+    for i in range(len(reversed_line_arr)):
+        print(reversed_line_arr[len(reversed_line_arr)-i])
+
 
 
 
@@ -54,12 +68,12 @@ def start_creation():
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
         mol_count = 0
         for row in spamreader:
-            if mol_count > 50:
+            if mol_count > 10:
                 break
             elif mol_count == 0:
                 mol_count+=1
                 continue
-
+            get_mol_from_xyz(row[1])
             if potential_hydrogen_bonding(row[3]):
 
                 neg_list.append(row[3])
@@ -72,7 +86,7 @@ def start_creation():
         mol_count1 = 0
         for row in spamreader:
             #print(row[2])
-            if mol_count1 > 50:
+            if mol_count1 > 10:
                 break
             elif mol_count1 == 0:
                 mol_count1+=1
