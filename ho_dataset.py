@@ -6,6 +6,7 @@ import math
 from rdkit import RDLogger
 import pandas as pd
 import csv
+import os
 
 from ho_test import has_covalent_hydrogen_bond
 from ho_test import find_half
@@ -33,8 +34,21 @@ def potential_hydrogen_bonding(smile):
     return False
 
 
+def get_mol_from_xyz(mol_id):
+    start_dir = "/cluster/research-groups/kowalczyk/stf_screen_cluster/Azo_Data_1"
+    mol_path = os.path.join()
+    directory_list = os.listdir(start_dir)
+    for batch in directory_list:
+        batch_path = os.path.join(start_dir, batch)
+        potential_mol_path = os.path.join(batch_path,mol_id)
+        if os.path.isdir(potential_mol_path):
+            
+
+
+
 def start_creation():
     neg_list,pos_list,neg_iso,pos_iso = [],[],[],[]
+    
     # Negative Isomerization Energy
     with open("failed_molecules.csv", newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter= ',', quotechar='|')
@@ -45,7 +59,9 @@ def start_creation():
             elif mol_count == 0:
                 mol_count+=1
                 continue
+
             if potential_hydrogen_bonding(row[3]):
+
                 neg_list.append(row[3])
                 neg_iso.append(row[4])
                 mol_count +=1

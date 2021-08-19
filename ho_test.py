@@ -113,7 +113,7 @@ def has_hydrogen_bond(smile, cutoff):
     m = Chem.AddHs(m)
     #new_mol = Chem.Mol(m)
     
-    AllChem.EmbedMultipleConfs(m, numConfs=50, randomSeed=123, numThreads=4)
+    AllChem.EmbedMultipleConfs(m, numConfs=100, randomSeed=123, numThreads=4)
     
     energies = AllChem.MMFFOptimizeMoleculeConfs(m, maxIters=800)
     energies_list = [e[1] for e in energies]
