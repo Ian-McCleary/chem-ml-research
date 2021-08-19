@@ -82,7 +82,7 @@ def start_creation():
             mol_id = str(row[1]) + ".xyz"
             mol_dir = os.path.join("xyz", mol_id)
             if os.path.isfile(mol_dir):
-                exec(open("xyz2mol.py " + mol_dir + " --no-graph").read())
+                os.system("python xyz2mol.py " + mol_dir + " --no-graph")
             if potential_hydrogen_bonding(row[3]):
 
                 neg_list.append(row[3])
