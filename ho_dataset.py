@@ -47,7 +47,7 @@ def get_mol_from_xyz(mol_id):
             if os.path.isfile(xyz_path):
                 stop = False
                 for line in reversed(open(xyz_path).readlines()):
-                    split_line = line.split("\\")
+                    split_line = line.split("\n")
                     reversed_line_arr.append(split_line[0])
                     if stop is False:
                         if "Geometry" in line:
