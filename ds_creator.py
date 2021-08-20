@@ -27,7 +27,7 @@ def start_ds_creation(args):
     if output_count == 0:
         raise ValueError('You must specify 1 output field. output_count=0')
     # weight_arr = np.ones([args.count, output_count], dtype=float)
-    output_arr = np.zeros([output_count, args.count], dtype=float)
+    output_arr = np.zeros([output_count, args.count+1], dtype=float)
     mol_count = 0
     directory_list = os.listdir(start_dir)
     for batch in directory_list:
@@ -67,15 +67,15 @@ def start_ds_creation(args):
                         failed_reason.append("Could not get isomerization  "+ neb_path)
                         continue
                     elif eisomerization < 0:
-                        failed_arr.append(molecule)
-                        failed_reason.append("Negative isomerization  " + smiles_arr[mol_count] + "  "+ str(au_to_ev(eisomerization)))
+                        #failed_arr.append(molecule)
+                        #failed_reason.append("Negative isomerization  " + smiles_arr[mol_count] + "  "+ str(au_to_ev(eisomerization)))
                         binary_negativity.append(1)
-                        if output_arr[output_count,mol_count] == au_to_ev(barrier_height):
-                            output_arr[output_count,mol_count] = 0
+                        #if output_arr[output_count,mol_count] == au_to_ev(barrier_height):
+                        #    output_arr[output_count,mol_count] = 0
                         #continue
                     else:
-                        output_arr[output_count, mol_count] = au_to_ev(eisomerization)
                         binary_negativity.append(0)
+                    output_arr[output_count, mol_count] = au_to_ev(eisomerization)
                     output_count += 1
                 # Vertical excitation energies
                 if args.vertical_excitation:
@@ -127,7 +127,7 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr, fa
     elif output_count == 3:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2], binary_negativity)), columns=[
                           "ids", "smiles", "reverse_iso", "eiso", "vertical_excitation", "binary_negativity"])
-    df.to_csv('dataset_4task_20k_filtered.csv')
+    df.to_csv('dataset_4task_10k.csv')
     failed_df = pd.DataFrame(list(zip(failed_arr, failed_reason)),
                              columns=["Failed Molecules", "Failed Reason"])
     failed_df.to_csv("failed_molecules.csv")
