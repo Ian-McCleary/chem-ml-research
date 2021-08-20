@@ -72,7 +72,7 @@ def start_ds_creation(args):
                         binary_negativity.append(1)
                         if output_arr[output_count,mol_count] == au_to_ev(barrier_height):
                             output_arr[output_count,mol_count] = 0
-                        continue
+                        #continue
                     else:
                         output_arr[output_count, mol_count] = au_to_ev(eisomerization)
                         binary_negativity.append(0)
@@ -126,7 +126,7 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr, fa
                           "ids", "smiles", "task1", "task2"])
     elif output_count == 3:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2], binary_negativity)), columns=[
-                          "ids", "smiles", "task1", "task2", "task3", "task4"])
+                          "ids", "smiles", "reverse_iso", "eiso", "vertical_excitation", "binary_negativity"])
     df.to_csv('dataset_4task_20k_filtered.csv')
     failed_df = pd.DataFrame(list(zip(failed_arr, failed_reason)),
                              columns=["Failed Molecules", "Failed Reason"])
