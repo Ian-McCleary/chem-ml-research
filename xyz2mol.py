@@ -13,6 +13,7 @@ Implementation by Jan H. Jensen, based on the paper
 
 import copy
 import itertools
+import pandas as pd
 
 from rdkit.Chem import rdmolops
 from rdkit.Chem import rdchem
