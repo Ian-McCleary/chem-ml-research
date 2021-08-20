@@ -15,11 +15,9 @@ start_dir = "/cluster/research-groups/kowalczyk/stf_screen_cluster/Azo_Data_1"
 def start_ds_creation(args):
     # create initial np arrays
     id_arr = np.zeros(args.count, dtype=int)
-    smiles_arr = []
+    smiles_arr,failed_arr,failed_reason, binary_negativity = [],[],[],[]
     smiles_arr = ["hi" for i in range(args.count)]
     output_count = 0
-    failed_arr = []
-    failed_reason = []
     if args.eisomerization:
         output_count += 1
     if args.reverse_isomerization:
@@ -71,11 +69,13 @@ def start_ds_creation(args):
                     elif eisomerization < 0:
                         failed_arr.append(molecule)
                         failed_reason.append("Negative isomerization  " + smiles_arr[mol_count] + "  "+ str(au_to_ev(eisomerization)))
+                        binary_negativity.append(1)
                         if output_arr[output_count,mol_count] == au_to_ev(barrier_height):
                             output_arr[output_count,mol_count] = 0
                         continue
                     else:
                         output_arr[output_count, mol_count] = au_to_ev(eisomerization)
+                        binary_negativity.append(0)
                     output_count += 1
                 # Vertical excitation energies
                 if args.vertical_excitation:
@@ -112,12 +112,12 @@ def start_ds_creation(args):
             break
 
     create_save_dataset(id_arr, smiles_arr, output_arr,
-                        output_count, failed_arr, failed_reason)
+                        output_count, failed_arr, failed_reason, binary_negativity)
 
 
 # Create and save the dataset. Weight vector to be added here
 # Featurizing should be done in ML model, deepchem CSVLoader class
-def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr, failed_reason):
+def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr, failed_reason, binary_negativity):
     if output_count == 1:
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0])), columns=[
                           "ids", "smiles", "task1"])
@@ -125,9 +125,9 @@ def create_save_dataset(id, smiles_arr, output_arr, output_count, failed_arr, fa
         df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1])), columns=[
                           "ids", "smiles", "task1", "task2"])
     elif output_count == 3:
-        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2])), columns=[
-                          "ids", "smiles", "task1", "task2", "task3"])
-    df.to_csv('dataset_3task_20k_filtered.csv')
+        df = pd.DataFrame(list(zip(id, smiles_arr, output_arr[0], output_arr[1], output_arr[2], binary_negativity)), columns=[
+                          "ids", "smiles", "task1", "task2", "task3", "task4"])
+    df.to_csv('dataset_4task_20k_filtered.csv')
     failed_df = pd.DataFrame(list(zip(failed_arr, failed_reason)),
                              columns=["Failed Molecules", "Failed Reason"])
     failed_df.to_csv("failed_molecules.csv")
