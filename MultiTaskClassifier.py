@@ -69,7 +69,7 @@ def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
     best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
-        params_dict, train_dataset, valid_dataset, metric)
+        params_dict, train_dataset, valid_dataset, [metric])
     print(best_hyperparams)
     return best_model
 
