@@ -41,7 +41,7 @@ def start_training():
     n_features = len(data.X[0])
 
     #metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-    metrics = [dc.metrics.Metric(dc.metrics.auc), dc.metrics.Metric(dc.metrics.precision_score), dc.metrics.Metric(dc.metrics.accuracy_score)]
+    metrics = [dc.metrics.Metric(dc.metrics.auc), dc.metrics.Metric(dc.metrics.precision_score), dc.metrics.Metric(dc.metrics.accuracy_score(mode="classification"))]
 
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
     model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metrics)
@@ -76,7 +76,7 @@ def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
 
 
 def mtc_fixed_param_model(task_count, n_features):
-    model = dc.models.MultitaskRegressor(
+    model = dc.models.MultitaskClassifier(
         n_tasks=task_count,
         n_features=n_features,
         layer_sizes=[32, 64, 128],
