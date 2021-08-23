@@ -43,8 +43,8 @@ def start_training():
     metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
     #metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
 
-    model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
-    #model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
+    #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
+    model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
     all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 250)
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
@@ -54,7 +54,7 @@ def start_training():
 
     df.to_csv(file_name)
 
-def mtc_hyperparameter_optimization(train_dataset, valid_dataset, transformer, metric):
+def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
     l_rate_scheduler = dc.models.optimizers.ExponentialDecay(0.0002, 0.9, 15)
@@ -69,7 +69,7 @@ def mtc_hyperparameter_optimization(train_dataset, valid_dataset, transformer, m
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
     best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
-        params_dict, train_dataset, valid_dataset, metric, [transformer])
+        params_dict, train_dataset, valid_dataset, metric)
     print(best_hyperparams)
     return best_model
 
