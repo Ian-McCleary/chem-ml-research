@@ -113,14 +113,14 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
 
 
         #valid_mean.append(valid[0]["precision_score"])
-        train_eiso.append(valid[0]["roc_auc_score"])
+        valid_eiso.append(valid[0]["roc_auc_score"])
 
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])mean
     # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
-    all_loss.append(train_mean)
+    #all_loss.append(train_mean)
     all_loss.append(train_eiso)
 
-    all_loss.append(valid_mean)
+    #all_loss.append(valid_mean)
     all_loss.append(valid_eiso)
 
     #[transformer]
