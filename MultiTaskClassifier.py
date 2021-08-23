@@ -49,8 +49,8 @@ def start_training():
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
     file_name = "mtc_10k_test.csv"
-    df = pd.DataFrame(list(zip(all_loss[0])), columns=[
-        "train_mean"])
+    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1])), columns=[
+        "train_roc_auc", "valid_roc_auc"])
 
     df.to_csv(file_name)
 
