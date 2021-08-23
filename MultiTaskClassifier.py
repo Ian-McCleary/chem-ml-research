@@ -5,7 +5,6 @@ import numpy as np
 import deepchem as dc
 from rdkit import Chem
 import tensorflow as tf
-from sklearn import metrics
 import os
 
 config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']),
@@ -42,7 +41,7 @@ def start_training():
     n_features = len(data.X[0])
 
     #metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-    metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score), metrics.roc_curve, dc.metrics.Metric(dc.metrics.average_precision_score)]
+    metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score), dc.metrics.Metric(dc.metrics.precision_score), dc.metrics.Metric(dc.metrics.average_precision_score)]
 
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
     model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metrics)
@@ -51,7 +50,7 @@ def start_training():
     # hyperparameter_optimization()
     file_name = "mtc_10k_test.csv"
     df = pd.DataFrame(list(zip(all_loss[0], all_loss[1],all_loss[2],all_loss[3])), columns=[
-        "train_roc","train_average_precision", "valid_roc", "valid_average_precision"])
+        "train_precision score","train_average_precision", "valid_precision score", "valid_average_precision"])
 
     df.to_csv(file_name)
 
@@ -107,11 +106,11 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-        train_mean.append(train[0]["roc_curve"])
+        train_mean.append(train[0]["precision_score"])
         train_eiso.append(train[0]["average_precision_score"])
 
 
-        valid_mean.append(valid[0]["roc_curve"])
+        valid_mean.append(valid[0]["precision_score"])
         train_eiso.append(valid[0]["average_precision_score"])
 
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])mean
@@ -127,7 +126,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     print("Test roc_auc:")
     print(test_scores[0]["roc_auc_score"])
     print("Test roc_curve:")
-    print(test_scores[0]["roc_curve"])
+    print(test_scores[0]["precision_score"])
     print("Test Average_precision:")
     print(test_scores[0]["average_precision_score"])
     return all_loss
