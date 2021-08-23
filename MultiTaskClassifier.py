@@ -40,17 +40,17 @@ def start_training():
     task_count = len(data.y[0])
     n_features = len(data.X[0])
 
-    metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-    #metrics = [dc.metrics.Metric(dc.metrics.rms_score), dc.metrics.Metric(dc.metrics.r2_score)]
+    #metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
+    metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score), dc.metrics.Metric(dc.metrics.roc_curve), dc.metrics.Metric(dc.metrics.average_precision_score)]
 
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
-    model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
-    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 250)
+    model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metrics)
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, 250)
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
     file_name = "mtc_10k_test.csv"
-    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1])), columns=[
-        "train_roc_auc", "valid_roc_auc"])
+    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1],all_loss[2],all_loss[3])), columns=[
+        "train_roc","train_average_precision", "valid_roc", "valid_average_precision"])
 
     df.to_csv(file_name)
 
@@ -106,21 +106,29 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-        train_mean.append(train[0]["roc_auc_score"])
+        train_mean.append(train[0]["roc_curve"])
+        train_eiso.append(train[0]["average_precision_score"])
 
 
-        valid_mean.append(valid[0]["roc_auc_score"])
+        valid_mean.append(valid[0]["roc_curve"])
+        train_eiso.append(valid[0]["average_precision_score"])
 
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])mean
     # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
     all_loss.append(train_mean)
+    all_loss.append(train_eiso)
 
     all_loss.append(valid_mean)
+    all_loss.append(valid_eiso)
 
     #[transformer]
     test_scores = model.evaluate(test_dataset, metric, per_task_metrics=True)
     print("Test roc_auc:")
     print(test_scores[0]["roc_auc_score"])
+    print("Test roc_curve:")
+    print(test_scores[0]["roc_curve"])
+    print("Test Average_precision:")
+    print(test_scores[0]["average_precision_score"])
     return all_loss
 
 
