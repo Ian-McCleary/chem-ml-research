@@ -5,6 +5,7 @@ import numpy as np
 import deepchem as dc
 from rdkit import Chem
 import tensorflow as tf
+from sklearn import metrics
 import os
 
 config = tf.compat.v1.ConfigProto(intra_op_parallelism_threads=int(os.environ['OMP_NUM_THREADS']),
@@ -41,7 +42,7 @@ def start_training():
     n_features = len(data.X[0])
 
     #metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-    metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score), dc.metrics.Metric(dc.metrics.roc_curve), dc.metrics.Metric(dc.metrics.average_precision_score)]
+    metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score), metrics.roc_curve, dc.metrics.Metric(dc.metrics.average_precision_score)]
 
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
     model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metrics)
