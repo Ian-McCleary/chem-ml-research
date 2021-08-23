@@ -41,7 +41,7 @@ def start_training():
     n_features = len(data.X[0])
 
     #metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-    metrics = [dc.metrics.Metric(dc.metrics.auc), dc.metrics.Metric(dc.metrics.precision_score), dc.metrics.Metric(dc.metrics.accuracy_score(mode="classification"))]
+    metrics = [dc.metrics.Metric(dc.metrics.auc), dc.metrics.Metric(dc.metrics.precision_score), dc.metrics.Metric(dc.metrics.accuracy_score())]
 
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
     model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metrics)
@@ -64,7 +64,8 @@ def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
         'layer_sizes': [[256, 512, 1024], [128, 256, 512], [64, 128, 256]],
         'dropouts': [0.1, 0.2, 0.5, 0.4, 0.6],
         'n_classes': [2],
-        'learning_rate': [0.001, 0.0001, 0.00001]
+        'learning_rate': [0.001, 0.0001, 0.00001],
+        'mode': ["classification"]
     }
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskClassifier)
