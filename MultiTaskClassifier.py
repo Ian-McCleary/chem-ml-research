@@ -41,7 +41,7 @@ def start_training():
     n_features = len(data.X[0])
 
     #metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-    metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score), dc.metrics.Metric(dc.metrics.precision_score), dc.metrics.Metric(dc.metrics.accuracy_score)]
+    metrics = [dc.metrics.Metric(dc.metrics.auc), dc.metrics.Metric(dc.metrics.precision_score), dc.metrics.Metric(dc.metrics.accuracy_score)]
 
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
     model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metrics)
@@ -69,7 +69,7 @@ def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
 
     optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
     best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
-        params_dict, train_dataset, valid_dataset, [metric])
+        params_dict, train_dataset, valid_dataset, metric)
     print(best_hyperparams)
     return best_model
 
@@ -124,7 +124,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     #[transformer]
     test_scores = model.evaluate(test_dataset, metric, per_task_metrics=True)
     print("Test roc_auc:")
-    print(test_scores[0]["roc_auc_score"])
+    print(test_scores[0]["auc"])
     print("Test roc_curve:")
     print(test_scores[0]["precision_score"])
     print("Test Average_precision:")
