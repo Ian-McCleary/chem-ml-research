@@ -61,11 +61,11 @@ def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
     params_dict = {
         'n_tasks': [task_count],
         'n_features': [n_features],
-        'layer_sizes': [[256, 512, 1024], [64, 128, 256], [512, 512, 512]],
+        'layer_sizes': [[256, 512, 1024], [512, 1024, 2048], [1024, 1024, 1024]],
         'dropouts': [0.2, 0.5, 0.4, 0.6],
         'n_classes': [2],
         'weight_decay_penalty_type': ["l1","l2"],
-        'weight_decay_penalty': [0.02, 0.002],
+        'weight_decay_penalty': [0.02, 0.002, 0.0002],
         'learning_rate': [0.0001, 0.00001],
         'mode': ["classification"]
     }
