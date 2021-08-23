@@ -67,7 +67,7 @@ def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
         'learning_rate': [0.001, 0.0001, 0.00001]
     }
 
-    optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskRegressor)
+    optimizer = dc.hyper.GridHyperparamOpt(dc.models.MultitaskClassifier)
     best_model, best_hyperparams, all_results = optimizer.hyperparam_search(
         params_dict, train_dataset, valid_dataset, metric)
     print(best_hyperparams)
