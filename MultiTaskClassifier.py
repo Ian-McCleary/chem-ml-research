@@ -95,8 +95,8 @@ def mtc_fixed_param_model(task_count, n_features):
 def get_classification(predict, threshold):
     classification = []
     for i in range(len(predict)):
-        print(predict[0][i][0])
-        if predict[0][i][0] > threshold:
+        print(predict[i][0][0])
+        if predict[i][0][0] > threshold:
             classification.append(0)
         else:
             classification.append(1)
