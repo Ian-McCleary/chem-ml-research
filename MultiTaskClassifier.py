@@ -92,15 +92,29 @@ def mtc_fixed_param_model(task_count, n_features):
     )
     return model
 
+def get_classification(predict, threshold):
+    classification = []
+    for i in range(len(predict)):
+        if predict[0][i] > threshold:
+            classification.append(0)
+        else:
+            classification.append(1)
+    return classification
+
+
 def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, epochs):
     #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
-    train_mean = []
-    train_eiso = []
+    # Threshold to use for classification predictions
+    threshold = 0.5
+    train_classification = []
+    train_m1 = []
+    train_m2 = []
     train_riso = []
     train_vert = []
 
-    valid_mean = []
-    valid_eiso = []
+    valid_classification = []
+    valid_m1 = []
+    valid_m2 = []
     valid_riso = []
     valid_vert = []
     all_loss = []
@@ -113,34 +127,36 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-        print(valid_pred)
-        train_f1 = f1_score(train_dataset.y, train_pred, average='binary', pos_label=0)
-        train_mean.append(train_f1)
-        train_eiso.append(train[0]["roc_auc_score"])
 
-        valid_f1 = f1_score(valid_dataset.y, valid_pred, average='binary', pos_label=0)
-        valid_mean.append(valid_f1)
-        valid_eiso.append(valid[0]["roc_auc_score"])
+        train_classification = get_classification(train_pred, threshold)
+        valid_classification = get_classification(valid_pred, threshold)
+
+        train_f1 = f1_score(train_dataset.y, train_classification, average='binary')
+        train_m1.append(train_f1)
+        train_m2.append(train[0]["roc_auc_score"])
+
+        valid_f1 = f1_score(valid_dataset.y, valid_classification, average='binary')
+        valid_m1.append(valid_f1)
+        valid_m2.append(valid[0]["roc_auc_score"])
 
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])mean
     # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
-    all_loss.append(train_mean)
-    all_loss.append(train_eiso)
+    all_loss.append(train_m1)
+    all_loss.append(train_m2)
 
-    all_loss.append(valid_mean)
-    all_loss.append(valid_eiso)
+    all_loss.append(valid_m1)
+    all_loss.append(valid_m2)
 
     #[transformer]
     test_scores = model.evaluate(test_dataset, metric, per_task_metrics=True)
-    #print("Test roc_auc:")
-    #print(test_scores[0]["auc"])
-    #print("Test roc_curve:")
-    #print(test_scores[0]["precision_score"])
+
     print("Test Average_precision:")
     print(test_scores[0]["roc_auc_score"])
     print("Test f1_score:")
     test_pred = model.predict(test_dataset)
-    print(f1_score(test_dataset.y, test_pred, average='binary',pos_label=0))
+    test_classification = get_classification(test_pred, threshold)
+    
+    print(f1_score(test_dataset.y, test_classification, average='binary'))
     return all_loss
 
 
