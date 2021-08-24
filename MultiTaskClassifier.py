@@ -128,7 +128,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-
+        print(train_pred)
         train_classification = get_classification(train_pred, threshold)
         valid_classification = get_classification(valid_pred, threshold)
 
