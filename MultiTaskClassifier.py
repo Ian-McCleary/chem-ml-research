@@ -174,7 +174,10 @@ def find_threshold(train_dataset, valid_dataset):
         if f1 > max_f1:
             max_f1 = f1
             print(threshold, f1)
+        elif f1 < max_f1:
+            return threshold - 0.02
         threshold += 0.02
+    
 
 
 def k_fold_validation(model, data):
