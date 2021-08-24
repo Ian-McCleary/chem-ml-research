@@ -40,12 +40,12 @@ def start_training():
     task_count = len(data.y[0])
     n_features = len(data.X[0])
 
-    metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-    #metrics = [dc.metrics.Metric(dc.metrics.auc), dc.metrics.Metric(dc.metrics.precision_score), dc.metrics.Metric(dc.metrics.roc_auc_score)]
+    #metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
+    metrics = [dc.metrics.Metric(dc.metrics.f1_score), dc.metrics.Metric(dc.metrics.roc_auc_score)]
 
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
-    model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
-    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 50)
+    model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metrics)
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metrics, 50)
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
     file_name = "mtc_10k_test.csv"
@@ -110,19 +110,19 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-        #train_mean.append(train[0]["precision_score"])
+        train_mean.append(train[0]["f1_score"])
         train_eiso.append(train[0]["roc_auc_score"])
 
 
-        #valid_mean.append(valid[0]["precision_score"])
+        valid_mean.append(valid[0]["f1_score"])
         valid_eiso.append(valid[0]["roc_auc_score"])
 
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])mean
     # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
-    #all_loss.append(train_mean)
+    all_loss.append(train_mean)
     all_loss.append(train_eiso)
 
-    #all_loss.append(valid_mean)
+    all_loss.append(valid_mean)
     all_loss.append(valid_eiso)
 
     #[transformer]
@@ -133,6 +133,8 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     #print(test_scores[0]["precision_score"])
     print("Test Average_precision:")
     print(test_scores[0]["roc_auc_score"])
+    print("Test f1_score:")
+    print(test_scores[0]["f1_score"])
     return all_loss
 
 
