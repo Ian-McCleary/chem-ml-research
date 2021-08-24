@@ -2,7 +2,7 @@ from random import randrange
 import pandas as pd
 import numpy as np
 
-from sklearn.metric import f1_score
+from sklearn.metrics import f1_score
 import deepchem as dc
 from rdkit import Chem
 import tensorflow as tf
