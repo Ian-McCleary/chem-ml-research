@@ -106,7 +106,7 @@ def get_classification(predict, threshold):
 def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, epochs):
     #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
     # Threshold to use for classification predictions
-    threshold = 0.5
+    threshold = 0.8
     train_classification = []
     train_m1 = []
     train_m2 = []
