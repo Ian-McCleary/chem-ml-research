@@ -2,6 +2,7 @@ from random import randrange
 import pandas as pd
 import numpy as np
 
+from sklearn.metric import f1_score
 import deepchem as dc
 from rdkit import Chem
 import tensorflow as tf
@@ -41,7 +42,7 @@ def start_training():
     n_features = len(data.X[0])
 
     #metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
-    metrics = [dc.metrics.Metric(dc.metrics.f1_score), dc.metrics.Metric(dc.metrics.roc_auc_score)]
+    metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score)]
 
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
     model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metrics)
@@ -107,14 +108,17 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         loss = model.fit(train_dataset, nb_epoch=1)
         train = model.evaluate(train_dataset, metric, per_task_metrics=True)
         valid = model.evaluate(valid_dataset, metric, per_task_metrics=True)
+        train_pred = model.predict(train_dataset)
+        valid_pred = model.predict(valid_dataset)
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-        train_mean.append(train[0]["f1_score"])
+        train_f1 = f1_score(train_dataset.y, train_pred)
+        train_mean.append(train_f1)
         train_eiso.append(train[0]["roc_auc_score"])
 
-
-        valid_mean.append(valid[0]["f1_score"])
+        valid_f1 = f1_score(valid_dataset.y, valid_pred)
+        valid_mean.append(valid_f1)
         valid_eiso.append(valid[0]["roc_auc_score"])
 
     # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])mean
@@ -134,7 +138,8 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     print("Test Average_precision:")
     print(test_scores[0]["roc_auc_score"])
     print("Test f1_score:")
-    print(test_scores[0]["f1_score"])
+    test_pred = model.predict(test_dataset)
+    print(f1_score(test_dataset.y, test_pred))
     return all_loss
 
 
