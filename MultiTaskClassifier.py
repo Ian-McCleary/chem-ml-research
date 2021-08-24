@@ -44,8 +44,8 @@ def start_training():
     metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
     #metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score)]
 
-    #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
-    model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
+    model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
+    #model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
     all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 50)
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
@@ -113,11 +113,12 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
+        print(valid_pred)
         train_f1 = f1_score(train_dataset.y, train_pred, average='binary', pos_label=0)
         train_mean.append(train_f1)
         train_eiso.append(train[0]["roc_auc_score"])
 
-        valid_f1 = f1_score(valid_dataset.y, valid_pred, average='binary',pos_label=0)
+        valid_f1 = f1_score(valid_dataset.y, valid_pred, average='binary', pos_label=0)
         valid_mean.append(valid_f1)
         valid_eiso.append(valid[0]["roc_auc_score"])
 
