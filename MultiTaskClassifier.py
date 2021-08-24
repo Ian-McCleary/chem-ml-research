@@ -177,6 +177,7 @@ def find_threshold(train_dataset, valid_dataset):
         elif f1 < max_f1:
             return threshold - 0.02
         threshold += 0.02
+    return threshold
     
 
 
