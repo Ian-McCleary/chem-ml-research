@@ -166,7 +166,7 @@ def find_threshold(train_dataset, valid_dataset):
     model = mtc_fixed_param_model(task_count, n_features)
     max_f1 = 0
     threshold = 0.6
-    while threshold < 0.82:
+    while threshold < 0.9:
         model.fit(train_dataset, nb_epoch=20)
         valid_pred = model.predict(valid_dataset)
         valid_classification = get_classification(valid_pred, threshold)
@@ -174,7 +174,7 @@ def find_threshold(train_dataset, valid_dataset):
         if f1 > max_f1:
             max_f1 = f1
             print(threshold, f1)
-        threshold += 0.2
+        threshold += 0.02
 
 
 def k_fold_validation(model, data):
