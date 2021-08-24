@@ -113,11 +113,11 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[0]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
-        train_f1 = f1_score(train_dataset.y, train_pred, average='binary')
+        train_f1 = f1_score(train_dataset.y, train_pred, average='binary', pos_label=0)
         train_mean.append(train_f1)
         train_eiso.append(train[0]["roc_auc_score"])
 
-        valid_f1 = f1_score(valid_dataset.y, valid_pred, average='binary')
+        valid_f1 = f1_score(valid_dataset.y, valid_pred, average='binary',pos_label=0)
         valid_mean.append(valid_f1)
         valid_eiso.append(valid[0]["roc_auc_score"])
 
@@ -139,7 +139,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     print(test_scores[0]["roc_auc_score"])
     print("Test f1_score:")
     test_pred = model.predict(test_dataset)
-    print(f1_score(test_dataset.y, test_pred, average='binary'))
+    print(f1_score(test_dataset.y, test_pred, average='binary',pos_label=0))
     return all_loss
 
 
