@@ -165,8 +165,8 @@ def find_threshold(train_dataset, valid_dataset):
     n_features = len(train_dataset.X[0])
     model = mtc_fixed_param_model(task_count, n_features)
     max_f1 = 0
-    threshold = 0.8
-    while threshold < 0.96:
+    threshold = 0.7
+    while threshold < 0.9:
         model.fit(train_dataset, nb_epoch=20)
         valid_pred = model.predict(valid_dataset)
         valid_classification = get_classification(valid_pred, threshold)
