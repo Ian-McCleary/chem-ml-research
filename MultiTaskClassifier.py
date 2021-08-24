@@ -50,8 +50,8 @@ def start_training():
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
     file_name = "mtc_10k_test.csv"
-    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1])), columns=[
-            "train roc_auc", "valid roc_auc"])
+    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3])), columns=[
+            "train roc_auc","train f1", "valid roc_auc", "valid f1"])
 
     df.to_csv(file_name)
 
@@ -95,6 +95,7 @@ def mtc_fixed_param_model(task_count, n_features):
 def get_classification(predict, threshold):
     classification = []
     for i in range(len(predict)):
+        print(predict[0][i])
         if predict[0][i] > threshold:
             classification.append(0)
         else:
