@@ -106,7 +106,8 @@ def get_classification(predict, threshold):
 def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, epochs):
     #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
     # Threshold to use for classification predictions
-    threshold = find_threshold(train_dataset, valid_dataset)
+    model_copy = model
+    threshold = find_threshold(model_copy, train_dataset, valid_dataset)
     train_classification = []
     train_m1 = []
     train_m2 = []
@@ -160,14 +161,15 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     print(f1_score(test_dataset.y, test_classification, average='binary'))
     return all_loss
 
-def find_threshold(train_dataset, valid_dataset):
+def find_threshold(model_origional, train_dataset, valid_dataset):
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
-    model = mtc_fixed_param_model(task_count, n_features)
+    
     max_f1 = 0
     threshold = 0.5
     t_tracker = 0
     while threshold < 0.9:
+        model = model_origional
         model.fit(train_dataset, nb_epoch=20)
         valid_pred = model.predict(valid_dataset)
         valid_classification = get_classification(valid_pred, threshold)
