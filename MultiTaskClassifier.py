@@ -92,6 +92,8 @@ def mtc_fixed_param_model(task_count, n_features):
     )
     return model
 
+
+# Create the binary classification vector based off a given threshold.
 def get_classification(predict, threshold):
     classification = []
     for i in range(len(predict)):
@@ -103,6 +105,7 @@ def get_classification(predict, threshold):
     return classification
 
 
+# Calculate loss or other performance metrics over training epochs
 def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, epochs):
     #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
     # Threshold to use for classification predictions
@@ -130,8 +133,11 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
         #print(train_pred)
-        train_classification = get_classification(train_pred, threshold)
-        valid_classification = get_classification(valid_pred, threshold)
+        #train_classification = get_classification(train_pred, threshold)
+        #valid_classification = get_classification(valid_pred, threshold)
+
+        train_classification = dc.metrics.handle_classification_mode(train_pred)
+        valid_classification = dc.metrics.handle_classification_mode(valid_pred)
 
         train_f1 = f1_score(train_dataset.y, train_classification, average='binary')
         train_m1.append(train_f1)
@@ -156,11 +162,14 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     print(test_scores[0]["roc_auc_score"])
     print("Test f1_score:")
     test_pred = model.predict(test_dataset)
-    test_classification = get_classification(test_pred, threshold)
+    #test_classification = get_classification(test_pred, threshold)
+    test_classification = dc.metrics.handle_classification_mode(train_pred)
     
     print(f1_score(test_dataset.y, test_classification, average='binary'))
     return all_loss
 
+# Find the threshold for classification predictions from 0.5 to 0.9
+# Uses the hyperparam model
 def find_threshold(model_origional, train_dataset, valid_dataset):
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
