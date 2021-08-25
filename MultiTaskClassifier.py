@@ -165,7 +165,8 @@ def find_threshold(train_dataset, valid_dataset):
     n_features = len(train_dataset.X[0])
     model = mtc_fixed_param_model(task_count, n_features)
     max_f1 = 0
-    threshold = 0.6
+    threshold = 0.5
+    t_tracker = 0
     while threshold < 0.9:
         model.fit(train_dataset, nb_epoch=20)
         valid_pred = model.predict(valid_dataset)
@@ -173,11 +174,10 @@ def find_threshold(train_dataset, valid_dataset):
         f1 = f1_score(valid_dataset.y, valid_classification, average='binary')
         if f1 > max_f1:
             max_f1 = f1
+            t_tracker = threshold
             print(threshold, f1)
-        elif f1 < max_f1:
-            return threshold - 0.02
-        threshold += 0.02
-    return threshold
+        threshold += 0.01
+    return t_tracker
     
 
 
