@@ -139,7 +139,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
 
         train_classification = dc.metrics.handle_classification_mode(train_pred)
         valid_classification = dc.metrics.handle_classification_mode(valid_pred)
-
+        print(train_classification)
         train_f1 = f1_score(train_dataset.y, train_classification, average='binary', pos_label=1)
         train_recall = recall_score(train_dataset.y, train_classification, average='binary', pos_label=1)
         train_m1.append(train_f1)
