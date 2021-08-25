@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn.metrics import f1_score
+from sklearn.metrics import recall_score
 import deepchem as dc
 from rdkit import Chem
 import tensorflow as tf
@@ -78,7 +79,7 @@ def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
     return best_model
 
 
-
+# arbitrary fixed parameter model for quick testing
 def mtc_fixed_param_model(task_count, n_features):
     model = dc.models.MultitaskClassifier(
         n_tasks=task_count,
@@ -139,11 +140,13 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         train_classification = dc.metrics.handle_classification_mode(train_pred)
         valid_classification = dc.metrics.handle_classification_mode(valid_pred)
 
-        train_f1 = f1_score(train_dataset.y, train_classification, average='binary')
+        train_f1 = f1_score(train_dataset.y, train_classification, average='binary', pos_label=1)
+        train_recall = recall_score(train_dataset.y, train_classification, average='binary', pos_label=1)
         train_m1.append(train_f1)
         train_m2.append(train[0]["roc_auc_score"])
 
         valid_f1 = f1_score(valid_dataset.y, valid_classification, average='binary')
+        valid_recall = recall_score(valid_dataset.y, valid_classification, average='binary', pos_label=1)
         valid_m1.append(valid_f1)
         valid_m2.append(valid[0]["roc_auc_score"])
 
@@ -160,12 +163,14 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
 
     print("Test Average_precision:")
     print(test_scores[0]["roc_auc_score"])
-    print("Test f1_score:")
+    
     test_pred = model.predict(test_dataset)
     #test_classification = get_classification(test_pred, threshold)
     test_classification = dc.metrics.handle_classification_mode(train_pred)
-    
-    print(f1_score(test_dataset.y, test_classification, average='binary'))
+    test_f1 = f1_score(test_dataset.y, test_classification, average='binary', pos_label=1)
+    print("Test f1_score:", test_f1)
+    test_recall = recall_score(test_dataset.y, test_classification, average='binary', pos_label=1)
+    print("Test Recall:", test_recall)
     return all_loss
 
 # Find the threshold for classification predictions from 0.5 to 0.9
