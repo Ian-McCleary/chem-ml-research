@@ -111,7 +111,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
     # Threshold to use for classification predictions
     model_copy = model
-    # threshold = find_threshold(model_copy, train_dataset, valid_dataset)
+    threshold = find_threshold(model_copy, train_dataset, valid_dataset)
     train_classification = []
     train_m1 = []
     train_m2 = []
@@ -134,11 +134,11 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
         #print(train_pred)
-        #train_classification = get_classification(train_pred, threshold)
-        #valid_classification = get_classification(valid_pred, threshold)
+        train_classification = get_classification(train_pred, threshold)
+        valid_classification = get_classification(valid_pred, threshold)
 
-        train_classification = dc.metrics.handle_classification_mode(train_pred, classification_handling_mode='threshold')
-        valid_classification = dc.metrics.handle_classification_mode(valid_pred, classification_handling_mode='threshold')
+        #train_classification = dc.metrics.handle_classification_mode(train_pred, classification_handling_mode='threshold')
+        #valid_classification = dc.metrics.handle_classification_mode(valid_pred, classification_handling_mode='threshold')
         print(train_classification)
         train_f1 = f1_score(train_dataset.y, train_classification, average='binary', pos_label=1)
         train_recall = recall_score(train_dataset.y, train_classification, average='binary', pos_label=1)
@@ -165,8 +165,8 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     print(test_scores[0]["roc_auc_score"])
     
     test_pred = model.predict(test_dataset)
-    #test_classification = get_classification(test_pred, threshold)
-    test_classification = dc.metrics.handle_classification_mode(test_pred, classification_handling_mode='threshold')
+    test_classification = get_classification(test_pred, threshold)
+    #test_classification = dc.metrics.handle_classification_mode(test_pred, classification_handling_mode='threshold')
     test_f1 = f1_score(test_dataset.y, test_classification, average='binary', pos_label=1)
     print("Test f1_score:", test_f1)
     test_recall = recall_score(test_dataset.y, test_classification, average='binary', pos_label=1)
