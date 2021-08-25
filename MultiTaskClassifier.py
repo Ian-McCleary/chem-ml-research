@@ -166,7 +166,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     
     test_pred = model.predict(test_dataset)
     #test_classification = get_classification(test_pred, threshold)
-    test_classification = dc.metrics.handle_classification_mode(train_pred, classification_handling_mode='threshold')
+    test_classification = dc.metrics.handle_classification_mode(test_pred, classification_handling_mode='threshold')
     test_f1 = f1_score(test_dataset.y, test_classification, average='binary', pos_label=1)
     print("Test f1_score:", test_f1)
     test_recall = recall_score(test_dataset.y, test_classification, average='binary', pos_label=1)
