@@ -47,9 +47,10 @@ def start_training():
     metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
     #metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score)]
 
-    model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
+    #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
+    
+    model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
     threshold_training(model, train_dataset, valid_dataset, test_dataset, metric)
-    #model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
     #all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 50)
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
