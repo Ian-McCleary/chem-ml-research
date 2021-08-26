@@ -2,6 +2,8 @@ from random import randrange
 import pandas as pd
 import numpy as np
 
+from ghost import optimize_threshold_from_predictions
+
 from sklearn.metrics import f1_score
 from sklearn.metrics import recall_score
 import deepchem as dc
@@ -46,15 +48,16 @@ def start_training():
     #metrics = [dc.metrics.Metric(dc.metrics.roc_auc_score)]
 
     model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
+    threshold_training(model, train_dataset, valid_dataset, test_dataset, metric)
     #model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
-    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 50)
+    #all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 50)
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
-    file_name = "mtc_10k_test.csv"
-    df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3])), columns=[
-            "train roc_auc","train f1", "valid roc_auc", "valid f1"])
+    #file_name = "mtc_10k_test.csv"
+    #df = pd.DataFrame(list(zip(all_loss[0], all_loss[1], all_loss[2], all_loss[3])), columns=[
+    #        "train roc_auc","train f1", "valid roc_auc", "valid f1"])
 
-    df.to_csv(file_name)
+    #df.to_csv(file_name)
 
 def mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric):
     task_count = len(train_dataset.y[0])
@@ -106,6 +109,27 @@ def get_classification(predict, threshold):
     return classification
 
 
+def threshold_training(model, train_dataset, valid_dataset, test_dataset, metric):
+    callback = dc.models.ValidationCallback(valid_dataset, 10, metric)
+    model.fit(train_dataset, nb_epoch=5, callbacks=callback)
+
+    training_pred = model.predict(train_dataset)
+    thresh_list = []
+    x = 0.50
+    while x <= 0.95:
+        thresh_list.append(x)
+    
+
+    threshold = optimize_threshold_from_predictions(labels = train_dataset.y, probs = training_pred[:,1], thresholds = thresh_list,ThOpt_metrics= 'Kappa', N_subsets=100, subsets_size=0.2)
+    print("Threshold: ", threshold)
+    test_pred = model.predict(test_dataset)
+    test_classification = get_classification(test_pred, threshold)
+    #test_classification = dc.metrics.handle_classification_mode(test_pred, classification_handling_mode='threshold')
+    test_f1 = f1_score(test_dataset.y, test_classification, average='binary', pos_label=1)
+    print("Test f1_score:", test_f1)
+    test_recall = recall_score(test_dataset.y, test_classification, average='binary', pos_label=1)
+    print("Test Recall:", test_recall)
+
 # Calculate loss or other performance metrics over training epochs
 def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, epochs):
     #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
@@ -139,7 +163,7 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
 
         #train_classification = dc.metrics.handle_classification_mode(train_pred, classification_handling_mode='threshold')
         #valid_classification = dc.metrics.handle_classification_mode(valid_pred, classification_handling_mode='threshold')
-        print(train_classification)
+        #print(train_classification)
         train_f1 = f1_score(train_dataset.y, train_classification, average='binary', pos_label=1)
         train_recall = recall_score(train_dataset.y, train_classification, average='binary', pos_label=1)
         train_m1.append(train_f1)
