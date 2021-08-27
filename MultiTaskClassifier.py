@@ -121,7 +121,8 @@ def threshold_training(model, train_dataset, valid_dataset, test_dataset, metric
         thresh_list.append(x)
     
 
-    threshold = optimize_threshold_from_predictions(labels = train_dataset.y, probs = training_pred[:,1], thresholds = thresh_list,ThOpt_metrics= 'Kappa', N_subsets=100, subsets_size=0.2)
+    #threshold = optimize_threshold_from_predictions(labels = train_dataset.y, probs = training_pred[:,1], thresholds = thresh_list,ThOpt_metrics= 'Kappa', N_subsets=100, subsets_size=0.2)
+    threshold = find_threshold(model, train_dataset, valid_dataset)
     print("Threshold: ", threshold)
     test_pred = model.predict(test_dataset)
     test_classification = get_classification(test_pred, threshold)
@@ -203,22 +204,25 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
 def find_threshold(model_origional, train_dataset, valid_dataset):
     task_count = len(train_dataset.y[0])
     n_features = len(train_dataset.X[0])
-    
+    thresh_list = []
     max_f1 = 0
     threshold = 0.5
-    t_tracker = 0
     while threshold < 0.9:
         model = model_origional
         model.fit(train_dataset, nb_epoch=20)
         valid_pred = model.predict(valid_dataset)
         valid_classification = get_classification(valid_pred, threshold)
         f1 = f1_score(valid_dataset.y, valid_classification, average='binary')
-        if f1 > max_f1:
-            max_f1 = f1
-            t_tracker = threshold
-            print(threshold, f1)
-        threshold += 0.01
-    return t_tracker
+        thresh_list.append([threshold,f1])
+        threshold += 0.05
+    max = 0
+    idx = 0
+    for i in range(len(thresh_list)):
+        if thresh_list[i][1] > max:
+            max = thresh_list[i][1]
+            idx = i
+    
+    return thresh_list[idx][0]
     
 
 
