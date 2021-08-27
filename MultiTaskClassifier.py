@@ -50,8 +50,8 @@ def start_training():
     #model = mtc_fixed_param_model(task_count=task_count, n_features=n_features)
     
     model = mtc_hyperparameter_optimization(train_dataset, valid_dataset, metric)
-    threshold_training(model, train_dataset, valid_dataset, test_dataset, metric)
-    #all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 50)
+    #threshold_training(model, train_dataset, valid_dataset, test_dataset, metric)
+    all_loss = loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, 50)
     #k_fold_validation(model, data)
     # hyperparameter_optimization()
     #file_name = "mtc_10k_test.csv"
@@ -137,7 +137,8 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
     #metric = dc.metrics.Metric(dc.metrics.mean_squared_error)
     # Threshold to use for classification predictions
     model_copy = model
-    threshold = find_threshold(model_copy, train_dataset, valid_dataset)
+    #threshold = find_threshold(model_copy, train_dataset, valid_dataset)
+    
     train_classification = []
     train_m1 = []
     train_m2 = []
@@ -160,6 +161,12 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
         #print(train_pred)
+        thresh_list = []
+        x = 0.50
+        while x <= 0.95:
+            thresh_list.append(x)
+
+        threshold = optimize_threshold_from_predictions(labels = train_dataset.y, probs = train_pred[:,1], thresholds = thresh_list,ThOpt_metrics= 'Kappa', N_subsets=100, subsets_size=0.2)
         train_classification = get_classification(train_pred, threshold)
         valid_classification = get_classification(valid_pred, threshold)
 
