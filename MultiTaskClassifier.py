@@ -161,12 +161,8 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         # print(valid[1]["mean_absolute_error"])
         # print(valid[1]["mean_absolute_error"][0])
         #print(train_pred)
-        thresh_list = []
-        x = 0.50
-        while x <= 0.95:
-            thresh_list.append(x)
 
-        threshold = optimize_threshold_from_predictions(labels = train_dataset.y, probs = train_pred[:,1], thresholds = thresh_list,ThOpt_metrics= 'Kappa', N_subsets=100, subsets_size=0.2)
+        '''
         train_classification = get_classification(train_pred, threshold)
         valid_classification = get_classification(valid_pred, threshold)
 
@@ -182,18 +178,32 @@ def loss_over_epoch(model, train_dataset, valid_dataset, test_dataset, metric, e
         valid_recall = recall_score(valid_dataset.y, valid_classification, average='binary', pos_label=1)
         valid_m1.append(valid_f1)
         valid_m2.append(valid[0]["roc_auc_score"])
+        
 
-    # all_loss.extend([train_mean, train_eiso, train_riso, train_vert])mean
-    # all_loss.extend([valid_mean, valid_eiso, valid_riso, valid_vert])
+
     all_loss.append(train_m1)
     all_loss.append(train_m2)
 
     all_loss.append(valid_m1)
     all_loss.append(valid_m2)
+    '''
+    thresh_list = []
+    x = 0.50
+    while x <= 0.95:
+        thresh_list.append(x)
+    threshold = optimize_threshold_from_predictions(labels = train_dataset.y, probs = train_pred[:,1], thresholds = thresh_list,ThOpt_metrics= 'Kappa', N_subsets=100, subsets_size=0.2)
+    print("Threshold: ", threshold)
+    train_classification = get_classification(train_pred, threshold)
+    train_scores = model.evaluate(train_dataset, metric, per_task_metrics=True)
+    print("Train Average_precision:")
+    print(train_scores[0]["roc_auc_score"])
+    train_f1 = f1_score(train_dataset.y, train_classification, average='binary', pos_label=1)
 
-    #[transformer]
+    print("Train f1_score:", train_f1)
+    train_recall = recall_score(train_dataset.y, train_classification, average='binary', pos_label=1)
+    print("Train Recall:", train_recall)
+
     test_scores = model.evaluate(test_dataset, metric, per_task_metrics=True)
-
     print("Test Average_precision:")
     print(test_scores[0]["roc_auc_score"])
     
